@@ -1,8 +1,8 @@
-package com.ssafy.plan.model.mapper;
+package com.ssafy.enjoytrip.plan.model.mapper;
 
 import java.sql.SQLException;
 import org.apache.ibatis.annotations.Mapper;
-import com.ssafy.plan.model.Plan;
+import com.ssafy.enjoytrip.plan.model.Plan;
 
 @Mapper
 public interface PlanMapper {
