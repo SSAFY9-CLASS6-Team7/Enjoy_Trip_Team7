@@ -1,4 +1,4 @@
-package com.ssafy.plan.model;
+package com.ssafy.enjoytrip.plan.model;
 
 import lombok.Data;
 
