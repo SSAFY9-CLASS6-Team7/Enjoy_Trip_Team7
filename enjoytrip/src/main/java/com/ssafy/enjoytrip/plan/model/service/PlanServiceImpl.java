@@ -1,6 +1,7 @@
 package com.ssafy.enjoytrip.plan.model.service;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
@@ -17,8 +18,9 @@ public class PlanServiceImpl implements PlanService {
 	}
 
 	@Override
-	public void getPlanList(String userId) throws SQLException {
-		planMapper.selectPlanList(userId);
+	public List<Plan> getPlanList(String userId) throws SQLException {
+		//수정필요??
+		return planMapper.selectPlanList(userId);
 	}
 
 	@Override

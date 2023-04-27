@@ -3,7 +3,7 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 	
 <mapper namespace="com.ssafy.enjoytrip.plan.model.mapper.PlanMapper">
-	<resultMap type="planDto" id="plan">
+	<resultMap type="plan" id="planDto">
 		<result column="plan_id" property="planId"/>
 		<result column="title" property="title"/>
 		<result column="createtime" property="createTime"/>
@@ -11,10 +11,30 @@
 		<result column="user_id" property="userId"/>
 	</resultMap>
 	
-	<select id="insertPlan" parameterType="planDto">
-		insert into plan (title, createtime, content, user_id)
-		values(#{title},#{},#{content},#{userId})
+	<select id="selectPlanList" parameterType="String">
+		select *
+		from plan
+		where user_id = #{userId}
+		order by createtime
 	</select>
+	
+	<select id="selectPlanById" parameterType="String">
+		
+	</select>
+	
+	<insert id="insertPlan" parameterType="plan">
+		insert into plan (title, createtime, content, user_id)
+		values(#{title},CURRENT_TIMESTAMP,#{content},#{userId})
+	</insert>
+	
+	<select id="updatePlan" parameterType="plan">
+		
+	</select>
+	
+	<select id="deletePlan" parameterType="String">
+		
+	</select>
+	
 </mapper>
 <!-- 
 void selectPlanList(String userId) throws SQLException;
