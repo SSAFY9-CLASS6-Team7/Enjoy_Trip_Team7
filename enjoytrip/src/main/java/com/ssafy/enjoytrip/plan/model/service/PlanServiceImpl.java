@@ -24,8 +24,8 @@ public class PlanServiceImpl implements PlanService {
 	}
 
 	@Override
-	public void getPlan(String planId) throws SQLException {
-		planMapper.selectPlanById(planId);
+	public Plan getPlan(String planId) throws SQLException {
+		return planMapper.selectPlanById(planId);
 	}
 
 	@Override

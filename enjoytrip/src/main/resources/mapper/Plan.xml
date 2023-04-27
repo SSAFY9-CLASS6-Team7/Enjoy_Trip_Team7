@@ -3,7 +3,8 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 	
 <mapper namespace="com.ssafy.enjoytrip.plan.model.mapper.PlanMapper">
-	<resultMap type="plan" id="planDto">
+	
+	<resultMap type="plan" id="planResultMap">
 		<result column="plan_id" property="planId"/>
 		<result column="title" property="title"/>
 		<result column="createtime" property="createTime"/>
@@ -11,35 +12,44 @@
 		<result column="user_id" property="userId"/>
 	</resultMap>
 	
-	<select id="selectPlanList" parameterType="String">
+	
+	<!-- List<Plan> selectPlanList(String userId) -->
+	<select id="selectPlanList" parameterType="String" resultMap="planResultMap">
 		select *
 		from plan
 		where user_id = #{userId}
 		order by createtime
 	</select>
 	
-	<select id="selectPlanById" parameterType="String">
-		
+	<!-- Plan selectPlanById(String planId) -->
+	<!-- 동일한 planId를 가진 plan_attraction을 가져와야 함
+		1. join하기 : resultMap, collection으로(x)
+		2. 비동기로 따로 불러오기 : 댓글을 fetch로 가져왔던 것처럼(v)
+		어쨌든 plan_attraction의 DTO가 필요
+	-->
+	<select id="selectPlanById" parameterType="String" resultMap="planResultMap">
+		select *
+		from plan
+		where plan_id = #{planId}
 	</select>
 	
+	<!-- void insertPlan(Plan plan) -->
 	<insert id="insertPlan" parameterType="plan">
 		insert into plan (title, createtime, content, user_id)
 		values(#{title},CURRENT_TIMESTAMP,#{content},#{userId})
 	</insert>
 	
-	<select id="updatePlan" parameterType="plan">
-		
-	</select>
+	<!-- void updatePlan(Plan plan) -->
+	<update id="updatePlan" parameterType="plan">
+		update plan
+		set title = #{title}, createtime = CURRENT_TIMESTAMP, content = #{content}
+		where plan_id = #{planId}
+	</update>
 	
-	<select id="deletePlan" parameterType="String">
-		
-	</select>
+	<!-- void deletePlan(String planId) -->
+	<delete id="deletePlan" parameterType="String">
+		delete from plan
+		where plan_id = #{planId}
+	</delete>
 	
 </mapper>
-<!-- 
-void selectPlanList(String userId) throws SQLException;
-void selectPlanById(String planId) throws SQLException;
-void insertPlan(Plan plan) throws SQLException;
-void updatePlan(Plan plan) throws SQLException;
-void deletePlan(String planId) throws SQLException;
- -->
