@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface BoardService {
     List<Board> getBoardList() throws SQLException;
+
+    void createBoard(Board board) throws SQLException;
 }
