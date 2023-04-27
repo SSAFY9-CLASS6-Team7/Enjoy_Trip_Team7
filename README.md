@@ -28,6 +28,11 @@
 ---
 ## 📚프로젝트 진행    
 ### [📜API 명세](https://gentle-capricorn-124.notion.site/9a06d8f8fe9144fab2f7470fd99ba63a)
+  <details>
+  <summary>API 상세 내용</summary><br>
+    <img src="https://user-images.githubusercontent.com/70866410/234883237-53e398ee-ebb0-49a4-ab72-b6b4a6edf7c1.png">
+  </details>
+  
 
 ### 🗂프로젝트 패키지 구조   
 ```
