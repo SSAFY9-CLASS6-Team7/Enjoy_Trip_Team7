@@ -24,6 +24,11 @@ public class BoardController {
         return boardService.getBoardList(paramMap);
     }
 
+    @GetMapping("/{boardId")
+    public Board getBoard(@PathVariable int boardId) throws SQLException{
+        return boardService.getBoard(boardId);
+    }
+
     @PostMapping
     public void createBoard(@RequestBody Board board) throws SQLException {
         /*

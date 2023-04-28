@@ -21,6 +21,11 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
+    public Board getBoard(int boardId) throws SQLException {
+        return boardMapper.selectBoardByBoardId(boardId);
+    }
+
+    @Override
     public void createBoard(Board board) throws SQLException {
         boardMapper.insertBoard(board);
     }

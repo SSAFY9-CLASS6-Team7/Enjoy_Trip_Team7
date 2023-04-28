@@ -34,6 +34,13 @@
         ORDER BY CASE WHEN ${condition} = '' THEN createtime ELSE ${condition} END DESC
     </select>
 
+    <!-- 게시글 상세 내용 조회 -->
+    <select id="selectBoardByBoardId" parameterType="int" resultMap="boardMap">
+        SELECT *
+          FROM board
+         WHERE board_id = #{boardId}
+    </select>
+
     <!-- 게시글 등록 -->
     <!-- TODO 사진 등록 -->
     <insert id="insertBoard" parameterType="Board">
