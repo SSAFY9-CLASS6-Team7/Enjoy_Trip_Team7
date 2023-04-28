@@ -18,4 +18,9 @@ public class BoardServiceImpl implements BoardService{
     public List<Board> getBoardList() throws SQLException {
         return boardMapper.selectBoard();
     }
+
+    @Override
+    public void createBoard(Board board) throws SQLException {
+        boardMapper.insertBoard(board);
+    }
 }

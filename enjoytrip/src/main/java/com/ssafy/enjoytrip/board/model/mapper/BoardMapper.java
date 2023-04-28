@@ -10,4 +10,6 @@ import java.util.List;
 public interface BoardMapper {
 
     List<Board> selectBoard() throws SQLException;
+
+    void insertBoard(Board board) throws SQLException;
 }
