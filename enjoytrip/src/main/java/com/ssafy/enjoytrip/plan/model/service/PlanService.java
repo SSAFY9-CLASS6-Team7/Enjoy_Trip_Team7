@@ -2,8 +2,10 @@ package com.ssafy.enjoytrip.plan.model.service;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import com.ssafy.enjoytrip.plan.model.Plan;
+import com.ssafy.enjoytrip.plan.model.PlanAttraction;
 
 public interface PlanService {
 	List<Plan> getPlanList(String userId) throws SQLException;

@@ -1,55 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-	
-<mapper namespace="com.ssafy.enjoytrip.plan.model.mapper.PlanMapper">
-	
-	<resultMap type="plan" id="planResultMap">
-		<result column="plan_id" property="planId"/>
-		<result column="title" property="title"/>
-		<result column="createtime" property="createTime"/>
-		<result column="content" property="content"/>
-		<result column="user_id" property="userId"/>
+
+<mapper
+	namespace="com.ssafy.enjoytrip.plan.model.mapper.PlanMapper">
+
+	<resultMap id="planResultMap" type="plan">
+		<result column="plan_id" property="planId" />
+		<result column="title" property="title" />
+		<result column="createtime" property="createTime" />
+		<result column="content" property="content" />
+		<result column="user_id" property="userId" />
 	</resultMap>
-	
-	
+
+	<resultMap id="PlanWithAttractionResultMap" type="plan" extends="planResultMap">
+		<collection column="plan_id" property="planAttractions"
+			javaType="List" ofType="planAttraction" select="selectPlanAttractionsByPlanId" />
+	</resultMap>
+
+	<select id="selectPlanAttractionsByPlanId" parameterType="int" resultType="planAttraction">
+		SELECT plan_id planId, attraction_id attractionId, sequence, plan_date planDate
+		FROM plan_attraction
+		WHERE plan_id = #{id}
+		order by sequence
+	</select>
+
 	<!-- List<Plan> selectPlanList(String userId) -->
-	<select id="selectPlanList" parameterType="String" resultMap="planResultMap">
-		select *
+	<select id="selectPlanList" parameterType="string"
+		resultMap="planResultMap">
+		select plan_id, title, createtime, content, user_id
 		from plan
 		where user_id = #{userId}
 		order by createtime
 	</select>
-	
+
 	<!-- Plan selectPlanById(String planId) -->
-	<!-- 동일한 planId를 가진 plan_attraction을 가져와야 함
-		1. join하기 : resultMap, collection으로(x)
-		2. 비동기로 따로 불러오기 : 댓글을 fetch로 가져왔던 것처럼(v)
-		어쨌든 plan_attraction의 DTO가 필요
-	-->
-	<select id="selectPlanById" parameterType="String" resultMap="planResultMap">
+	<select id="selectPlanById" parameterType="string"
+		resultMap="PlanWithAttractionResultMap">
 		select *
 		from plan
 		where plan_id = #{planId}
+		order by createtime
 	</select>
-	
+
 	<!-- void insertPlan(Plan plan) -->
 	<insert id="insertPlan" parameterType="plan">
 		insert into plan (title, createtime, content, user_id)
 		values(#{title},CURRENT_TIMESTAMP,#{content},#{userId})
 	</insert>
-	
+
 	<!-- void updatePlan(Plan plan) -->
 	<update id="updatePlan" parameterType="plan">
 		update plan
-		set title = #{title}, createtime = CURRENT_TIMESTAMP, content = #{content}
+		set title=#{title}, content=#{content}
 		where plan_id = #{planId}
 	</update>
-	
+
 	<!-- void deletePlan(String planId) -->
 	<delete id="deletePlan" parameterType="String">
 		delete from plan
 		where plan_id = #{planId}
 	</delete>
-	
+
 </mapper>

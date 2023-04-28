@@ -4,7 +4,6 @@ import java.sql.SQLException;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
-
 import com.ssafy.enjoytrip.plan.model.Plan;
 import com.ssafy.enjoytrip.plan.model.mapper.PlanMapper;
 
@@ -19,7 +18,6 @@ public class PlanServiceImpl implements PlanService {
 
 	@Override
 	public List<Plan> getPlanList(String userId) throws SQLException {
-		//수정필요??
 		return planMapper.selectPlanList(userId);
 	}
 
