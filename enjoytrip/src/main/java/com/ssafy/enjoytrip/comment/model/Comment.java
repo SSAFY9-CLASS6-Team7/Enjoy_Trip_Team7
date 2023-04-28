@@ -1,4 +1,4 @@
-package com.ssafy.enjoytrip.comment;
+package com.ssafy.enjoytrip.comment.model;
 
 import lombok.Data;
 
