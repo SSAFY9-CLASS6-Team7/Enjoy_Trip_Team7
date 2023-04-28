@@ -10,4 +10,12 @@
           FROM board
     </select>
 
+    <!-- 게시글 등록 -->
+    <!-- 관광지 선택 여부에 따른 분기 필요 -->
+    <!-- 사진 등록 추가 필요 -->
+    <insert id="createBoard" parameterType="Board">
+        INSERT INTO board (code, title, createtime, board_content, user_id, annonymous)
+        VALUES (#{code}, #{title}, now(), #{boardContent}, #{userId}, #{anonymous})
+    </insert>
+
 </mapper>
