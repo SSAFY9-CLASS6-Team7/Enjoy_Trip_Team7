@@ -57,8 +57,8 @@
     <!-- 게시글 수정 -->
     <update id="updateBoard" parameterType="Board">
         UPDATE board
-        SET title = #{title}, code = #{code}, attraction_id = #{attractionId}, board_content = #{boardContent},
-        createtime = now()
+        SET title = #{title}, code = #{code}, attraction_id = #{attractionId},
+            board_content = #{boardContent}, createtime = now()
         WHERE board_id = #{boardId}
     </update>
 

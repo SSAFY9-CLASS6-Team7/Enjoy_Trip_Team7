@@ -20,11 +20,10 @@ public class BoardController {
 
     @GetMapping
     public List<Board> getBoardList(@RequestParam Map<String, String> paramMap) throws SQLException {
-        log.info("HEART = {}" , paramMap.get("condition"));
         return boardService.getBoardList(paramMap);
     }
 
-    @GetMapping("/{boardId")
+    @GetMapping("/{boardId}")
     public Board getBoard(@PathVariable int boardId) throws SQLException{
         return boardService.getBoard(boardId);
     }
@@ -40,7 +39,8 @@ public class BoardController {
     }
 
     @PostMapping("/{boardId}")
-    public void updateBoard(@RequestBody Board board) throws SQLException {
+    public void updateBoard(@RequestBody Board board, @PathVariable int boardId) throws SQLException {
+        board.setBoardId(boardId);
         boardService.updateBoard(board);
     }
 
