@@ -4,7 +4,9 @@ import java.sql.SQLException;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+
 import com.ssafy.enjoytrip.plan.model.Plan;
+import com.ssafy.enjoytrip.plan.model.PlanAttraction;
 import com.ssafy.enjoytrip.plan.model.mapper.PlanMapper;
 
 @Service
@@ -22,7 +24,7 @@ public class PlanServiceImpl implements PlanService {
 	}
 
 	@Override
-	public Plan getPlan(String planId) throws SQLException {
+	public Plan getPlan(int planId) throws SQLException {
 		return planMapper.selectPlanById(planId);
 	}
 
@@ -37,8 +39,19 @@ public class PlanServiceImpl implements PlanService {
 	}
 
 	@Override
-	public void deletePlan(String planId) throws SQLException {
+	public void deletePlan(int planId) throws SQLException {
+		List<PlanAttraction> list = getPlan(planId).getPlanAttractions();
+		for(PlanAttraction pa : list) {
+			planMapper.deletePlanAttraction(pa);
+		}
 		planMapper.deletePlan(planId);
+	}
+
+	//-----------이하 Plan Attraction 관련 -----------
+	
+	@Override
+	public void createPlanAttraction(PlanAttraction planAttraction) throws SQLException {
+		planMapper.insertPlanAttraction(planAttraction);
 	}
 
 }

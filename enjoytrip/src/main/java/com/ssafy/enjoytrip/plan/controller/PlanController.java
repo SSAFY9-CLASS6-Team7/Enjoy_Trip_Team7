@@ -2,7 +2,9 @@ package com.ssafy.enjoytrip.plan.controller;
 
 import java.sql.SQLException;
 import java.util.List;
+
 import javax.servlet.http.HttpSession;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.enjoytrip.plan.model.Plan;
+import com.ssafy.enjoytrip.plan.model.PlanAttraction;
 import com.ssafy.enjoytrip.plan.model.service.PlanService;
 import com.ssafy.enjoytrip.user.model.User;
 
@@ -39,14 +42,9 @@ public class PlanController {
 	}
 
 	@GetMapping("{planId}")
-	public Plan getPlan(@PathVariable String planId) throws SQLException {
+	public Plan getPlan(@PathVariable int planId) throws SQLException {
 		return planService.getPlan(planId);
 	}
-	
-	// TODO : 플랜 등록 폼으로 이동 -> 페이지 이동만이니까 contoller구현 없어도 되나?(jsp가 없음)
-	/*
-	 * @GetMapping public String createPlan() { return "plan/create"; }
-	 */
 
 	@PostMapping
 	public List<Plan> createPlan(@RequestBody Plan plan, HttpSession session) throws SQLException {
@@ -55,21 +53,42 @@ public class PlanController {
 	}
 	
 	@PostMapping("{planId}")
-	public List<Plan> updatePlan(@RequestBody Plan plan, HttpSession session) throws SQLException {
+	public List<Plan> updatePlan(@RequestBody Plan plan, @PathVariable int planId, HttpSession session) throws SQLException {
+		plan.setPlanId(planId);
 		planService.updatePlan(plan);
 		return planService.getPlanList(getLoginUser(session).getUserId());
 	}
 	
 	@DeleteMapping("{planId}")
-	public List<Plan> deletePlan(@PathVariable String planId, HttpSession session) throws SQLException {
+	public List<Plan> deletePlan(@PathVariable int planId, HttpSession session) throws SQLException {
 		planService.deletePlan(planId);
 		return planService.getPlanList(getLoginUser(session).getUserId());
 	}
+	
+	//-----------이하 Plan Attraction 관련 -----------
+	
+	@PostMapping("{planId}/attraction")
+	public Plan createPlanAttraction(@RequestBody PlanAttraction planAttraction, @PathVariable int planId, HttpSession session) throws SQLException {
+		planAttraction.setPlanId(planId);
+		int sequence = getPlan(planId).getPlanAttractions().size();
+		planAttraction.setSequence(sequence+1);
+		planService.createPlanAttraction(planAttraction);
+		return planService.getPlan(planId);
+	}
+	
+	/*
+	@PostMapping("{planId}/attraction/{attractionId}")
+	public List<Plan> updatePlanAttraction(@RequestBody PlanAttraction planAttraction, @PathVariable int planId, @PathVariable int attractionId, HttpSession session) throws SQLException {
+		planAttraction.setAttractionId(attractionId);
+		planService.updatePlanAttraction(planAttraction);
+		return planService.getPlanList(getLoginUser(session).getUserId());
+	}
+	
+	@DeleteMapping("{planId}/attraction/{attractionId}")
+	public List<Plan> deletePlanAttraction(@PathVariable int planId, @PathVariable int attractionId, @RequestBody PlanAttraction planAttraction, HttpSession session) throws SQLException {
+		planAttraction.setPlanId(planId);
+		planAttraction.setAttractionId(attractionId);
+		planService.deletePlanAttraction(planAttraction);
+		return planService.getPlanList(getLoginUser(session).getUserId());
+	}*/
 }
-/*
- * List<Plan> getPlanList() throws SQLException;
- * Plan getPlan(String planId) throws SQLException;
- * void createPlan(Plan plan) throws SQLException;
- * void updatePlan(Plan plan) throws SQLException;
- * void deletePlan(String planId) throws SQLException;
- */

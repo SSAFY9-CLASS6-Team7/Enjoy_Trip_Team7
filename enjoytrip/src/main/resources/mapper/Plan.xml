@@ -2,8 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper
-	namespace="com.ssafy.enjoytrip.plan.model.mapper.PlanMapper">
+<mapper namespace="com.ssafy.enjoytrip.plan.model.mapper.PlanMapper">
 
 	<resultMap id="planResultMap" type="plan">
 		<result column="plan_id" property="planId" />
@@ -11,6 +10,13 @@
 		<result column="createtime" property="createTime" />
 		<result column="content" property="content" />
 		<result column="user_id" property="userId" />
+	</resultMap>
+	
+	<resultMap id="planAttractionResultMap" type="planAttraction">
+		<result column="plan_id" property="planId" />
+		<result column="attraction_id" property="attractionId" />
+		<result column="sequence" property="sequence" />
+		<result column="plan_date" property="planDate" />
 	</resultMap>
 
 	<resultMap id="PlanWithAttractionResultMap" type="plan" extends="planResultMap">
@@ -34,8 +40,8 @@
 		order by createtime
 	</select>
 
-	<!-- Plan selectPlanById(String planId) -->
-	<select id="selectPlanById" parameterType="string"
+	<!-- Plan selectPlanById(int planId) -->
+	<select id="selectPlanById" parameterType="int"
 		resultMap="PlanWithAttractionResultMap">
 		select *
 		from plan
@@ -56,10 +62,28 @@
 		where plan_id = #{planId}
 	</update>
 
-	<!-- void deletePlan(String planId) -->
-	<delete id="deletePlan" parameterType="String">
+	<!-- void deletePlan(int planId) -->
+	<delete id="deletePlan" parameterType="int">
 		delete from plan
 		where plan_id = #{planId}
 	</delete>
+	
+	<!--이하 Plan Attraction 관련  -->
+	
+	<!-- void insertPlanAttraction(PlanAttraction planAttraction) -->
+	<insert id="insertPlanAttraction" parameterType="planAttraction">
+		insert into plan_attraction(plan_id, attraction_id, sequence, plan_date)
+		values(#{planId},#{attractionId},#{sequence},#{planDate})
+	</insert>
+	
+	<!-- void updatePlanAttraction(PlanAttraction planAttraction) -->
+	<!-- void updatePlanAttractionsSequence(PlanAttraction planAttraction) -->
+	<!-- void deletePlanAttraction(PlanAttraction planAttraction) -->
+	<delete id="deletePlanAttraction" parameterType="planAttraction">
+		delete from plan_attraction
+		where plan_id = #{planId}
+		and attraction_id = #{attractionId}
+	</delete>
+ 
 
 </mapper>
