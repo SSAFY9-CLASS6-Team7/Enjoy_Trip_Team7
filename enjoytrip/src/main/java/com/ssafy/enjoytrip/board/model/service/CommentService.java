@@ -10,4 +10,8 @@ public interface CommentService {
     List<Comment> getCommentList(int boardId) throws SQLException;
 
     void createComment(Comment comment) throws SQLException;
+
+    void updateComment(Comment comment) throws SQLException;
+
+    void deleteComment(int commentId) throws SQLException;
 }

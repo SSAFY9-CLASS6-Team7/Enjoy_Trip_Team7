@@ -9,4 +9,8 @@ public interface CommentMapper {
     List<Comment> selectComment(int boardId) throws SQLException;
 
     void insertComment(Comment comment) throws SQLException;
+
+    void updateComment(Comment comment) throws SQLException;
+
+    void deleteComment(int commentId) throws SQLException;
 }

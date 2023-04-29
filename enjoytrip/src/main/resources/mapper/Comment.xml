@@ -27,6 +27,18 @@
         VALUES (now(), #{commentContent}, #{boardId}, #{userId}, #{anonymous})
     </insert>
 
+    <!-- 댓글 수정 -->
+    <update id="updateComment" parameterType="Comment">
+        UPDATE comment
+        SET comment_content = #{commentContent}, createtime = now()
+        WHERE comment_id = #{commentId}
+    </update>
 
+    <!-- 댓글 삭제 -->
+    <delete id="deleteComment" parameterType="int">
+        DELETE
+          FROM comment
+         WHERE comment_id = #{commentId}
+    </delete>
 
 </mapper>

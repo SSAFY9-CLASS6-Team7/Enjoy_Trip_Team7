@@ -23,4 +23,14 @@ public class CommentServiceImpl implements CommentService{
     public void createComment(Comment comment) throws SQLException {
         commentMapper.insertComment(comment);
     }
+
+    @Override
+    public void updateComment(Comment comment) throws SQLException {
+        commentMapper.updateComment(comment);
+    }
+
+    @Override
+    public void deleteComment(int commentId) throws SQLException {
+        commentMapper.deleteComment(commentId);
+    }
 }
