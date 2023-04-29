@@ -2,6 +2,7 @@ package com.ssafy.enjoytrip.plan.model.service;
 
 import java.sql.SQLException;
 import java.util.List;
+
 import com.ssafy.enjoytrip.plan.model.Plan;
 import com.ssafy.enjoytrip.plan.model.PlanAttraction;
 
@@ -13,5 +14,6 @@ public interface PlanService {
 	void deletePlan(int planId) throws SQLException;
 	
 	void createPlanAttraction(PlanAttraction planAttraction) throws SQLException;
+	void updatePlanAttraction(PlanAttraction planAttraction) throws SQLException;
 	void deletePlanAttraction(PlanAttraction planAttraction) throws SQLException;
 }

@@ -1,7 +1,6 @@
 package com.ssafy.enjoytrip.plan.model;
 
 import java.util.List;
-
 import lombok.Data;
 
 @Data
