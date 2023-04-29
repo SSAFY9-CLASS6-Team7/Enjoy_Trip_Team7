@@ -22,16 +22,19 @@
     <select id="selectBoard" resultMap="boardMap" parameterType="hashMap">
         SELECT *
           FROM board
-        <if test="code == '' and anonymous != ''">
-            WHERE anonymous = #{anonymous}
-        </if>
         <if test="code != ''">
          WHERE code = ${code}
         </if>
         <if test="code != '' and anonymous != ''">
-         AND anonymous = #{anonymous}
+           AND anonymous = #{anonymous}
         </if>
-        ORDER BY CASE WHEN ${condition} = '' THEN createtime ELSE ${condition} END DESC
+        <if test="code == '' and anonymous != ''">
+         WHERE anonymous = #{anonymous}
+        </if>
+        <if test="condition != ''">
+         ORDER BY ${condition} DESC
+        </if>
+
     </select>
 
     <!-- 게시글 상세 내용 조회 -->
