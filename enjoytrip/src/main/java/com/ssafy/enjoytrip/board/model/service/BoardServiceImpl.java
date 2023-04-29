@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -15,12 +16,27 @@ public class BoardServiceImpl implements BoardService{
     private final BoardMapper boardMapper;
 
     @Override
-    public List<Board> getBoardList() throws SQLException {
-        return boardMapper.selectBoard();
+    public List<Board> getBoardList(Map<String, String> paramMap) throws SQLException {
+        return boardMapper.selectBoard(paramMap);
+    }
+
+    @Override
+    public Board getBoard(int boardId) throws SQLException {
+        return boardMapper.selectBoardByBoardId(boardId);
     }
 
     @Override
     public void createBoard(Board board) throws SQLException {
         boardMapper.insertBoard(board);
+    }
+
+    @Override
+    public void updateBoard(Board board) throws SQLException {
+        boardMapper.updateBoard(board);
+    }
+
+    @Override
+    public void deleteBoard(int boardId) throws SQLException {
+        boardMapper.deleteBoard(boardId);
     }
 }

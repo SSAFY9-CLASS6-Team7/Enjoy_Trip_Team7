@@ -4,18 +4,69 @@
 
 <mapper namespace="com.ssafy.enjoytrip.board.model.mapper.BoardMapper">
 
+    <resultMap type="board" id="boardMap">
+        <result column="code" property="code"/>
+        <result column="title" property="title"/>
+        <result column="createtime" property="createTime"/>
+        <result column="board_content" property="boardContent"/>
+        <result column="heart" property="heart"/>
+        <result column="hits" property="hits"/>
+        <result column="anonymous" property="anonymous"/>
+        <result column="boardId" property="boar_id"/>
+        <result column="userId" property="user_id"/>
+        <result column="attractionId" property="attraction_id"/>
+    </resultMap>
+
     <!-- 게시글 전체 조회 -->
-    <select id="selectBoard" resultType="Board">
+    <!-- TODO 게시글 조건에 따른 정렬 -->
+    <select id="selectBoard" resultMap="boardMap" parameterType="hashMap">
         SELECT *
           FROM board
+        <if test="code == '' and anonymous != ''">
+            WHERE anonymous = #{anonymous}
+        </if>
+        <if test="code != ''">
+         WHERE code = ${code}
+        </if>
+        <if test="code != '' and anonymous != ''">
+         AND anonymous = #{anonymous}
+        </if>
+        ORDER BY CASE WHEN ${condition} = '' THEN createtime ELSE ${condition} END DESC
+    </select>
+
+    <!-- 게시글 상세 내용 조회 -->
+    <select id="selectBoardByBoardId" parameterType="int" resultMap="boardMap">
+        SELECT *
+          FROM board
+         WHERE board_id = #{boardId}
     </select>
 
     <!-- 게시글 등록 -->
-    <!-- 관광지 선택 여부에 따른 분기 필요 -->
-    <!-- 사진 등록 추가 필요 -->
-    <insert id="createBoard" parameterType="Board">
-        INSERT INTO board (code, title, createtime, board_content, user_id, annonymous)
-        VALUES (#{code}, #{title}, now(), #{boardContent}, #{userId}, #{anonymous})
+    <!-- TODO 사진 등록 -->
+    <insert id="insertBoard" parameterType="Board">
+        <if test="attractionId == 0">
+            INSERT INTO board (code, title, createtime, board_content, user_id, anonymous, heart)
+            VALUES (#{code}, #{title}, now(), #{boardContent}, #{userId}, #{anonymous}, #{heart})
+        </if>
+        <if test="attractionId != 0">
+            INSERT INTO board (code, title, createtime, board_content, user_id, anonymous, attraction_id, heart)
+            VALUES (#{code}, #{title}, now(), #{boardContent}, #{userId}, #{anonymous}, #{attractionId}, #{heart})
+        </if>
     </insert>
+
+    <!-- 게시글 수정 -->
+    <update id="updateBoard" parameterType="Board">
+        UPDATE board
+        SET title = #{title}, code = #{code}, attraction_id = #{attractionId}, board_content = #{boardContent},
+        createtime = now()
+        WHERE board_id = #{boardId}
+    </update>
+
+    <!-- 게시글 삭제 -->
+    <delete id="deleteBoard" parameterType="int">
+        DELETE
+          FROM board
+         WHERE board_id = #{boardId}
+    </delete>
 
 </mapper>
