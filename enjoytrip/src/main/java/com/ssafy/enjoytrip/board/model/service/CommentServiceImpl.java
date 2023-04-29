@@ -18,4 +18,9 @@ public class CommentServiceImpl implements CommentService{
     public List<Comment> getCommentList(int boardId) throws SQLException {
         return commentMapper.selectComment(boardId);
     }
+
+    @Override
+    public void createComment(Comment comment) throws SQLException {
+        commentMapper.insertComment(comment);
+    }
 }

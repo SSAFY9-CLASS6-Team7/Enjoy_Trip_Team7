@@ -5,21 +5,28 @@
 <mapper namespace="com.ssafy.enjoytrip.board.model.mapper.CommentMapper">
 
     <resultMap type="comment" id="commentMap">
-        <result column="commentiD" property="comment_id"/>
+        <result column="commentId" property="comment_id"/>
         <result column="boardId" property="board_id"/>
         <result column="createtime" property="createTime"/>
-        <result column="comment_content" property="boardContent"/>
+        <result column="comment_content" property="commentContent"/>
         <result column="heart" property="heart"/>
         <result column="anonymous" property="anonymous"/>
     </resultMap>
 
-    <select id="selectComment" resultMap="commentMap">
+    <!-- 댓글 전체 조회 -->
+    <select id="selectComment" parameterType="int" resultMap="commentMap">
         SELECT *
-        FROM comment
-        <trim prefix="ORDER BY" suffix="DESC">
-            <if test="condition == ''">`heart`</if>
-            <if test="condition == 'createTime'"> 'createtime' </if>
-        </trim>
+          FROM comment
+         WHERE board_id = #{boardId}
+         ORDER BY heart DESC, createtime DESC
     </select>
+
+    <!-- 댓글 등록 -->
+    <insert id="insertComment" parameterType="Comment">
+        INSERT INTO comment (createtime, comment_content, board_id, user_id, anonymous)
+        VALUES (now(), #{commentContent}, #{boardId}, #{userId}, #{anonymous})
+    </insert>
+
+
 
 </mapper>

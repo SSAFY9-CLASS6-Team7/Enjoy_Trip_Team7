@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface CommentMapper {
     List<Comment> selectComment(int boardId) throws SQLException;
+
+    void insertComment(Comment comment) throws SQLException;
 }

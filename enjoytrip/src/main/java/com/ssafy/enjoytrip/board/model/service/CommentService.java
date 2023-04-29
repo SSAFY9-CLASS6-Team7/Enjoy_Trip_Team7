@@ -8,4 +8,6 @@ import java.util.List;
 public interface CommentService {
 
     List<Comment> getCommentList(int boardId) throws SQLException;
+
+    void createComment(Comment comment) throws SQLException;
 }

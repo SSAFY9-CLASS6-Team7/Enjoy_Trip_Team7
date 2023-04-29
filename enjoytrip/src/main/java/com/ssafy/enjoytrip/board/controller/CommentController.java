@@ -3,10 +3,7 @@ package com.ssafy.enjoytrip.board.controller;
 import com.ssafy.enjoytrip.board.model.Comment;
 import com.ssafy.enjoytrip.board.model.service.CommentService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -21,5 +18,11 @@ public class CommentController {
     @GetMapping
     public List<Comment> getCommentList(@PathVariable int boardId) throws SQLException {
         return commentService.getCommentList(boardId);
+    }
+
+    @PostMapping
+    public void createComment(@PathVariable int boardId, @RequestBody Comment comment) throws SQLException{
+        comment.setBoardId(boardId);
+        commentService.createComment(comment);
     }
 }
