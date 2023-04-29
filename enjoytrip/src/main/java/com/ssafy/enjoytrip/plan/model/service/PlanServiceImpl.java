@@ -54,4 +54,9 @@ public class PlanServiceImpl implements PlanService {
 		planMapper.insertPlanAttraction(planAttraction);
 	}
 
+	@Override
+	public void deletePlanAttraction(PlanAttraction planAttraction) throws SQLException {
+		planMapper.deletePlanAttraction(planAttraction);
+	}
+
 }

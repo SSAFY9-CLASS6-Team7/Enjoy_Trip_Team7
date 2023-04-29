@@ -13,4 +13,5 @@ public interface PlanService {
 	void deletePlan(int planId) throws SQLException;
 	
 	void createPlanAttraction(PlanAttraction planAttraction) throws SQLException;
+	void deletePlanAttraction(PlanAttraction planAttraction) throws SQLException;
 }
