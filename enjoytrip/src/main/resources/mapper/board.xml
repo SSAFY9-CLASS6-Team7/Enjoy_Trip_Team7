@@ -22,19 +22,17 @@
     <select id="selectBoard" resultMap="boardMap" parameterType="hashMap">
         SELECT *
           FROM board
-        <if test="code != ''">
-         WHERE code = ${code}
-        </if>
-        <if test="code != '' and anonymous != ''">
-           AND anonymous = #{anonymous}
-        </if>
-        <if test="code == '' and anonymous != ''">
-         WHERE anonymous = #{anonymous}
-        </if>
-        <if test="condition != ''">
-         ORDER BY ${condition} DESC
-        </if>
-
+        <where>
+            <if test="code != ''">WHERE code = ${code}</if>
+            <if test="anonymous != ''">WHERE anonymous = #{anonymous}</if>
+        </where>
+        ORDER BY
+        <choose>
+            <when test="condition == 'heart'">`heart`</when>
+            <when test="condition == 'hits'">`hits` </when>
+            <otherwise> 'createtime' </otherwise>
+        </choose>
+        DESC
     </select>
 
     <!-- 게시글 상세 내용 조회 -->
