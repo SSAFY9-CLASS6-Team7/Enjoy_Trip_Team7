@@ -18,21 +18,21 @@
     </resultMap>
 
     <!-- 게시글 전체 조회 -->
-    <!-- TODO 게시글 조건에 따른 정렬 -->
     <select id="selectBoard" resultMap="boardMap" parameterType="hashMap">
         SELECT *
           FROM board
         <where>
-            <if test="code != ''">WHERE code = ${code}</if>
-            <if test="anonymous != ''">WHERE anonymous = #{anonymous}</if>
+            <choose>
+                <when test="code != ''">AND code = ${code}</when>
+                <when test="anonymous != ''">AND anonymous = #{anonymous}</when>
+            </choose>
         </where>
-        ORDER BY
-        <choose>
-            <when test="condition == 'heart'">`heart`</when>
-            <when test="condition == 'hits'">`hits` </when>
-            <otherwise> 'createtime' </otherwise>
-        </choose>
-        DESC
+
+        <trim prefix="ORDER BY" suffix="DESC">
+            <if test="condition == 'heart'">`heart`</if>
+            <if test="condition == 'hits'">`hits` </if>
+            <if test="condition == ''"> 'createtime' </if>
+        </trim>
     </select>
 
     <!-- 게시글 상세 내용 조회 -->
