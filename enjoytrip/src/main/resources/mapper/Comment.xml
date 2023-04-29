@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.enjoytrip.board.model.mapper.CommentMapper">
+
+    <resultMap type="comment" id="commentMap">
+        <result column="commentiD" property="comment_id"/>
+        <result column="boardId" property="board_id"/>
+        <result column="createtime" property="createTime"/>
+        <result column="comment_content" property="boardContent"/>
+        <result column="heart" property="heart"/>
+        <result column="anonymous" property="anonymous"/>
+    </resultMap>
+
+    <select id="selectComment" resultMap="commentMap">
+        SELECT *
+        FROM comment
+        <trim prefix="ORDER BY" suffix="DESC">
+            <if test="condition == ''">`heart`</if>
+            <if test="condition == 'createTime'"> 'createtime' </if>
+        </trim>
+    </select>
+
+</mapper>
