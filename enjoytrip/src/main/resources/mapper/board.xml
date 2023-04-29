@@ -12,7 +12,7 @@
         <result column="heart" property="heart"/>
         <result column="hits" property="hits"/>
         <result column="anonymous" property="anonymous"/>
-        <result column="boardId" property="boar_id"/>
+        <result column="boardId" property="board_id"/>
         <result column="userId" property="user_id"/>
         <result column="attractionId" property="attraction_id"/>
     </resultMap>
