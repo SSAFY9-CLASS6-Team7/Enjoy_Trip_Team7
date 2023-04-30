@@ -12,6 +12,5 @@ public class Attraction {
     private String address;
     private String overView;
     private int sido;
-    private int gugun;
     private String thumbnail;
 }
