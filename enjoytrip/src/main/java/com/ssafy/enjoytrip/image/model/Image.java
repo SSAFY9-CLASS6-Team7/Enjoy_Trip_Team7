@@ -6,7 +6,7 @@ import lombok.Data;
 public class Image {
 	private int imageId;
 	private int type;
-	private int data_id;
+	private int dataId;
 	private char thumbnail;
 	private String saveFolder;
 	private String originalFile;
