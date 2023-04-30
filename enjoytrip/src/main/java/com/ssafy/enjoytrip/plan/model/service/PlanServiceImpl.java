@@ -2,10 +2,10 @@ package com.ssafy.enjoytrip.plan.model.service;
 
 import java.sql.SQLException;
 import java.util.List;
-
 import org.springframework.stereotype.Service;
 
 import com.ssafy.enjoytrip.plan.model.Plan;
+import com.ssafy.enjoytrip.plan.model.PlanAttraction;
 import com.ssafy.enjoytrip.plan.model.mapper.PlanMapper;
 
 @Service
@@ -19,12 +19,11 @@ public class PlanServiceImpl implements PlanService {
 
 	@Override
 	public List<Plan> getPlanList(String userId) throws SQLException {
-		//수정필요??
 		return planMapper.selectPlanList(userId);
 	}
 
 	@Override
-	public Plan getPlan(String planId) throws SQLException {
+	public Plan getPlan(int planId) throws SQLException {
 		return planMapper.selectPlanById(planId);
 	}
 
@@ -39,8 +38,54 @@ public class PlanServiceImpl implements PlanService {
 	}
 
 	@Override
-	public void deletePlan(String planId) throws SQLException {
+	public void deletePlan(int planId) throws SQLException {
+		List<PlanAttraction> list = getPlan(planId).getPlanAttractions();
+		for(PlanAttraction pa : list) {
+			planMapper.deletePlanAttraction(pa);
+		}
 		planMapper.deletePlan(planId);
 	}
 
+	//-----------이하 Plan Attraction 관련 -----------
+	
+	@Override
+	public void createPlanAttraction(PlanAttraction planAttraction) throws SQLException {
+		planMapper.insertPlanAttraction(planAttraction);
+	}
+	
+	@Override
+	public void updatePlanAttraction(PlanAttraction planAttraction) throws SQLException {
+		int beforeSequence = planMapper.selectPlanAttraction(planAttraction).getSequence();
+		int afterSequence = planAttraction.getSequence();
+		planMapper.updatePlanAttraction(planAttraction);
+		
+		if(beforeSequence != afterSequence) {
+			int planId = planAttraction.getPlanId();
+			List<PlanAttraction> list = getPlan(planId).getPlanAttractions();
+			for(int i=afterSequence; i<list.size(); i++) {
+				PlanAttraction tempAttraction = list.get(i);
+				if(planAttraction.equals(tempAttraction)) continue;
+				else if(tempAttraction.getSequence() == afterSequence) {
+					tempAttraction.setSequence(i+1);
+				} else {
+					tempAttraction.setSequence(i);
+				}
+				planMapper.updatePlanAttraction(tempAttraction);
+			}
+		}
+	}
+
+	@Override
+	public void deletePlanAttraction(PlanAttraction planAttraction) throws SQLException {
+		int sequence = planAttraction.getSequence();
+		int planId = planAttraction.getPlanId();
+		List<PlanAttraction> list = getPlan(planId).getPlanAttractions();
+		for(int i=sequence+1; i<list.size(); i++) {
+			PlanAttraction tempAttraction = list.get(i);
+			tempAttraction.setSequence(i-1);
+			planMapper.updatePlanAttraction(tempAttraction);
+		}
+		
+		planMapper.deletePlanAttraction(planAttraction);
+	}
 }
