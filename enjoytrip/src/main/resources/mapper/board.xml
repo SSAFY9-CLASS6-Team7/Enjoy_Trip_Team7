@@ -12,9 +12,9 @@
         <result column="heart" property="heart"/>
         <result column="hits" property="hits"/>
         <result column="anonymous" property="anonymous"/>
-        <result column="boardId" property="board_id"/>
-        <result column="userId" property="user_id"/>
-        <result column="attractionId" property="attraction_id"/>
+        <result column="board_id" property="boardId"/>
+        <result column="user_id" property="userId"/>
+        <result column="attraction_id" property="attractionId"/>
     </resultMap>
 
     <!-- 게시글 전체 조회 -->
@@ -22,16 +22,16 @@
         SELECT *
           FROM board
         <where>
-            <choose>
-                <when test="code != ''">AND code = ${code}</when>
-                <when test="anonymous != ''">AND anonymous = #{anonymous}</when>
-            </choose>
+            <if test="code != ''">AND code = ${code}</if>
+            <if test="anonymous != ''">AND anonymous = #{anonymous}</if>
         </where>
 
         <trim prefix="ORDER BY" suffix="DESC">
-            <if test="condition == 'heart'">`heart`</if>
-            <if test="condition == 'hits'">`hits` </if>
-            <if test="condition == ''"> 'createtime' </if>
+          <choose>
+            <when test="condition == 'heart'">`heart`</when>
+            <when test="condition == 'hits'">`hits` </when>
+            <when test="condition == ''"> 'createtime' </when>
+          </choose>
         </trim>
     </select>
 
