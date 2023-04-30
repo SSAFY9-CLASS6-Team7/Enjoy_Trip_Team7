@@ -4,10 +4,7 @@ import com.ssafy.enjoytrip.attraction.model.Attraction;
 import com.ssafy.enjoytrip.attraction.model.service.AttractionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -23,8 +20,13 @@ public class AttractionController {
 
     @GetMapping
     public List<Attraction> getAttractionList(@RequestParam Map<String, Object> paramMap) throws SQLException {
-        log.info("PARAMETER : {}", paramMap.toString());
         return attractionService.getAttractionList(paramMap);
+    }
+
+    @GetMapping("/{attractionId}")
+    public Attraction getAttraction(@PathVariable int attractionId) throws SQLException {
+        System.out.println(attractionId);
+        return attractionService.getAttraction(attractionId);
     }
 
 }

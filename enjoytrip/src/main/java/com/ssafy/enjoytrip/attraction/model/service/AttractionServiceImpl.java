@@ -19,4 +19,9 @@ public class AttractionServiceImpl implements AttractionService{
     public List<Attraction> getAttractionList(Map<String, Object> paramMap) throws SQLException {
         return attractionMapper.selectAttraction(paramMap);
     }
+
+    @Override
+    public Attraction getAttraction(int attractionId) throws SQLException {
+        return attractionMapper.selectAttractionByAttractionId(attractionId);
+    }
 }

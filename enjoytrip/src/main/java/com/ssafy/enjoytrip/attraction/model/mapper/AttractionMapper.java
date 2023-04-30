@@ -8,4 +8,6 @@ import java.util.Map;
 
 public interface AttractionMapper {
     List<Attraction> selectAttraction(Map<String, Object> paramMap) throws SQLException;
+
+    Attraction selectAttractionByAttractionId(int attractionId) throws SQLException;
 }

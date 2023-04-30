@@ -28,6 +28,15 @@
             <if test="keyword != ''">AND i.title LIKE CONCAT('%', #{keyword}, '%')</if>
         </where>
     </select>
+    
+    <!-- 관광지 상세 조회 -->
+    <select id="selectAttractionByAttractionId" parameterType="_int" resultMap="attractionMap">
+        SELECT des.attraction_id, des.overview, i.title, i.content_type_id,
+               i.addr1, i.first_image, i.sido_code, i.latitude, i.longitude
+          FROM attraction_description des
+          JOIN attraction_info i USING (attraction_id)
+         WHERE i.attraction_id = ${attractionId}
+    </select>
 
 
 </mapper>
