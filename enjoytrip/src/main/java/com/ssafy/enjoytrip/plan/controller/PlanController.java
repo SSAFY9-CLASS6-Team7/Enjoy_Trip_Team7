@@ -46,6 +46,7 @@ public class PlanController {
 
 	@PostMapping
 	public List<Plan> createPlan(@RequestBody Plan plan, HttpSession session) throws SQLException {
+		plan.setUserId(getLoginUser(session).getUserId());
 		planService.createPlan(plan);
 		return planService.getPlanList(getLoginUser(session).getUserId());
 	}
