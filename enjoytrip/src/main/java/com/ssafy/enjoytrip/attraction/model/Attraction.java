@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class Attraction {
-    private String attractionId;
+    private int attractionId;
     private String title;
     private int code;
     private double lat;
@@ -12,6 +12,5 @@ public class Attraction {
     private String address;
     private String overView;
     private int sido;
-    private int gugun;
     private String thumbnail;
 }

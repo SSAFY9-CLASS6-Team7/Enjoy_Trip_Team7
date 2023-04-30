@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.enjoytrip.attraction.model.mapper.AttractionMapper">
+
+    <resultMap type="attraction" id="attractionMap">
+        <result column="attraction_id" property="attractionId"/>
+        <result column="title" property="title"/>
+        <result column="content_type_id" property="code"/>
+        <result column="latitude" property="lat"/>
+        <result column="longitude" property="lng"/>
+        <result column="addr1" property="address"/>
+        <result column="overview" property="overView"/>
+        <result column="sido_code" property="sido"/>
+        <result column="first_image" property="thumbnail"/>
+    </resultMap>
+
+    <!-- 관광지 리스트 조회 -->
+    <select id="selectAttraction" resultMap="attractionMap" parameterType="hashMap">
+        SELECT des.attraction_id, des.overview, i.title, i.content_type_id,
+               i.addr1, i.first_image, i.sido_code, i.latitude, i.longitude
+          FROM attraction_description des
+          JOIN attraction_info i USING (attraction_id)
+        <where>
+            <if test="code != ''">AND i.content_type_id = ${code}</if>
+            <if test="sido != ''">AND i.sido_code = ${sido}</if>
+            <if test="keyword != ''">AND i.title LIKE CONCAT('%', #{keyword}, '%')</if>
+        </where>
+    </select>
+    
+    <!-- 관광지 상세 조회 -->
+    <select id="selectAttractionByAttractionId" parameterType="_int" resultMap="attractionMap">
+        SELECT des.attraction_id, des.overview, i.title, i.content_type_id,
+               i.addr1, i.first_image, i.sido_code, i.latitude, i.longitude
+          FROM attraction_description des
+          JOIN attraction_info i USING (attraction_id)
+         WHERE i.attraction_id = ${attractionId}
+    </select>
+
+
+</mapper>
