@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.ssafy.enjoytrip.history.model.mapper.HistoryMapper">
+	
+	<resultMap type="history" id="historyResultMap">
+		<result column="history_id" property="historyId"/>
+		<result column="title" property="title"/>
+		<result column="createtime" property="createTime"/>
+		<result column="content" property="content"/>
+		<result column="user_id" property="userId"/>
+		<result column="start_day" property="startDay"/>
+		<result column="end_day" property="endDay"/>
+	</resultMap>
+	
+	<!-- List<History> selectHistoryList(String userId) -->
+	<select id="selectHistoryList" parameterType="String" resultMap="historyResultMap">
+		select *
+		from history
+		where user_id = #{userId}
+		order by createtime
+	</select>
+	
+	<!-- History selectHistoryById(int historyId)-->
+	<select id="selectHistoryById" parameterType="int" resultMap="historyResultMap">
+		select *
+		from history
+		where history_id = #{historyId}
+	</select>
+	
+	<!-- void insertHistory(History history) -->
+	<insert id="insertHistory" parameterType="history">
+		insert into history (title, createtime, content, user_id, start_day, end_day)
+		values(#{title},CURRENT_TIMESTAMP,#{content},#{userId}, #{startDay}, #{endDay})
+	</insert>
+	
+	<!-- void updateHistory(History history) -->
+	<update id="updateHistory" parameterType="history">
+		update history
+		set title=#{title}, content=#{content}, start_day=#{startDay}, end_day=#{endDay}
+		where history_id = #{historyId}
+	</update>
+	
+	<!-- void deleteHistory(int historyId) -->
+	<delete id="deleteHistory" parameterType="int">
+		delete from history
+		where history_id = #{historyId}
+	</delete>
+	
+</mapper>
