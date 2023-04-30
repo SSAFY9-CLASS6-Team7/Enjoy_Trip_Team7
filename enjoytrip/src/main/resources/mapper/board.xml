@@ -22,16 +22,16 @@
         SELECT *
           FROM board
         <where>
-            <choose>
-                <when test="code != ''">AND code = ${code}</when>
-                <when test="anonymous != ''">AND anonymous = #{anonymous}</when>
-            </choose>
+            <if test="code != ''">AND code = ${code}</if>
+            <if test="anonymous != ''">AND anonymous = #{anonymous}</if>
         </where>
 
         <trim prefix="ORDER BY" suffix="DESC">
-            <if test="condition == 'heart'">`heart`</if>
-            <if test="condition == 'hits'">`hits` </if>
-            <if test="condition == ''"> 'createtime' </if>
+          <choose>
+            <when test="condition == 'heart'">`heart`</when>
+            <when test="condition == 'hits'">`hits` </when>
+            <when test="condition == ''"> 'createtime' </when>
+          </choose>
         </trim>
     </select>
 
