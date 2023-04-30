@@ -12,9 +12,9 @@
         <result column="heart" property="heart"/>
         <result column="hits" property="hits"/>
         <result column="anonymous" property="anonymous"/>
-        <result column="boardId" property="board_id"/>
-        <result column="userId" property="user_id"/>
-        <result column="attractionId" property="attraction_id"/>
+        <result column="board_id" property="boardId"/>
+        <result column="user_id" property="userId"/>
+        <result column="attraction_id" property="attractionId"/>
     </resultMap>
 
     <!-- 게시글 전체 조회 -->
