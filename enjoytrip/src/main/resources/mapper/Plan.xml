@@ -98,5 +98,10 @@
 		where plan_id = #{planId}
 		and attraction_id = #{attractionId}
 	</delete>
+	
+	<delete id="cascadeDeletePlanAttraction" parameterType="int">
+		delete from plan_attraction
+		where plan_id = #{planId}
+	</delete>
 
 </mapper>
