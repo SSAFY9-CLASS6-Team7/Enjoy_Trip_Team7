@@ -12,7 +12,7 @@ import java.io.IOException;
 @Slf4j
 public class LoginFilter implements Filter {
     private static final String[] whiteList = {
-            "/attraction*", "/user/login"
+            "/attraction*", "/user/login", "/user"
     };
 
     @Override
