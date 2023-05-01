@@ -38,7 +38,7 @@ public class BoardController {
         boardService.createBoard(board);
     }
 
-    @PostMapping("/{boardId}")
+    @PutMapping("/{boardId}")
     public void updateBoard(@RequestBody Board board, @PathVariable int boardId) throws SQLException {
         board.setBoardId(boardId);
         boardService.updateBoard(board);

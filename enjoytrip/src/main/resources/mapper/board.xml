@@ -58,8 +58,13 @@
     <!-- 게시글 수정 -->
     <update id="updateBoard" parameterType="Board">
         UPDATE board
-        SET title = #{title}, code = #{code}, attraction_id = #{attractionId},
-            board_content = #{boardContent}, createtime = now()
+        <set>
+            <if test="title != null">title = #{title},</if>
+            <if test="code != 0">code = ${code},</if>
+            <if test="attractionId != 0">attraction_id = ${attractionId},</if>
+            <if test="boardContent != null">board_content = #{boardContent},</if>
+            <if test="1 == 1">createtime = now()</if>
+        </set>
         WHERE board_id = #{boardId}
     </update>
 
