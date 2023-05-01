@@ -2,8 +2,10 @@ package com.ssafy.enjoytrip.board.model.service;
 
 import com.ssafy.enjoytrip.board.model.Board;
 import com.ssafy.enjoytrip.board.model.mapper.BoardMapper;
+import com.ssafy.enjoytrip.board.model.mapper.CommentMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -14,6 +16,7 @@ import java.util.Map;
 public class BoardServiceImpl implements BoardService{
 
     private final BoardMapper boardMapper;
+    private final CommentMapper commentMapper;
 
     @Override
     public List<Board> getBoardList(Map<String, String> paramMap) throws SQLException {
@@ -35,8 +38,10 @@ public class BoardServiceImpl implements BoardService{
         boardMapper.updateBoard(board);
     }
 
+    @Transactional
     @Override
     public void deleteBoard(int boardId) throws SQLException {
         boardMapper.deleteBoard(boardId);
+        commentMapper.cascadeDeleteComment(boardId);
     }
 }

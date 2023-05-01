@@ -13,4 +13,6 @@ public interface CommentMapper {
     void updateComment(Comment comment) throws SQLException;
 
     void deleteComment(int commentId) throws SQLException;
+
+    void cascadeDeleteComment(int boardId) throws SQLException;
 }
