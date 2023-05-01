@@ -8,29 +8,13 @@
 		<result column="image_id" property="imageId" />
 		<result column="type" property="type" />
 		<result column="data_id" property="dataId" />
-		<result column="thumbnail" property="thumbnail" />
-		<result column="save_folder" property="saveFolder" />
-		<result column="original_file" property="originalFile" />
-		<result column="save_file" property="saveFile" />
+		<result column="image_path" property="imagePath" />
 	</resultMap>
 
-	<insert id="registerFile" parameterType="object">
-		insert into file_info (type, data_id, thumbnail, save_folder, original_file, save_file)
-		values
-		<foreach collection="images" item="image" separator=" , ">
-			(#{image.type}, #{image.dataId}, #{image.thumbnail}, #{image.saveFolder}, #{image.originalFile}, #{image.saveFile})
-		</foreach>
+	<!-- 이미지 등록 -->
+	<insert id="insertImage" parameterType="Image">
+		INSERT INTO image (type, image_path, data_id)
+		VALUES (${type}, #{imagePath}, ${dataId})
 	</insert>
-	
-	<select id="fileInfoList" resultMap="file">
-		select save_folder, original_file, save_file
-		from file_info
-		where article_no = #{articleNo}
-	</select>
-	
-	<delete id="deleteFile" parameterType="int">
-		delete from file_info
-		where article_no = #{articleNo}
-	</delete>
 
 </mapper>

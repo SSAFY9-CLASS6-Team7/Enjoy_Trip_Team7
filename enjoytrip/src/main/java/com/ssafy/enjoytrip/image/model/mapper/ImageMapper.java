@@ -1,14 +1,12 @@
 package com.ssafy.enjoytrip.image.model.mapper;
 
-import java.util.List;
-
+import com.ssafy.enjoytrip.image.model.Image;
 import org.apache.ibatis.annotations.Mapper;
 
-import com.ssafy.enjoytrip.image.model.Image;
+import java.sql.SQLException;
 
 @Mapper
 public interface ImageMapper {
-	void registerFile(Object dto) throws Exception;
-	void deleteFile(Object dto) throws Exception;
-	List<Image> fileInfoList(Object dto) throws Exception;
+	void insertImage(Image image) throws SQLException;
+
 }

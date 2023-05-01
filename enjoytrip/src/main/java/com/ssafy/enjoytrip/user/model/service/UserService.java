@@ -1,7 +1,9 @@
 package com.ssafy.enjoytrip.user.model.service;
 
 import com.ssafy.enjoytrip.user.model.User;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.sql.SQLException;
 
 public interface UserService {
@@ -11,5 +13,5 @@ public interface UserService {
 
     void deleteUser(String userId) throws SQLException;
 
-    void updateUser(User user) throws SQLException;
+    void updateUser(User user, MultipartFile file) throws SQLException, IOException;
 }
