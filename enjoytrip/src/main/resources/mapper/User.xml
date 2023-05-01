@@ -28,8 +28,15 @@
     <!-- TODO 프로필 사진 -->
     <update id="updateUser" parameterType="User">
         UPDATE user
-           SET password = #{password}, name = #{name}, nickname = #{nickname},
-               phone = #{phone}, email = #{email}, gender = #{gender}, birth = #{birth}
+        <set>
+            <if test="password != null">password = #{password},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="nickname != null">nickname = #{nickname},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="gender != null">gender = #{gender},</if>
+            <if test="birth != null">birth = #{birth}</if>
+        </set>
          WHERE user_id = #{userId}
     </update>
 
