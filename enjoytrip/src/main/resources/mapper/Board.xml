@@ -44,7 +44,7 @@
 
     <!-- 게시글 등록 -->
     <!-- TODO 사진 등록 -->
-    <insert id="insertBoard" parameterType="Board">
+    <insert id="insertBoard" parameterType="Board" useGeneratedKeys="true" keyProperty="boardId">
         <if test="attractionId == 0">
             INSERT INTO board (code, title, createtime, board_content, user_id, anonymous, heart)
             VALUES (#{code}, #{title}, now(), #{boardContent}, #{userId}, #{anonymous}, #{heart})
