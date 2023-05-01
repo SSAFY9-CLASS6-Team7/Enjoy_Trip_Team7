@@ -2,6 +2,7 @@ package com.ssafy.enjoytrip.board.controller;
 
 import com.ssafy.enjoytrip.board.model.Board;
 import com.ssafy.enjoytrip.board.model.service.BoardService;
+import com.ssafy.enjoytrip.image.model.Image;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +28,7 @@ public class BoardController {
     }
 
     @GetMapping("/{boardId}")
-    public Board getBoard(@PathVariable int boardId) throws SQLException{
+    public Map<String, Object> getBoard(@PathVariable int boardId) throws SQLException{
         return boardService.getBoard(boardId);
     }
 
@@ -38,9 +39,9 @@ public class BoardController {
     }*/
 
     @PutMapping("/{boardId}")
-    public void updateBoard(@RequestBody Board board, @PathVariable int boardId) throws SQLException {
+    public void updateBoard(@RequestPart Board board, @PathVariable int boardId, @RequestPart(required = false) List<MultipartFile> files) throws SQLException, IOException {
         board.setBoardId(boardId);
-        boardService.updateBoard(board);
+        boardService.updateBoard(board, files);
     }
 
     @DeleteMapping("/{boardId}")
@@ -50,7 +51,7 @@ public class BoardController {
 
     // File 업로드 포함
     @PostMapping
-    public void createBoard(@RequestPart Board board, @RequestPart List<MultipartFile> files) throws SQLException, IOException {
+    public void createBoard(@RequestPart Board board, @RequestPart(required = false) List<MultipartFile> files) throws SQLException, IOException {
         boardService.createBoard(board, files);
     }
 }
