@@ -35,7 +35,8 @@
             <if test="phone != null">phone = #{phone},</if>
             <if test="email != null">email = #{email},</if>
             <if test="gender != null">gender = #{gender},</if>
-            <if test="birth != null">birth = #{birth}</if>
+            <if test="birth != null">birth = #{birth},</if>
+            <if test="profilePicPath != null">profile_pic_path = #{profilePicPath}</if>
         </set>
          WHERE user_id = #{userId}
     </update>
