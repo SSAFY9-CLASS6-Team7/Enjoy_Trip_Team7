@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,11 +41,6 @@ public class BoardServiceImpl implements BoardService{
         return boardMapper.selectBoardByBoardId(boardId);
     }
 
-    /*@Override
-    public void createBoard(Board board) throws SQLException {
-        boardMapper.insertBoard(board);
-    }*/
-
     @Override
     public void updateBoard(Board board) throws SQLException {
         boardMapper.updateBoard(board);
@@ -55,6 +51,10 @@ public class BoardServiceImpl implements BoardService{
     public void deleteBoard(int boardId) throws SQLException {
         boardMapper.deleteBoard(boardId);
         commentMapper.cascadeDeleteComment(boardId);
+        Map<String, Integer> paramMap = new HashMap<>();
+        paramMap.put("type", TYPE);
+        paramMap.put("dataId", boardId);
+        imageMapper.cascadeDeleteImage(paramMap);
     }
 
     // 사진 포함
