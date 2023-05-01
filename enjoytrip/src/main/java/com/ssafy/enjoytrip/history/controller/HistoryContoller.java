@@ -3,6 +3,7 @@ package com.ssafy.enjoytrip.history.controller;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -43,21 +45,21 @@ public class HistoryContoller {
 	}
 
 	@GetMapping("{historyId}")
-	public History getHistory(@PathVariable int historyId) throws SQLException {
+	public Map<String, Object> getHistory(@PathVariable int historyId) throws SQLException {
 		return historyService.getHistory(historyId);
 	}
 
 	@PostMapping
-	public List<History> createHistory(@RequestPart History history, @RequestPart List<MultipartFile> files, HttpSession session) throws SQLException, IOException {
+	public List<History> createHistory(@RequestPart History history, @RequestPart(required = false) List<MultipartFile> files, HttpSession session) throws SQLException, IOException {
 		history.setUserId(getLoginUser(session).getUserId());
 		historyService.createHistory(history, files);
 		return historyService.getHistoryList(getLoginUser(session).getUserId());
 	}
 	
-	@PostMapping("{historyId}")
-	public List<History> updatehistory(@RequestBody History history, @PathVariable int historyId, HttpSession session) throws SQLException {
+	@PutMapping("{historyId}")
+	public List<History> updatehistory(@RequestPart History history, @PathVariable int historyId, HttpSession session, @RequestPart(required = false) List<MultipartFile> files) throws SQLException, IOException {
 		history.setHistoryId(historyId);
-		historyService.updateHistory(history);
+		historyService.updateHistory(history, files);
 		return historyService.getHistoryList(getLoginUser(session).getUserId());
 	}
 	
