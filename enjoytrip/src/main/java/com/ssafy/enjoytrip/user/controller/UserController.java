@@ -41,7 +41,7 @@ public class UserController {
         userService.deleteUser(userId);
     }
 
-    @PostMapping("/{userId}")
+    @PutMapping("/{userId}")
     public void updateUser(@PathVariable String userId, @RequestBody User user) throws SQLException {
         user.setUserId(userId);
         userService.updateUser(user);
