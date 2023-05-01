@@ -17,7 +17,7 @@ import static com.ssafy.enjoytrip.image.controller.ImageUploader.saveFile;
 public class UserServiceImpl implements UserService{
 
     @Value("${profile.dir}")
-    private final String fileDir;
+    private String fileDir;
 
     private final UserMapper userMapper;
 
