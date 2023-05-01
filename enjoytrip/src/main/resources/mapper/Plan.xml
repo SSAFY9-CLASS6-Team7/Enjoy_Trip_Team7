@@ -13,6 +13,7 @@
 	</resultMap>
 	
 	<resultMap id="planAttractionResultMap" type="planAttraction">
+		<result column="plan_attraction_id" property="planAttractionId" />
 		<result column="plan_id" property="planId" />
 		<result column="attraction_id" property="attractionId" />
 		<result column="sequence" property="sequence" />
@@ -74,8 +75,7 @@
 		resultMap="planAttractionResultMap">
 		select *
 		from plan_attraction
-		where plan_id = #{planId}
-		and attraction_id = #{attractionId}
+		where plan_attraction_id = #{planAttractionId}
 	</select>
 	
 	<!-- void insertPlanAttraction(PlanAttraction planAttraction) -->
@@ -87,16 +87,15 @@
 	<!-- void updatePlanAttraction(PlanAttraction planAttraction) -->
 	<update id="updatePlanAttraction" parameterType="planAttraction">
 		update plan_attraction
-		set sequence=#{sequence}, plan_date=#{planDate}
-		where plan_id = #{planId}
-		and attraction_id = #{attractionId}
+		set attraction_id=#{attractionId}, sequence=#{sequence}, plan_date=#{planDate}
+		where plan_attraction_id = #{planAttractionId}
+		and plan_id = #{planId}
 	</update>
 	
 	<!-- void deletePlanAttraction(PlanAttraction planAttraction) -->
 	<delete id="deletePlanAttraction" parameterType="planAttraction">
 		delete from plan_attraction
-		where plan_id = #{planId}
-		and attraction_id = #{attractionId}
+		where plan_attraction_id = #{planAttractionId}
 	</delete>
 	
 	<delete id="cascadeDeletePlanAttraction" parameterType="int">
