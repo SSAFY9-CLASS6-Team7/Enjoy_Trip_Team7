@@ -13,8 +13,6 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import static com.ssafy.enjoytrip.image.controller.ImageUploader.saveFile;
-
 @Slf4j
 @RestController
 @RequestMapping("/user")
