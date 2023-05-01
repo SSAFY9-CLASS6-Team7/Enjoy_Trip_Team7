@@ -39,7 +39,6 @@ public class PlanServiceImpl implements PlanService {
 
 	@Override
 	public void deletePlan(int planId) throws SQLException {
-		List<PlanAttraction> list = getPlan(planId).getPlanAttractions();
 		planMapper.cascadeDeletePlanAttraction(planId);
 		planMapper.deletePlan(planId);
 	}
