@@ -42,6 +42,12 @@
          WHERE board_id = #{boardId}
     </select>
 
+    <update id="updateHits" parameterType="int">
+        UPDATE board
+           SET hits = hits + 1
+         WHERE board_id = #{boardId}
+    </update>
+
     <!-- 게시글 등록 -->
     <!-- TODO 사진 등록 -->
     <insert id="insertBoard" parameterType="Board" useGeneratedKeys="true" keyProperty="boardId">

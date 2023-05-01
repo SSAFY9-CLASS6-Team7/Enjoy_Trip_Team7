@@ -39,16 +39,21 @@ public class BoardServiceImpl implements BoardService{
         return boardMapper.selectBoard(paramMap);
     }
 
+    @Transactional
     @Override
     public Map<String, Object> getBoard(int boardId) throws SQLException {
         Map<String, Integer> paramMap = new HashMap<>();
         paramMap.put("type", TYPE);
         paramMap.put("dataId", boardId);
 
+        // 조회수 증가
+        boardMapper.updateHits(boardId);
+
         Map<String, Object> result = new HashMap<>();
 
         result.put("board", boardMapper.selectBoardByBoardId(boardId));
         result.put("images", imageMapper.selectImage(paramMap));
+
         return result;
     }
 
