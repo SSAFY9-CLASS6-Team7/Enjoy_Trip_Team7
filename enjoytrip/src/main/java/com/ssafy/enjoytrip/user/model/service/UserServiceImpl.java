@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import static com.ssafy.enjoytrip.image.controller.ImageUploader.saveFile;
+import static com.ssafy.enjoytrip.image.controller.ImageUtils.saveFile;
 
 @Service
 @RequiredArgsConstructor

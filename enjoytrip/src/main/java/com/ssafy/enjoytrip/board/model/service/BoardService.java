@@ -11,11 +11,11 @@ import java.util.Map;
 public interface BoardService {
     List<Board> getBoardList(Map<String, String> paramMap) throws SQLException;
 
-    Board getBoard(int boardId) throws SQLException;
+    Map<String, Object> getBoard(int boardId) throws SQLException;
 
     void createBoard(Board board, List<MultipartFile> files) throws SQLException, IOException;
 
-    void updateBoard(Board board) throws SQLException;
+    void updateBoard(Board board, List<MultipartFile> files) throws SQLException, IOException;
 
     void deleteBoard(int boardId) throws SQLException;
 
