@@ -2,6 +2,7 @@ package com.ssafy.enjoytrip.board.model.service;
 
 import com.ssafy.enjoytrip.board.model.Board;
 import com.ssafy.enjoytrip.board.model.mapper.BoardMapper;
+import com.ssafy.enjoytrip.board.model.mapper.CommentMapper;
 import com.ssafy.enjoytrip.image.model.Image;
 import com.ssafy.enjoytrip.image.model.mapper.ImageMapper;
 import lombok.RequiredArgsConstructor;
