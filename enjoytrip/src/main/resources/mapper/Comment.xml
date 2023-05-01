@@ -30,8 +30,8 @@
     <!-- 댓글 수정 -->
     <update id="updateComment" parameterType="Comment">
         UPDATE comment
-        SET comment_content = #{commentContent}, createtime = now()
-        WHERE comment_id = #{commentId}
+           SET comment_content = #{commentContent}, createtime = now()
+         WHERE comment_id = #{commentId}
     </update>
 
     <!-- 댓글 삭제 -->
@@ -40,5 +40,13 @@
           FROM comment
          WHERE comment_id = #{commentId}
     </delete>
+
+    <!-- 게시글 삭제 시 댓글 삭제 -->
+    <delete id="cascadeDeleteComment" parameterType="int">
+        DELETE
+          FROM comment
+         WHERE board_id = #{boardId}
+    </delete>
+
 
 </mapper>

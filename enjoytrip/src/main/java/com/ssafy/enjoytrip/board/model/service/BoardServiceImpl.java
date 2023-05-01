@@ -26,6 +26,7 @@ public class BoardServiceImpl implements BoardService{
     private String fileDir;
 
     private final BoardMapper boardMapper;
+    private final CommentMapper commentMapper;
     private final ImageMapper imageMapper;
 
     @Override
@@ -48,9 +49,11 @@ public class BoardServiceImpl implements BoardService{
         boardMapper.updateBoard(board);
     }
 
+    @Transactional
     @Override
     public void deleteBoard(int boardId) throws SQLException {
         boardMapper.deleteBoard(boardId);
+        commentMapper.cascadeDeleteComment(boardId);
     }
 
     // 사진 포함
