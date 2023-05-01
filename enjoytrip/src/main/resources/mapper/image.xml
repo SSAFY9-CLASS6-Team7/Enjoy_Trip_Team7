@@ -11,6 +11,7 @@
 		<result column="image_path" property="imagePath" />
 	</resultMap>
 
+
 	<!-- 조회 -->
 	<select id="selectImage" parameterType="hashMap" resultMap="imageResultMap">
 		SELECT *
