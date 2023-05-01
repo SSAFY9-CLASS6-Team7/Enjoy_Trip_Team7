@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.enjoytrip.image.model.mapper.ImageMapper">
+
+	<resultMap id="imageResultMap" type="image">
+		<result column="image_id" property="imageId" />
+		<result column="type" property="type" />
+		<result column="data_id" property="dataId" />
+		<result column="image_path" property="imagePath" />
+	</resultMap>
+
+	<!-- 조회 -->
+	<select id="selectImage" parameterType="hashMap" resultMap="imageResultMap">
+		SELECT *
+          FROM image
+		 WHERE type = ${type}
+ 		   AND data_id = ${dataId}
+	</select>
+
+	<!-- 이미지 등록 -->
+	<insert id="insertImage" parameterType="Image">
+		INSERT INTO image (type, image_path, data_id)
+		VALUES (${type}, #{imagePath}, ${dataId})
+	</insert>
+
+	<!-- 삭제 -->
+	<delete id="deleteImage" parameterType="int">
+		DELETE FROM image
+		 WHERE image_id = ${imageId}
+	</delete>
+
+	<!-- 게시글이나 기록 삭제시 -->
+	<delete id="cascadeDeleteImage" parameterType="hashMap">
+		DELETE
+		  FROM image
+		 WHERE type = ${type}
+  		   AND data_id = ${dataId}
+	</delete>
+
+</mapper>
