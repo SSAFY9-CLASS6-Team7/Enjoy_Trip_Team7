@@ -30,7 +30,7 @@
 	</select>
 	
 	<!-- void insertHistory(History history) -->
-	<insert id="insertHistory" parameterType="history">
+	<insert id="insertHistory" parameterType="history" useGeneratedKeys="true" keyProperty="historyId">
 		insert into history (title, createtime, content, user_id, start_day, end_day)
 		values(#{title},CURRENT_TIMESTAMP,#{content},#{userId}, #{startDay}, #{endDay})
 	</insert>

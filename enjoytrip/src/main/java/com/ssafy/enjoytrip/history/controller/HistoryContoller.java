@@ -1,5 +1,6 @@
 package com.ssafy.enjoytrip.history.controller;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -11,7 +12,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.ssafy.enjoytrip.history.model.History;
 import com.ssafy.enjoytrip.history.model.service.HistoryService;
@@ -20,7 +23,7 @@ import com.ssafy.enjoytrip.user.model.User;
 @RestController
 @RequestMapping("/history")
 public class HistoryContoller {
-private HistoryService historyService;
+	private HistoryService historyService;
 	
 	public HistoryContoller(HistoryService historyService) {
 		this.historyService = historyService;
@@ -45,9 +48,9 @@ private HistoryService historyService;
 	}
 
 	@PostMapping
-	public List<History> createHistory(@RequestBody History history, HttpSession session) throws SQLException {
+	public List<History> createHistory(@RequestPart History history, @RequestPart List<MultipartFile> files, HttpSession session) throws SQLException, IOException {
 		history.setUserId(getLoginUser(session).getUserId());
-		historyService.createHistory(history);
+		historyService.createHistory(history, files);
 		return historyService.getHistoryList(getLoginUser(session).getUserId());
 	}
 	
