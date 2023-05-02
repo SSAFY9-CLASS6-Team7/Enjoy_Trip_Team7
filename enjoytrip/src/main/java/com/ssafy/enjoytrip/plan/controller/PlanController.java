@@ -82,20 +82,17 @@ public class PlanController {
 		return planService.getPlan(planId);
 	}
 	
-	// TODO : planAttraction의 PK역할을 planId와 attractionId가 하는 게 맞는가?
-	@PostMapping("{planId}/attraction/{attractionId}")
-	public Plan updatePlanAttraction(@RequestBody PlanAttraction planAttraction, @PathVariable int planId, @PathVariable int attractionId) throws SQLException {
+	@PostMapping("{planId}/attraction/{planAttractionId}")
+	public Plan updatePlanAttraction(@RequestBody PlanAttraction planAttraction, @PathVariable int planId, @PathVariable int planAttractionId) throws SQLException {
 		planAttraction.setPlanId(planId);
-		planAttraction.setAttractionId(attractionId);
+		planAttraction.setPlanAttractionId(planAttractionId);
 		planService.updatePlanAttraction(planAttraction);
 		return planService.getPlan(planId);
 	}
 	
-	@DeleteMapping("{planId}/attraction/{attractionId}")
-	public Plan deletePlanAttraction(@RequestBody PlanAttraction planAttraction, @PathVariable int planId, @PathVariable int attractionId) throws SQLException {
-		planAttraction.setPlanId(planId);
-		planAttraction.setAttractionId(attractionId);
-		planService.deletePlanAttraction(planAttraction);
+	@DeleteMapping("{planId}/attraction/{planAttractionId}")
+	public Plan deletePlanAttraction(@PathVariable int planId, @PathVariable int planAttractionId) throws SQLException {
+		planService.deletePlanAttraction(planAttractionId);
 		return planService.getPlan(planId);
 	}
 }

@@ -17,9 +17,9 @@ public interface PlanMapper {
 	void updatePlan(Plan plan) throws SQLException;
 	void deletePlan(int planId) throws SQLException;
 	
-	PlanAttraction selectPlanAttraction(PlanAttraction planAttraction) throws SQLException;
+	PlanAttraction selectPlanAttraction(int planAttractionId) throws SQLException;
 	void insertPlanAttraction(PlanAttraction planAttraction) throws SQLException;
 	void updatePlanAttraction(PlanAttraction planAttraction) throws SQLException;
-	void deletePlanAttraction(PlanAttraction planAttraction) throws SQLException;
+	void deletePlanAttraction(int planAttractionId) throws SQLException;
 	void cascadeDeletePlanAttraction(int planId) throws SQLException;
 }
