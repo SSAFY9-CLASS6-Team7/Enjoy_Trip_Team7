@@ -11,7 +11,7 @@ import com.ssafy.enjoytrip.history.model.History;
 
 public interface HistoryService {
 
-	List<History> getHistoryList(String userId) throws SQLException;
+	List<History> getHistoryList(Map<String, String> map) throws SQLException;
 	Map<String, Object> getHistory(int historyId) throws SQLException;
 	void createHistory(History history, List<MultipartFile> files) throws SQLException, IOException;
 	void updateHistory(History history, List<MultipartFile> files) throws SQLException, IOException;

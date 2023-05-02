@@ -28,14 +28,23 @@ public class HistoryServiceImpl implements HistoryService {
 
     @Value("${file.dir}")
     private String fileDir;
+    
+    //페이징 용 : 한 페이지에 보일 글의 수
+    private final int LIST_SIZE = 10;
 	
 	private final HistoryMapper historyMapper;
 	private final ImageMapper imageMapper;
-
-
+	
+	//~~~~~~~~ 페이징 적용 리스트 ~~~~~~~~
 	@Override
-	public List<History> getHistoryList(String userId) throws SQLException {
-		return historyMapper.selectHistoryList(userId);
+	public List<History> getHistoryList(Map<String, String> map) throws SQLException {
+		Map<String, Object> param = new HashMap<String, Object>();
+		int pgNo = Integer.parseInt(map.get("pgno") == null ? "1" : map.get("pgno"));
+		int start = pgNo * LIST_SIZE - LIST_SIZE;
+		param.put("userId", map.get("userId"));
+		param.put("start", start);
+		param.put("listsize", LIST_SIZE);
+		return historyMapper.selectHistoryList(param);
 	}
 
 	@Override
