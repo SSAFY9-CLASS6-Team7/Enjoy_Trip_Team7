@@ -33,6 +33,7 @@
             <when test="condition == ''"> 'createtime' </when>
           </choose>
         </trim>
+         LIMIT #{start}, #{size}
     </select>
 
     <!-- 게시글 상세 내용 조회 -->
