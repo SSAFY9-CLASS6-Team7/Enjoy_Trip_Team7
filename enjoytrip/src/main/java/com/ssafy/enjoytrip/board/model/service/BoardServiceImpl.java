@@ -39,16 +39,21 @@ public class BoardServiceImpl implements BoardService{
         return boardMapper.selectBoard(paramMap);
     }
 
+    @Transactional
     @Override
     public Map<String, Object> getBoard(int boardId) throws SQLException {
         Map<String, Integer> paramMap = new HashMap<>();
         paramMap.put("type", TYPE);
         paramMap.put("dataId", boardId);
 
+        // 조회수 증가
+        boardMapper.updateHits(boardId);
+
         Map<String, Object> result = new HashMap<>();
 
         result.put("board", boardMapper.selectBoardByBoardId(boardId));
         result.put("images", imageMapper.selectImage(paramMap));
+
         return result;
     }
 
@@ -95,6 +100,24 @@ public class BoardServiceImpl implements BoardService{
         if (files != null) {
             insertImages(dataId, files);
         }
+    }
+
+    @Transactional
+    @Override
+    public void updateHeart(Map<String, Object> paramMap) throws SQLException {
+        int heartCount = (int) paramMap.get("heart");
+        if (boardMapper.selectHeartFlag(paramMap)) {
+            heartCount -= 1;
+            boardMapper.deleteHeartFlag(paramMap);
+        }
+        else {
+            heartCount += 1;
+            boardMapper.insertHeartFlag(paramMap);
+        }
+        Board board = new Board();
+        board.setBoardId((int) paramMap.get("boardId"));
+        board.setHeart(heartCount);
+        boardMapper.updateBoard(board);
     }
 
     public void insertImages(int boardId, List<MultipartFile> files) throws IOException, SQLException {
