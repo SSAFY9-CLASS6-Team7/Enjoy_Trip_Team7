@@ -9,9 +9,9 @@
 
 ## 📍기능
 - 여행지 정보 제공
-- 여행 계획 작성 기능
-- 여행 후기 작성 기능
-- 여행 관련 게시판 기능
+- 여행 `계획` 작성 기능
+- 여행 `후기` 작성 기능
+- 여행 관련 `게시판` 기능
   - 자유
   - 후기
   - 추천
@@ -46,12 +46,13 @@
 |Docs|문서 작성 및 수정|Docs : README.md 수정|
 |Refactor|프로덕션 코드 리팩토링|Refactor : 유저 컨트롤러 리팩토링|
 
-### [📜API 명세](https://gentle-capricorn-124.notion.site/9a06d8f8fe9144fab2f7470fd99ba63a)
-  <details>
+### [📜API 명세](https://gentle-capricorn-124.notion.site/9a06d8f8fe9144fab2f7470fd99ba63a) 
+- `Postman`을 통해 개발 진행   
+<details>
   <summary>API 상세 내용</summary><br>
   <img src="https://user-images.githubusercontent.com/70866410/235563772-0521fcae-7d9f-4671-a9ec-3cf3601d5821.png"><br>
   <img src="https://user-images.githubusercontent.com/70866410/235563901-2869b323-2518-4ecf-8218-f6ee8d559b23.png">
-  </details>
+</details>
 
 ### 🗂프로젝트 패키지 구조   
 ```
@@ -97,6 +98,9 @@ com
      ├─filter
      ㄴexception
 ```
-### ER Diagram
+### 🗃ER Diagram
 <img src="https://user-images.githubusercontent.com/70866410/235568566-a72a5abe-28dc-4450-8df7-aabe53972d43.png" style="border:1px solid black">
+
+### 🗃클래스 다이어그램
+<img src="https://user-images.githubusercontent.com/70866410/235580936-ed27c755-133f-41ca-b4cc-03ad9d569ccc.png" style="border:1px solid black">
 
