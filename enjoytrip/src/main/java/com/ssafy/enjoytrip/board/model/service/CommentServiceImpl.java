@@ -4,13 +4,16 @@ import com.ssafy.enjoytrip.board.model.Comment;
 import com.ssafy.enjoytrip.board.model.mapper.CommentMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService{
+    static final int TYPE = 300;
 
     private final CommentMapper commentMapper;
 
@@ -29,8 +32,28 @@ public class CommentServiceImpl implements CommentService{
         commentMapper.updateComment(comment);
     }
 
+    @Transactional
     @Override
     public void deleteComment(int commentId) throws SQLException {
         commentMapper.deleteComment(commentId);
+        commentMapper.cascadeDeleteHeart(commentId);
+    }
+
+    @Transactional
+    @Override
+    public void updateHeart(Map<String, Object> paramMap) throws SQLException {
+        int heartCount = (int) paramMap.get("heart");
+        if (commentMapper.selectHeartFlag(paramMap)) {
+            heartCount -= 1;
+            commentMapper.deleteHeartFlag(paramMap);
+        }
+        else {
+            heartCount += 1;
+            commentMapper.insertHeartFlag(paramMap);
+        }
+        Comment comment = new Comment();
+        comment.setCommentId((int) paramMap.get("commentId"));
+        comment.setHeart(heartCount);
+        commentMapper.updateComment(comment);
     }
 }

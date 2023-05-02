@@ -30,7 +30,11 @@
     <!-- 댓글 수정 -->
     <update id="updateComment" parameterType="Comment">
         UPDATE comment
-           SET comment_content = #{commentContent}, createtime = now()
+        <set>
+            <if test="commentContent != null">comment_content = #{commentContent},</if>
+            <if test="heart != null">heart = #{heart},</if>
+            <if test="1 == 1">createtime = now()</if>
+        </set>
          WHERE comment_id = #{commentId}
     </update>
 
@@ -48,5 +52,36 @@
          WHERE board_id = #{boardId}
     </delete>
 
+    <!-- 댓글 삭제 시 좋아요 제거 -->
+    <delete id="cascadeDeleteHeart" parameterType="int">
+        DELETE
+          FROM heart_flag
+         WHERE code = 300
+           AND data_id = #{commentId}
+    </delete>
+
+    <!-- 좋아요 여부 확인 -->
+    <select id="selectHeartFlag" parameterType="hashMap" resultType="boolean">
+        SELECT IF(count(*) = 1, true, false)
+        FROM heart_flag
+        WHERE code = 300
+          AND data_id = #{commentId}
+          AND user_id = #{userId}
+    </select>
+
+    <!-- 좋아요 반영 -->
+    <insert id="insertHeartFlag" parameterType="hashMap">
+        INSERT INTO heart_flag(code, data_id, user_id)
+        VALUES (300, ${commentId}, #{userId})
+    </insert>
+
+    <!-- 좋아요 제거 -->
+    <delete id="deleteHeartFlag" parameterType="hashMap">
+        DELETE
+        FROM heart_flag
+        WHERE code = 300
+          AND data_id = ${commentId}
+          AND user_id = #{userId}
+    </delete>
 
 </mapper>
