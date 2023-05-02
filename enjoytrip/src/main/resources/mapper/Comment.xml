@@ -52,6 +52,14 @@
          WHERE board_id = #{boardId}
     </delete>
 
+    <!-- 댓글 삭제 시 좋아요 제거 -->
+    <delete id="cascadeDeleteHeart" parameterType="int">
+        DELETE
+          FROM heart_flag
+         WHERE code = 300
+           AND data_id = #{commentId}
+    </delete>
+
     <!-- 좋아요 여부 확인 -->
     <select id="selectHeartFlag" parameterType="hashMap" resultType="boolean">
         SELECT IF(count(*) = 1, true, false)

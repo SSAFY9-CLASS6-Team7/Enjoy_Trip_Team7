@@ -1,6 +1,5 @@
 package com.ssafy.enjoytrip.board.model.service;
 
-import com.ssafy.enjoytrip.board.model.Board;
 import com.ssafy.enjoytrip.board.model.Comment;
 import com.ssafy.enjoytrip.board.model.mapper.CommentMapper;
 import lombok.RequiredArgsConstructor;
@@ -33,9 +32,11 @@ public class CommentServiceImpl implements CommentService{
         commentMapper.updateComment(comment);
     }
 
+    @Transactional
     @Override
     public void deleteComment(int commentId) throws SQLException {
         commentMapper.deleteComment(commentId);
+        commentMapper.cascadeDeleteHeart(commentId);
     }
 
     @Transactional

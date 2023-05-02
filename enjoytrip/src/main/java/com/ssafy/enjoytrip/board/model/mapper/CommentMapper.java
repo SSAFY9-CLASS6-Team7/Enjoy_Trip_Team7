@@ -22,4 +22,6 @@ public interface CommentMapper {
     void insertHeartFlag(Map<String, Object> paramMap) throws SQLException;
 
     void deleteHeartFlag(Map<String, Object> paramMap) throws SQLException;
+
+    void cascadeDeleteHeart(int commentId) throws SQLException;
 }
