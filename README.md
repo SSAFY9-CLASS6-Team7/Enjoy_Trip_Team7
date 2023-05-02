@@ -38,14 +38,9 @@
 ```
 com
  ㄴssafy
+   ├─config
    ㄴenjoytrip
-     ├─board
-     │ ├─controller
-     │ ㄴmodel
-     │   ├─dto
-     │   ├─mapper
-     │   ㄴservice
-     ├─comment
+     ├─board & comment
      │ ├─controller
      │ ㄴmodel
      │   ├─dto
@@ -69,12 +64,20 @@ com
      │   ├─dto
      │   ├─mapper
      │   ㄴservice
-     ㄴattraction
-       ├─controller
-       ㄴmodel
-         ├─dto
-         ├─mapper
-         ㄴservice
+     ├─image
+     │ ├─controller
+     │ ㄴmodel
+     │   ├─dto
+     │   ├─mapper
+     ├─attraction
+     │ ├─controller
+     │ ㄴmodel
+     │   ├─dto
+     │   ├─mapper
+     │   ㄴservice
+     ├─filter
+     ㄴexception
+     
 ```
 ### ✒커밋 컨벤션
  |태그|설명|예시|
