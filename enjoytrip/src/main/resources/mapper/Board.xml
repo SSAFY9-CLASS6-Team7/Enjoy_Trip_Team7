@@ -106,4 +106,12 @@
          WHERE board_id = #{boardId}
     </delete>
 
+    <!-- 게시글 삭제 시 좋아요 제거 -->
+    <delete id="cascadeDeleteHeart" parameterType="int">
+        DELETE
+          FROM heart_flag
+         WHERE code = 100
+           AND data_id = #{boardId}
+    </delete>
+
 </mapper>

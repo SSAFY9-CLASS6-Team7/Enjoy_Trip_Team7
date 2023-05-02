@@ -89,6 +89,7 @@ public class BoardServiceImpl implements BoardService{
         deleteImageFile(images);
 
         imageMapper.cascadeDeleteImage(paramMap);
+        boardMapper.cascadeDeleteHeart(boardId);
     }
 
     // 사진 포함
