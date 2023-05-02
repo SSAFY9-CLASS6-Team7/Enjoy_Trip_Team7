@@ -32,12 +32,6 @@ public class BoardController {
         return boardService.getBoard(boardId);
     }
 
-/*    @PostMapping
-    public void createBoard(@RequestBody Board board) throws SQLException {
-        // TODO 로그인 유무 구분을 위한 필터 추가 필요
-        boardService.createBoard(board);
-    }*/
-
     @PutMapping("/{boardId}")
     public void updateBoard(@RequestPart Board board, @PathVariable int boardId, @RequestPart(required = false) List<MultipartFile> files) throws SQLException, IOException {
         board.setBoardId(boardId);
@@ -53,5 +47,10 @@ public class BoardController {
     @PostMapping
     public void createBoard(@RequestPart Board board, @RequestPart(required = false) List<MultipartFile> files) throws SQLException, IOException {
         boardService.createBoard(board, files);
+    }
+
+    @PutMapping("/{boardId}/heart")
+    public void updateHeart(@RequestBody Map<String, Object> paramMap) throws SQLException {
+        boardService.updateHeart(paramMap);
     }
 }

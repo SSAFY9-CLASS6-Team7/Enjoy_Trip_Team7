@@ -21,4 +21,10 @@ public interface BoardMapper {
     Board selectBoardByBoardId(int boardId) throws SQLException;
 
     void updateHits(int boardId) throws SQLException;
+
+    boolean selectHeartFlag(Map<String, Object> paramMap) throws SQLException;
+
+    void insertHeartFlag(Map<String, Object> paramMap) throws SQLException;
+
+    void deleteHeartFlag(Map<String, Object> paramMap) throws SQLException;
 }

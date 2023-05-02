@@ -102,6 +102,24 @@ public class BoardServiceImpl implements BoardService{
         }
     }
 
+    @Transactional
+    @Override
+    public void updateHeart(Map<String, Object> paramMap) throws SQLException {
+        int heartCount = (int) paramMap.get("heart");
+        if (boardMapper.selectHeartFlag(paramMap)) {
+            heartCount -= 1;
+            boardMapper.deleteHeartFlag(paramMap);
+        }
+        else {
+            heartCount += 1;
+            boardMapper.insertHeartFlag(paramMap);
+        }
+        Board board = new Board();
+        board.setBoardId((int) paramMap.get("boardId"));
+        board.setHeart(heartCount);
+        boardMapper.updateBoard(board);
+    }
+
     public void insertImages(int boardId, List<MultipartFile> files) throws IOException, SQLException {
         for (int i = 0; i < files.size(); i++) {
             String imagePath = saveFile(files.get(i), fileDir);
