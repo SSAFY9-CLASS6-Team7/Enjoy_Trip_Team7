@@ -89,7 +89,7 @@ com
      ㄴexception
 ```
 ### ER Diagram
-<img src="https://user-images.githubusercontent.com/70866410/235563025-101bddbb-28f1-4c5a-a215-cb19d4b5b42a.png" style="border:1px solid black">
+<img src="https://user-images.githubusercontent.com/70866410/235568566-a72a5abe-28dc-4450-8df7-aabe53972d43.png" style="border:1px solid black">
 
 ### ✒커밋 컨벤션
  |태그|설명|예시|
