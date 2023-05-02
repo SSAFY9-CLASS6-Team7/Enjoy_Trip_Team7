@@ -12,14 +12,13 @@ import javax.servlet.Filter;
 @MapperScan(basePackages = {"com.ssafy.**.mapper"})
 public class WebMvcConfig {
 
-
-//    @Bean
-//    public FilterRegistrationBean loginCheckFilter() {
-//        FilterRegistrationBean<Filter> filterRegistrationBean = new
-//                FilterRegistrationBean<>();
-//        filterRegistrationBean.setFilter(new LoginFilter());
-//        filterRegistrationBean.setOrder(1);
-//        filterRegistrationBean.addUrlPatterns("/*");
-//        return filterRegistrationBean;
-//    }
+    @Bean
+    public FilterRegistrationBean loginCheckFilter() {
+        FilterRegistrationBean<Filter> filterRegistrationBean = new
+                FilterRegistrationBean<>();
+        filterRegistrationBean.setFilter(new LoginFilter());
+        filterRegistrationBean.setOrder(1);
+        filterRegistrationBean.addUrlPatterns("/*");
+        return filterRegistrationBean;
+    }
 }
