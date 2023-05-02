@@ -12,11 +12,18 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class AttractionServiceImpl implements AttractionService{
+    // 페이지 사이즈
+    private final int LIST_SIZE = 10;
 
     private final AttractionMapper attractionMapper;
 
     @Override
     public List<Attraction> getAttractionList(Map<String, Object> paramMap) throws SQLException {
+        int pageNo;
+        if ("".equals((String) paramMap.get("pageNo"))) pageNo = 1;
+        else pageNo = Integer.parseInt((String) paramMap.get("pageNo"));
+        paramMap.put("start", pageNo * LIST_SIZE - LIST_SIZE);
+        paramMap.put("size", LIST_SIZE);
         return attractionMapper.selectAttraction(paramMap);
     }
 

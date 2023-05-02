@@ -27,6 +27,7 @@
             <if test="sido != ''">AND i.sido_code = ${sido}</if>
             <if test="keyword != ''">AND i.title LIKE CONCAT('%', #{keyword}, '%')</if>
         </where>
+         LIMIT #{start}, #{size}
     </select>
     
     <!-- 관광지 상세 조회 -->
