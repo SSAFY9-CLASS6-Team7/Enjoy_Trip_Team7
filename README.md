@@ -30,22 +30,17 @@
 ### [📜API 명세](https://gentle-capricorn-124.notion.site/9a06d8f8fe9144fab2f7470fd99ba63a)
   <details>
   <summary>API 상세 내용</summary><br>
-    <img src="https://user-images.githubusercontent.com/70866410/234883237-53e398ee-ebb0-49a4-ab72-b6b4a6edf7c1.png">
+  <img src="https://user-images.githubusercontent.com/70866410/235563772-0521fcae-7d9f-4671-a9ec-3cf3601d5821.png"><br>
+  <img src="https://user-images.githubusercontent.com/70866410/235563901-2869b323-2518-4ecf-8218-f6ee8d559b23.png">
   </details>
-  
 
 ### 🗂프로젝트 패키지 구조   
 ```
 com
  ㄴssafy
+   ├─config
    ㄴenjoytrip
-     ├─board
-     │ ├─controller
-     │ ㄴmodel
-     │   ├─dto
-     │   ├─mapper
-     │   ㄴservice
-     ├─comment
+     ├─board & comment
      │ ├─controller
      │ ㄴmodel
      │   ├─dto
@@ -69,13 +64,23 @@ com
      │   ├─dto
      │   ├─mapper
      │   ㄴservice
-     ㄴattraction
-       ├─controller
-       ㄴmodel
-         ├─dto
-         ├─mapper
-         ㄴservice
+     ├─image
+     │ ├─controller
+     │ ㄴmodel
+     │   ├─dto
+     │   ├─mapper
+     ├─attraction
+     │ ├─controller
+     │ ㄴmodel
+     │   ├─dto
+     │   ├─mapper
+     │   ㄴservice
+     ├─filter
+     ㄴexception
 ```
+### ER Diagram
+<img src="https://user-images.githubusercontent.com/70866410/235563025-101bddbb-28f1-4c5a-a215-cb19d4b5b42a.png" style="border:1px solid black">
+
 ### ✒커밋 컨벤션
  |태그|설명|예시|
 |---|---|---|
@@ -83,3 +88,4 @@ com
 |Fix|파일, 코드, 버그 수정/삭제|Fix : 댓글 미표기 현상 수정|
 |Docs|문서 작성 및 수정|Docs : README.md 수정|
 |Refactor|프로덕션 코드 리팩토링|Refactor : 유저 컨트롤러 리팩토링|
+
