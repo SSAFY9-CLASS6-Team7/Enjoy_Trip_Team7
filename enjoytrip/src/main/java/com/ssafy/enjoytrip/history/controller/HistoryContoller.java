@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -45,11 +44,10 @@ public class HistoryContoller {
 		return (User) session.getAttribute("loginUser");
 	}
 	@GetMapping
-	public List<History> getHistoryList(@RequestParam(required = false) String pgno, HttpSession session) throws SQLException {
+	public List<History> getHistoryList(@RequestParam(required = false) String pageNo, HttpSession session) throws SQLException {
 		Map<String, String> param = new HashMap<String, String>();
 		param.put("userId", getLoginUser(session).getUserId());
-		log.info("pgno: {}", pgno);
-		param.put("pgno", pgno);
+		param.put("pgno", pageNo);
 		return historyService.getHistoryList(param);
 	}
 
