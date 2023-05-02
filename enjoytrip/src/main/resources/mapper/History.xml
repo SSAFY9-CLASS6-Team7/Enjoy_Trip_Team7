@@ -19,7 +19,7 @@
 		select *
 		from history
 		where user_id = #{userId}
-		order by createtime
+		order by createtime desc
 		limit #{start}, #{listsize}
 	</select>
 	
