@@ -27,4 +27,6 @@ public interface BoardMapper {
     void insertHeartFlag(Map<String, Object> paramMap) throws SQLException;
 
     void deleteHeartFlag(Map<String, Object> paramMap) throws SQLException;
+
+    void cascadeDeleteHeart(int boardId) throws SQLException;
 }
