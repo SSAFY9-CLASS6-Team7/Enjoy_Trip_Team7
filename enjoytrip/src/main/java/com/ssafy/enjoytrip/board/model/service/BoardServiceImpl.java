@@ -25,9 +25,10 @@ import static com.ssafy.enjoytrip.image.controller.ImageUtils.saveFile;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class BoardServiceImpl implements BoardService{
+public class BoardServiceImpl implements BoardService {
     static final int TYPE = 100;
-
+    // 페이지 사이즈
+    private final int LIST_SIZE = 10;
     @Value("${file.dir}")
     private String fileDir;
 
@@ -36,7 +37,13 @@ public class BoardServiceImpl implements BoardService{
     private final ImageMapper imageMapper;
 
     @Override
-    public List<Board> getBoardList(Map<String, String> paramMap) throws SQLException {
+    public List<Board> getBoardList(Map<String, Object> paramMap) throws SQLException {
+        int pageNo;
+        if ("".equals((String) paramMap.get("pageNo"))) pageNo = 1;
+        else pageNo = Integer.parseInt((String) paramMap.get("pageNo"));
+        log.info("START INT = {}", pageNo);
+        paramMap.put("start", pageNo * LIST_SIZE - LIST_SIZE);
+        paramMap.put("size", LIST_SIZE);
         return boardMapper.selectBoard(paramMap);
     }
 
@@ -85,10 +92,10 @@ public class BoardServiceImpl implements BoardService{
 
         List<Image> images = imageMapper.selectImage(paramMap);
         deleteImageFile(images);
-        
+
         // 게시글 삭제시 자동으로 댓글도 삭제되도록
         List<Comment> list = commentMapper.selectComment(boardId);
-        for (Comment comment : list){
+        for (Comment comment : list) {
             commentMapper.cascadeDeleteHeart(comment.getCommentId());
         }
 
@@ -116,8 +123,7 @@ public class BoardServiceImpl implements BoardService{
         if (boardMapper.selectHeartFlag(paramMap)) {
             heartCount -= 1;
             boardMapper.deleteHeartFlag(paramMap);
-        }
-        else {
+        } else {
             heartCount += 1;
             boardMapper.insertHeartFlag(paramMap);
         }

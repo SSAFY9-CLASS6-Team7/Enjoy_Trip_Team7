@@ -23,7 +23,7 @@ public class BoardController {
 
 
     @GetMapping
-    public List<Board> getBoardList(@RequestParam Map<String, String> paramMap) throws SQLException {
+    public List<Board> getBoardList(@RequestParam Map<String, Object> paramMap) throws SQLException {
         return boardService.getBoardList(paramMap);
     }
 

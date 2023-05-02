@@ -10,7 +10,7 @@ import java.util.Map;
 @Mapper
 public interface BoardMapper {
 
-    List<Board> selectBoard(Map<String, String> paramMap) throws SQLException;
+    List<Board> selectBoard(Map<String, Object> paramMap) throws SQLException;
 
     void insertBoard(Board board) throws SQLException;
 
