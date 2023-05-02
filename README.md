@@ -21,7 +21,7 @@
 ## 👨‍👨‍👧‍👦**팀원**
 <table>
     <tr>
-        <td height="140px" align="center"> <a href="https://github.com/oth54477">
+        <td height="140px" align="center"> <a href="https://github.com/dayoung100">
             <img src="https://avatars.githubusercontent.com/u/53906423?v=4" width="140px" /> <br><br> 이다영 <br></a> <br></td>
         <td height="140px" align="center"> <a href="https://github.com/meoldae">
             <img src="https://avatars.githubusercontent.com/u/70866410?s=400&u=54bdc7977a0c8016cb2d7230bd28200c2c76b3b0&v=4" width="140px" /> <br><br> 전준영 <br></a> <br></td>
