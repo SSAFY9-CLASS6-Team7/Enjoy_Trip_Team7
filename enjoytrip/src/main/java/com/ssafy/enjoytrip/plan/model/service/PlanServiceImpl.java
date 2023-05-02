@@ -1,7 +1,10 @@
 package com.ssafy.enjoytrip.plan.model.service;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.stereotype.Service;
 
 import com.ssafy.enjoytrip.plan.model.Plan;
@@ -10,6 +13,9 @@ import com.ssafy.enjoytrip.plan.model.mapper.PlanMapper;
 
 @Service
 public class PlanServiceImpl implements PlanService {
+	
+	//페이징 용 : 한 페이지에 보일 글의 수
+    private final int LIST_SIZE = 10;
 
 	private PlanMapper planMapper;
 	
@@ -18,8 +24,14 @@ public class PlanServiceImpl implements PlanService {
 	}
 
 	@Override
-	public List<Plan> getPlanList(String userId) throws SQLException {
-		return planMapper.selectPlanList(userId);
+	public List<Plan> getPlanList(Map<String, String> map) throws SQLException {
+		Map<String, Object> param = new HashMap<String, Object>();
+		int pgNo = Integer.parseInt(map.get("pgno") == "" ? "1" : map.get("pgno"));
+		int start = pgNo * LIST_SIZE - LIST_SIZE;
+		param.put("userId", map.get("userId"));
+		param.put("start", start);
+		param.put("listsize", LIST_SIZE);
+		return planMapper.selectPlanList(param);
 	}
 
 	@Override

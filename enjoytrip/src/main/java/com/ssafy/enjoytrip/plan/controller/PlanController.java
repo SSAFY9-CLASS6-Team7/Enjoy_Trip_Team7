@@ -1,7 +1,10 @@
 package com.ssafy.enjoytrip.plan.controller;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import javax.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.enjoytrip.plan.model.Plan;
@@ -35,8 +39,11 @@ public class PlanController {
 	}
 	
 	@GetMapping
-	public List<Plan> getPlanList(HttpSession session) throws SQLException {
-		return planService.getPlanList(getLoginUser(session).getUserId());
+	public List<Plan> getPlanList(@RequestParam(required = false) String pageNo, HttpSession session) throws SQLException {
+		Map<String, String> param = new HashMap<String, String>();
+		param.put("userId", getLoginUser(session).getUserId());
+		param.put("pgno", pageNo);
+		return planService.getPlanList(param);
 	}
 
 	@GetMapping("{planId}")
@@ -48,20 +55,20 @@ public class PlanController {
 	public List<Plan> createPlan(@RequestBody Plan plan, HttpSession session) throws SQLException {
 		plan.setUserId(getLoginUser(session).getUserId());
 		planService.createPlan(plan);
-		return planService.getPlanList(getLoginUser(session).getUserId());
+		return getPlanList("1", session);
 	}
 	
 	@PostMapping("{planId}")
 	public List<Plan> updatePlan(@RequestBody Plan plan, @PathVariable int planId, HttpSession session) throws SQLException {
 		plan.setPlanId(planId);
 		planService.updatePlan(plan);
-		return planService.getPlanList(getLoginUser(session).getUserId());
+		return getPlanList("1", session);
 	}
 	
 	@DeleteMapping("{planId}")
 	public List<Plan> deletePlan(@PathVariable int planId, HttpSession session) throws SQLException {
 		planService.deletePlan(planId);
-		return planService.getPlanList(getLoginUser(session).getUserId());
+		return getPlanList("1", session);
 	}
 	
 	//-----------이하 Plan Attraction 관련 -----------
