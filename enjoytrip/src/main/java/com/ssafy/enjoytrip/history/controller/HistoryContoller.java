@@ -24,6 +24,9 @@ import com.ssafy.enjoytrip.history.model.History;
 import com.ssafy.enjoytrip.history.model.service.HistoryService;
 import com.ssafy.enjoytrip.user.model.User;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestController
 @RequestMapping("/history")
 public class HistoryContoller {
@@ -42,10 +45,11 @@ public class HistoryContoller {
 		return (User) session.getAttribute("loginUser");
 	}
 	@GetMapping
-	public List<History> getHistoryList(@RequestParam(required = false) int pgno, HttpSession session) throws SQLException {
+	public List<History> getHistoryList(@RequestParam(required = false) String pgno, HttpSession session) throws SQLException {
 		Map<String, String> param = new HashMap<String, String>();
 		param.put("userId", getLoginUser(session).getUserId());
-		param.put("pgno", String.valueOf(pgno));
+		log.info("pgno: {}", pgno);
+		param.put("pgno", pgno);
 		return historyService.getHistoryList(param);
 	}
 
@@ -58,19 +62,19 @@ public class HistoryContoller {
 	public List<History> createHistory(@RequestPart History history, @RequestPart(required = false) List<MultipartFile> files, HttpSession session) throws SQLException, IOException {
 		history.setUserId(getLoginUser(session).getUserId());
 		historyService.createHistory(history, files);
-		return getHistoryList(1, session);
+		return getHistoryList("1", session);
 	}
 	
 	@PutMapping("{historyId}")
 	public List<History> updatehistory(@RequestPart History history, @PathVariable int historyId, HttpSession session, @RequestPart(required = false) List<MultipartFile> files) throws SQLException, IOException {
 		history.setHistoryId(historyId);
 		historyService.updateHistory(history, files);
-		return getHistoryList(1, session);
+		return getHistoryList("1", session);
 	}
 	
 	@DeleteMapping("{historyId}")
 	public List<History> deleteHistory(@PathVariable int historyId, HttpSession session) throws SQLException {
 		historyService.deleteHistory(historyId);
-		return getHistoryList(1, session);
+		return getHistoryList("1", session);
 	}
 }

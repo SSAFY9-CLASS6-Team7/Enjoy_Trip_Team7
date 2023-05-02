@@ -39,7 +39,7 @@ public class HistoryServiceImpl implements HistoryService {
 	@Override
 	public List<History> getHistoryList(Map<String, String> map) throws SQLException {
 		Map<String, Object> param = new HashMap<String, Object>();
-		int pgNo = Integer.parseInt(map.get("pgno") == null ? "1" : map.get("pgno"));
+		int pgNo = Integer.parseInt(map.get("pgno") == "" ? "1" : map.get("pgno"));
 		int start = pgNo * LIST_SIZE - LIST_SIZE;
 		param.put("userId", map.get("userId"));
 		param.put("start", start);
