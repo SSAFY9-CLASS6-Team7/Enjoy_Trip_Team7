@@ -1,6 +1,7 @@
 package com.ssafy.enjoytrip.board.model.service;
 
 import com.ssafy.enjoytrip.board.model.Board;
+import com.ssafy.enjoytrip.board.model.Comment;
 import com.ssafy.enjoytrip.board.model.mapper.BoardMapper;
 import com.ssafy.enjoytrip.board.model.mapper.CommentMapper;
 import com.ssafy.enjoytrip.image.model.Image;
@@ -78,18 +79,23 @@ public class BoardServiceImpl implements BoardService{
     @Transactional
     @Override
     public void deleteBoard(int boardId) throws SQLException {
-        boardMapper.deleteBoard(boardId);
-        commentMapper.cascadeDeleteComment(boardId);
-
         Map<String, Integer> paramMap = new HashMap<>();
         paramMap.put("type", TYPE);
         paramMap.put("dataId", boardId);
 
         List<Image> images = imageMapper.selectImage(paramMap);
         deleteImageFile(images);
+        
+        // 게시글 삭제시 자동으로 댓글도 삭제되도록
+        List<Comment> list = commentMapper.selectComment(boardId);
+        for (Comment comment : list){
+            commentMapper.cascadeDeleteHeart(comment.getCommentId());
+        }
 
+        commentMapper.cascadeDeleteComment(boardId);
         imageMapper.cascadeDeleteImage(paramMap);
         boardMapper.cascadeDeleteHeart(boardId);
+        boardMapper.deleteBoard(boardId);
     }
 
     // 사진 포함
