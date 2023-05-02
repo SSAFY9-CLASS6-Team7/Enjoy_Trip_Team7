@@ -22,11 +22,11 @@
 
 	<resultMap id="PlanWithAttractionResultMap" type="plan" extends="planResultMap">
 		<collection column="plan_id" property="planAttractions"
-			javaType="List" ofType="planAttraction" select="selectPlanAttractionsByPlanId" />
+			javaType="List" ofType="planAttraction" select="selectPlanAttractionListByPlanId" />
 	</resultMap>
 
-	<select id="selectPlanAttractionsByPlanId" parameterType="int" resultType="planAttraction">
-		SELECT plan_id planId, attraction_id attractionId, sequence, plan_date planDate
+	<select id="selectPlanAttractionListByPlanId" parameterType="int" resultType="planAttraction">
+		SELECT plan_attraction_id planAttractionId, plan_id planId, attraction_id attractionId, sequence, plan_date planDate
 		FROM plan_attraction
 		WHERE plan_id = #{id}
 		order by sequence
@@ -70,8 +70,8 @@
 	
 	<!--이하 Plan Attraction 관련  -->
 	
-	<!-- PlanAttraction selectPlanAttraction(PlanAttraction planAttraction) -->
-	<select id="selectPlanAttraction" parameterType="planAttraction"
+	<!-- PlanAttraction selectPlanAttraction(int planAttractionId) -->
+	<select id="selectPlanAttraction" parameterType="int"
 		resultMap="planAttractionResultMap">
 		select *
 		from plan_attraction

@@ -64,7 +64,7 @@ public class PlanServiceImpl implements PlanService {
 	
 	@Override
 	public void updatePlanAttraction(PlanAttraction planAttraction) throws SQLException {
-		int beforeSequence = planMapper.selectPlanAttraction(planAttraction).getSequence();
+		int beforeSequence = planMapper.selectPlanAttraction(planAttraction.getPlanAttractionId()).getSequence();
 		int afterSequence = planAttraction.getSequence();
 		planMapper.updatePlanAttraction(planAttraction);
 		
@@ -85,7 +85,8 @@ public class PlanServiceImpl implements PlanService {
 	}
 
 	@Override
-	public void deletePlanAttraction(PlanAttraction planAttraction) throws SQLException {
+	public void deletePlanAttraction(int planAttractionId) throws SQLException {
+		PlanAttraction planAttraction = planMapper.selectPlanAttraction(planAttractionId);
 		int sequence = planAttraction.getSequence();
 		int planId = planAttraction.getPlanId();
 		List<PlanAttraction> list = getPlan(planId).getPlanAttractions();
@@ -94,7 +95,6 @@ public class PlanServiceImpl implements PlanService {
 			tempAttraction.setSequence(i-1);
 			planMapper.updatePlanAttraction(tempAttraction);
 		}
-		
-		planMapper.deletePlanAttraction(planAttraction);
+		planMapper.deletePlanAttraction(planAttractionId);
 	}
 }
