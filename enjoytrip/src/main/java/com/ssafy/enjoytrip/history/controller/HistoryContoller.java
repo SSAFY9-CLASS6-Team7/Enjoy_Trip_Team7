@@ -2,6 +2,7 @@ package com.ssafy.enjoytrip.history.controller;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,6 +24,9 @@ import com.ssafy.enjoytrip.history.model.History;
 import com.ssafy.enjoytrip.history.model.service.HistoryService;
 import com.ssafy.enjoytrip.user.model.User;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestController
 @RequestMapping("/history")
 public class HistoryContoller {
@@ -40,8 +45,12 @@ public class HistoryContoller {
 		return (User) session.getAttribute("loginUser");
 	}
 	@GetMapping
-	public List<History> getHistoryList(HttpSession session) throws SQLException {
-		return historyService.getHistoryList(getLoginUser(session).getUserId());
+	public List<History> getHistoryList(@RequestParam(required = false) String pgno, HttpSession session) throws SQLException {
+		Map<String, String> param = new HashMap<String, String>();
+		param.put("userId", getLoginUser(session).getUserId());
+		log.info("pgno: {}", pgno);
+		param.put("pgno", pgno);
+		return historyService.getHistoryList(param);
 	}
 
 	@GetMapping("{historyId}")
@@ -53,19 +62,19 @@ public class HistoryContoller {
 	public List<History> createHistory(@RequestPart History history, @RequestPart(required = false) List<MultipartFile> files, HttpSession session) throws SQLException, IOException {
 		history.setUserId(getLoginUser(session).getUserId());
 		historyService.createHistory(history, files);
-		return historyService.getHistoryList(getLoginUser(session).getUserId());
+		return getHistoryList("1", session);
 	}
 	
 	@PutMapping("{historyId}")
 	public List<History> updatehistory(@RequestPart History history, @PathVariable int historyId, HttpSession session, @RequestPart(required = false) List<MultipartFile> files) throws SQLException, IOException {
 		history.setHistoryId(historyId);
 		historyService.updateHistory(history, files);
-		return historyService.getHistoryList(getLoginUser(session).getUserId());
+		return getHistoryList("1", session);
 	}
 	
 	@DeleteMapping("{historyId}")
 	public List<History> deleteHistory(@PathVariable int historyId, HttpSession session) throws SQLException {
 		historyService.deleteHistory(historyId);
-		return historyService.getHistoryList(getLoginUser(session).getUserId());
+		return getHistoryList("1", session);
 	}
 }

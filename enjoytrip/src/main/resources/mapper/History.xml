@@ -13,13 +13,14 @@
 		<result column="start_day" property="startDay"/>
 		<result column="end_day" property="endDay"/>
 	</resultMap>
-	
-	<!-- List<History> selectHistoryList(String userId) -->
-	<select id="selectHistoryList" parameterType="String" resultMap="historyResultMap">
+
+	<!-- 페이징 적용 리스트 -->
+	<select id="selectHistoryList" parameterType="map" resultMap="historyResultMap">
 		select *
 		from history
 		where user_id = #{userId}
 		order by createtime
+		limit #{start}, #{listsize}
 	</select>
 	
 	<!-- History selectHistoryById(int historyId)-->
