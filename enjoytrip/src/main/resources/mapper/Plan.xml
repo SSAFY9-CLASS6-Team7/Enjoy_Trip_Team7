@@ -33,12 +33,12 @@
 	</select>
 
 	<!-- List<Plan> selectPlanList(String userId) -->
-	<select id="selectPlanList" parameterType="string"
-		resultMap="planResultMap">
+	<select id="selectPlanList" parameterType="map" resultMap="planResultMap">
 		select plan_id, title, createtime, content, user_id
 		from plan
 		where user_id = #{userId}
-		order by createtime
+		order by createtime desc
+		limit #{start}, #{listsize}
 	</select>
 
 	<!-- Plan selectPlanById(int planId) -->
