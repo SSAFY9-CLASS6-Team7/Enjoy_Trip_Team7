@@ -6,7 +6,6 @@
 ## 📌소개
 
  공공 데이터 포털의 오픈 API를 이용하여 `관광지`와 `여행`에 대한 정보를 제공하고 사용자를 위한 편의 기능을 제공하는 서비스입니다.   
- SSAFY 1학기 백엔드 관통 프로젝트로서 진행하였습니다.
 
 ## 📍기능
 - 여행지 정보 제공
@@ -18,6 +17,17 @@
   - 추천
   - 질문
 - 여행 계획 및 후기 공유 기능 ( Ver 2.0 추가 요망 )
+
+## 👨‍👨‍👧‍👦**팀원**
+<table>
+    <tr>
+        <td height="140px" align="center"> <a href="https://github.com/oth54477">
+            <img src="https://avatars.githubusercontent.com/u/53906423?v=4" width="140px" /> <br><br> 이다영 <br></a> <br></td>
+        <td height="140px" align="center"> <a href="https://github.com/meoldae">
+            <img src="https://avatars.githubusercontent.com/u/70866410?s=400&u=54bdc7977a0c8016cb2d7230bd28200c2c76b3b0&v=4" width="140px" /> <br><br> 전준영 <br></a> <br></td>
+    </tr>
+</table>
+
 
 ## 🛠개발환경
 ### 협업 : <img src="https://img.shields.io/badge/Notion-000000?style=flat-square&logo=Notion&logoColor=white"/></a> 
