@@ -15,6 +15,7 @@ import java.util.Map;
 
 @Slf4j
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/board")
 @RequiredArgsConstructor
 public class BoardController {
@@ -33,7 +34,7 @@ public class BoardController {
     }
 
     @PutMapping("/{boardId}")
-    public void updateBoard(@RequestPart Board board, @PathVariable int boardId, @RequestPart(required = false) List<MultipartFile> files) throws SQLException, IOException {
+    public void updateBoard(Board board, @PathVariable int boardId, List<MultipartFile> files) throws SQLException, IOException {
         board.setBoardId(boardId);
         boardService.updateBoard(board, files);
     }
@@ -45,9 +46,14 @@ public class BoardController {
 
     // File 업로드 포함
     @PostMapping
-    public void createBoard(@RequestPart Board board, @RequestPart(required = false) List<MultipartFile> files) throws SQLException, IOException {
+    public void createBoard(Board board, List<MultipartFile> files) throws SQLException, IOException {
         boardService.createBoard(board, files);
     }
+
+//    @PostMapping
+//    public void createBoard(@RequestBody Board board) throws SQLException, IOException {
+//        boardService.createBoard(board, null);
+//    }
 
     @PutMapping("/{boardId}/heart")
     public void updateHeart(@RequestBody Map<String, Object> paramMap) throws SQLException {

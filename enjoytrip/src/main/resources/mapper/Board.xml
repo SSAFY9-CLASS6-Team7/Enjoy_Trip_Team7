@@ -4,7 +4,7 @@
 
 <mapper namespace="com.ssafy.enjoytrip.board.model.mapper.BoardMapper">
 
-    <resultMap type="board" id="boardMap">
+    <resultMap type="board" id="boardMap" >
         <result column="code" property="code"/>
         <result column="title" property="title"/>
         <result column="createtime" property="createTime"/>
@@ -30,7 +30,7 @@
           <choose>
             <when test="condition == 'heart'">`heart`</when>
             <when test="condition == 'hits'">`hits` </when>
-            <when test="condition == ''"> 'createtime' </when>
+            <when test="condition == ''"> `createtime` </when>
           </choose>
         </trim>
          LIMIT #{start}, #{size}
@@ -71,7 +71,6 @@
             <if test="attractionId != 0">attraction_id = ${attractionId},</if>
             <if test="heart != null">heart = ${heart},</if>
             <if test="boardContent != null">board_content = #{boardContent},</if>
-            <if test="1 == 1">createtime = now()</if>
         </set>
         WHERE board_id = #{boardId}
     </update>

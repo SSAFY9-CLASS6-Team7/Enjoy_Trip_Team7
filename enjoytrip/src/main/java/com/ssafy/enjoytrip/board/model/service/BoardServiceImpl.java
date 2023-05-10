@@ -41,7 +41,6 @@ public class BoardServiceImpl implements BoardService {
         int pageNo;
         if ("".equals((String) paramMap.get("pageNo"))) pageNo = 1;
         else pageNo = Integer.parseInt((String) paramMap.get("pageNo"));
-        log.info("START INT = {}", pageNo);
         paramMap.put("start", pageNo * LIST_SIZE - LIST_SIZE);
         paramMap.put("size", LIST_SIZE);
         return boardMapper.selectBoard(paramMap);
@@ -109,7 +108,11 @@ public class BoardServiceImpl implements BoardService {
     @Transactional
     @Override
     public void createBoard(Board board, List<MultipartFile> files) throws SQLException, IOException {
+        // for Test
+        if (board.getCode() == 0) board.setCode(100);
+
         boardMapper.insertBoard(board);
+
         int dataId = board.getBoardId();
         if (files != null) {
             insertImages(dataId, files);
