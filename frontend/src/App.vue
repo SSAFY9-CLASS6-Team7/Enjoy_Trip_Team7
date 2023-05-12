@@ -1,12 +1,26 @@
 <template>
   <div id="app">
-    <nav>
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </nav>
-    <router-view/>
+    <the-header></the-header>
+    <router-view></router-view>
   </div>
 </template>
+
+
+<script>
+import TheHeader from "@/components/TheHeader";
+// import AppMain from "@/views/AppMain";
+// import AppBoard from "@/views/AppBoard";
+
+export default {
+  components: {
+    TheHeader,
+    // AppMain,
+    // AppBoard,
+  },
+};
+</script>
+
+
 
 <style>
 #app {
