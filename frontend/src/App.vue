@@ -2,25 +2,25 @@
   <div id="app">
     <the-header></the-header>
     <router-view></router-view>
+    <the-footer></the-footer>
   </div>
 </template>
 
-
 <script>
-import TheHeader from "@/components/TheHeader";
+import TheHeader from '@/components/TheHeader';
+import TheFooter from '@/components/TheFooter';
 // import AppMain from "@/views/AppMain";
 // import AppBoard from "@/views/AppBoard";
 
 export default {
   components: {
     TheHeader,
+    TheFooter,
     // AppMain,
     // AppBoard,
   },
 };
 </script>
-
-
 
 <style>
 #app {
