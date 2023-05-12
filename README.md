@@ -33,7 +33,9 @@
 ### 협업 : <img src="https://img.shields.io/badge/Notion-000000?style=flat-square&logo=Notion&logoColor=white"/></a> 
 ### VCS(형상관리) : <img src="https://img.shields.io/badge/Git-000000?style=flat-square&logo=Git&logoColor=red"/></a>, <img src="https://img.shields.io/badge/GitHub-000000?style=flat-square&logo=GitHub&logoColor=white"/></a> 
 ### Backend : <img src="https://img.shields.io/badge/Spring-000000?style=flat-square&logo=Spring&logoColor=6DB33F"/></a>, <img src="https://img.shields.io/badge/JAVA-000000?style=flat-square&logo=JAVA&logoColor=007396"/></a>, <img src="https://img.shields.io/badge/MyBatis-000000?style=flat-square&logo=MyBatis&logoColor=007396"/></a> 
+### FrontEnd : <img src="https://img.shields.io/badge/Vue.js-000000?style=flat-square&logo=Vue.js&logoColor=4FC08D"/></a>, <img src="https://img.shields.io/badge/HTML-000000?style=flat-square&logo=HTML5&logoColor=E34F26"/></a>,  <img src="https://img.shields.io/badge/CSS-000000?style=flat-square&logo=CSS3&logoColor=1572B6"/></a> 
 ### DB : <img src="https://img.shields.io/badge/MySQL-000000?style=flat-square&logo=MySQL&logoColor=4479A1"/></a> 
+
 
 ---
 ## 📚프로젝트 진행    
