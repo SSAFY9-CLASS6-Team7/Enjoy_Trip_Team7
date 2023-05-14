@@ -2,7 +2,7 @@
   <div class="header">
     <div class="top-bar"></div>
     <div class="header-content">
-      <img class="logo-img" src="@/assets/logo.gif" />
+      <img class="logo-img" src="@/assets/logo.gif" @click="toMain"/>
       <div class="menu-set">
         <div :class="{ 'nav-item': true, active: activeMenuItem === 'attraction' }" @click="activeMenuItem = 'attraction'">
           <img class="nav-item-vector" src="../assets/header_icon/attraction.svg"/>
@@ -39,6 +39,11 @@ export default {
   data() {
     return {
       activeMenuItem: '-1',
+    }
+  },
+  methods: {
+    toMain(){
+      if(this.$route.path  !== '/') this.$router.push("/");
     }
   }
 };
@@ -93,6 +98,9 @@ export default {
   flex: 1 1 10%;
   margin-left: 20px;
   height: 60px;
+}
+.logo-img:hover {
+  cursor: pointer;
 }
 
 .menu-set {
