@@ -1,5 +1,8 @@
 <template>
   <div class="history-container">
+    <div v-if='modalOpen===true'>
+      <history-create></history-create>
+    </div>
     <div class="left-aside"></div>
     <div>
       <div class="inner-header">
@@ -12,15 +15,48 @@
         </router-link>
       </div>
       <div class="line"></div>
-      <div class="main">main area</div>
+      <div class="main">
+        <router-link to="view">
+          <history-image></history-image>
+        </router-link>
+        <router-link to="view">
+          <history-image></history-image>
+        </router-link>
+        <router-link to="view">
+          <history-image></history-image>
+        </router-link>
+        <router-link to="view">
+          <history-image></history-image>
+        </router-link>
+        <router-link to="view">
+          <history-image></history-image>
+        </router-link>
+        <router-link to="view">
+          <history-image></history-image>
+        </router-link>
+        <router-link to="view">
+          <history-image></history-image>
+        </router-link>
+        <router-link to="view">
+          <history-image></history-image>
+        </router-link>
+      </div>
+      <div class="pagination">pagination</div>
     </div>
     <div class="right-aside"></div>
   </div>
 </template>
 
 <script>
+import HistoryImage from "../history/HistoryImage.vue";
+import HistoryCreate from "../history/HistoryCreate.vue";
+
 export default {
   name: "HistoryList",
+  components: {
+    HistoryImage,
+    HistoryCreate,
+  },
 };
 </script>
 
@@ -31,19 +67,18 @@ export default {
   grid-template-columns: 1fr 5fr 1fr;
   grid-template-areas:
     "left header right"
-    "left  main  right";
+    "left  main  right"
+    "left  page  right";
   align-items: stretch;
   justify-items: stretch;
 }
 
 .left-aside {
   grid-area: left;
-  /* background-color: aquamarine; */
 }
 
 .right-aside {
   grid-area: right;
-  /* background-color: aquamarine; */
 }
 
 .inner-header {
@@ -54,7 +89,6 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  /* background-color: aqua; */
 }
 
 .line {
@@ -65,23 +99,34 @@ export default {
 
 .main {
   grid-area: main;
-  background-color: #ff699a;
+  margin: 20px 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  background-color: antiquewhite;
 }
 
 .create-btn {
-  padding: 10px 15px;
+  padding: 7px 10px;
+  margin-top: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
   background: linear-gradient(95.36deg, #e1306c 2.32%, #ff699a 68.42%, #fcaf45 104.98%);
   background-blend-mode: darken;
-  border-radius: 10px;
+  border-radius: 5px;
   font-size: 12px;
+  font-weight: 600;
 }
 
 .create-btn-vector {
   width: 15px;
   height: auto;
+}
+
+.pagination {
+  grid-area: page;
+  background-color: #fcaf45;
 }
 
 button {
