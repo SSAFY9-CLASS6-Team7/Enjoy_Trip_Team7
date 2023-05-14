@@ -4,13 +4,29 @@
     <div class="header-content">
       <img class="logo-img" src="@/assets/logo.gif" />
       <div class="menu-set">
-        <router-link to="/attraction">여행지</router-link>
-        <router-link to="/plan">계 획</router-link>
-        <router-link to="/history">기 록</router-link>
-        <router-link to="/board">게시판</router-link>
+        <div :class="{ 'nav-item': true, active: activeMenuItem === 'attraction' }" @click="activeMenuItem = 'attraction'">
+          <img class="nav-item-vector" src="../assets/header_icon/attraction.svg"/>
+          <router-link to="/attraction">여행지</router-link>
+        </div>
+
+        <div :class="{ 'nav-item': true, active: activeMenuItem === 'plan' }" @click="activeMenuItem = 'plan'">
+          <img class="nav-item-vector" src="../assets/header_icon/plan.svg"/>
+          <router-link to="/plan">계 획</router-link>
+        </div>
+
+        <div :class="{ 'nav-item': true, active: activeMenuItem === 'history' }" @click="activeMenuItem = 'history'">
+          <img class="nav-item-vector" src="../assets/header_icon/history.svg"/>
+          <router-link to="/history">기 록</router-link>
+        </div>
+
+        <div :class="{ 'nav-item': true, active: activeMenuItem === 'board' }" @click="activeMenuItem = 'board'">
+          <img class="nav-item-vector" src="../assets/header_icon/community.svg"/>
+          <router-link to="/board">게시판</router-link>
+        </div>
+        
       </div>
       <div class="user-area">
-        <img class="profile-img" src="@/assets/logo.png" />
+        <img class="profile-img" src="../assets/header_icon/profile.svg" />
         <router-link to="/user/login">로그인</router-link>
       </div>
     </div>
@@ -20,12 +36,46 @@
 <script>
 export default {
   name: "TheHeader",
+  data() {
+    return {
+      activeMenuItem: '-1',
+    }
+  }
 };
+
 </script>
 
 <style scoped>
+  .nav-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border-bottom : 6px solid #e1306b00;
+  }
+
+.nav-item-vector {
+  width: 16px;
+  height: 22px;
+  margin-left: 5px;
+}
+
+.nav-item:hover {
+  border-bottom: 6px solid #e1306c;
+  transition: 0.3s;
+} 
+
+.nav-item.active {
+  border-bottom: 6px solid #e1306c;
+  /* 하단 밑줄 그라데이션 */
+  /* background-image: linear-gradient(#ffffff, #ffffff), linear-gradient(97.1deg, #E1306C 0%, #FF699A 48.96%, rgba(252, 175, 69, 0.78) 100%);
+  background-origin: border-box;
+  background-clip: content-box, border-box; */
+}
+
+
 .header {
   width: 100%;
+  height: 100px;
   text-align: center;
   box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.15);
   font-size: 15px;
@@ -36,10 +86,13 @@ export default {
   display: flex; /* 10:65:15 비율 */
   justify-content: space-between;
   align-items: center;
+  margin-top: 10px;
 }
 
 .logo-img {
   flex: 1 1 10%;
+  margin-left: 20px;
+  height: 60px;
 }
 
 .menu-set {
@@ -47,7 +100,8 @@ export default {
   justify-content: space-around;
   align-items: center;
   flex: 2 1 65%;
-  padding: 5px 15% 5px 10%;
+  padding: 3px 15% 5px 10%;
+  font-size: 20px;
 }
 
 .top-bar {
@@ -69,8 +123,9 @@ export default {
 
 a {
   font-weight: bold;
-  padding: 13px;
+  padding: 13px 10px 13px 8px;
   flex-shrink: 1;
+
 }
 /* a:hover {
   color: #42b983;
