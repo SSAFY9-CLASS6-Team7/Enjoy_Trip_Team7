@@ -62,4 +62,8 @@ a {
 a:hover {
   cursor: pointer;
 }
+
+button:hover {
+  cursor: pointer;
+}
 </style>
