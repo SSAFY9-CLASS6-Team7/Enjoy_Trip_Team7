@@ -66,6 +66,10 @@ export default {
 
 .nav-item.active {
   border-bottom: 6px solid #e1306c;
+  /* 하단 밑줄 그라데이션 */
+  /* background-image: linear-gradient(#ffffff, #ffffff), linear-gradient(97.1deg, #E1306C 0%, #FF699A 48.96%, rgba(252, 175, 69, 0.78) 100%);
+  background-origin: border-box;
+  background-clip: content-box, border-box; */
 }
 
 
