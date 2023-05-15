@@ -5,10 +5,14 @@
       <!-- <img :src="require(`thumbnail`)" class="history-thumnail" /> -->
       <img src="@/assets/sample/sample_history.jpg" class="history-thumnail" />
       <div class="history-info">
-        <div class="history-title">{{ history.history.title }}</div>
+        <div class="history-title" v-if="history.history">
+          {{ history.history.title }}
+        </div>
         <div class="history-img">
           <img src="@/assets/common/image.svg" class="img-icon-vector" />
-          <div class="img-num">{{ history.images.length }}</div>
+          <div class="img-num" v-if="history.history">
+            {{ history.images.length }}
+          </div>
         </div>
       </div>
     </div>
@@ -37,7 +41,6 @@ export default {
     await axios
       .get('http://localhost/history/' + this.historyId)
       .then((response) => (this.history = response.data));
-    console.dir(this.history);
   },
 };
 </script>
