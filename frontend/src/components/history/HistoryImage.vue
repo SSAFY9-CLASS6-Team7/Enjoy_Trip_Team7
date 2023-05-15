@@ -1,7 +1,7 @@
 <template>
   <div class="history-item">
-    <!-- <div class="card" @click="checkHistoryInfo"> -->
-    <div class="card" @click="$router.push('/view/' + history.historyId)">
+    <!-- <div class="card" @click="$router.push('view/' + history.history.historyId)"> -->
+    <div class="card">
       <!-- <img :src="require(`thumbnail`)" class="history-thumnail" /> -->
       <img src="@/assets/sample/sample_history.jpg" class="history-thumnail" />
       <div class="history-info">
@@ -47,10 +47,9 @@ export default {
 
 <style scoped>
 .history-item {
-  /*반응형 정사각형 크기를 유지하기 위함*/
   position: relative;
   width: 100%;
-  min-width: 150px;
+  min-width: 340px;
   height: 0;
   overflow: hidden;
   padding-bottom: 100%;
@@ -61,6 +60,10 @@ export default {
   overflow: hidden;
   width: 100%;
   height: 100%;
+  /* width: 340px;
+  height: 340px; */
+  /* min-width: 340px;
+  min-height: 340px; */
 }
 
 .card:hover .history-info {
