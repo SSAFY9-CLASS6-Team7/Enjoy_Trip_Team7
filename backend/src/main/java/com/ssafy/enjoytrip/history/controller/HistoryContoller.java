@@ -38,7 +38,7 @@ public class HistoryContoller {
 	private User getLoginUser(HttpSession session) {
 		// ----- DUMMY USER FOR TEST -----
 		User dummyUser = new User();
-		dummyUser.setUserId("ssafy");
+		dummyUser.setUserId("TestUser1");
 		session.setAttribute("loginUser", dummyUser);
 		// --------------------------------
 		return (User) session.getAttribute("loginUser");
