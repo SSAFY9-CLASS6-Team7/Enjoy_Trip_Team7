@@ -1,8 +1,8 @@
 <template>
   <div class="history-container">
-    <div v-if='modalOpen===true'>
+    <!-- <div v-if="modalOpen === true">
       <history-create></history-create>
-    </div>
+    </div> -->
     <div class="left-aside"></div>
     <div>
       <div class="inner-header">
@@ -16,30 +16,11 @@
       </div>
       <div class="line"></div>
       <div class="main">
-        <router-link to="view">
-          <history-image></history-image>
-        </router-link>
-        <router-link to="view">
-          <history-image></history-image>
-        </router-link>
-        <router-link to="view">
-          <history-image></history-image>
-        </router-link>
-        <router-link to="view">
-          <history-image></history-image>
-        </router-link>
-        <router-link to="view">
-          <history-image></history-image>
-        </router-link>
-        <router-link to="view">
-          <history-image></history-image>
-        </router-link>
-        <router-link to="view">
-          <history-image></history-image>
-        </router-link>
-        <router-link to="view">
-          <history-image></history-image>
-        </router-link>
+        <history-image
+          v-for="history in histories"
+          :key="history.historyId"
+          :historyId="history.historyId"
+        ></history-image>
       </div>
       <div class="pagination">pagination</div>
     </div>
@@ -48,14 +29,25 @@
 </template>
 
 <script>
-import HistoryImage from "../history/HistoryImage.vue";
-import HistoryCreate from "../history/HistoryCreate.vue";
+import HistoryImage from '../history/HistoryImage.vue';
+// import HistoryCreate from '../history/HistoryCreate.vue';
+import axios from 'axios';
 
 export default {
-  name: "HistoryList",
+  name: 'HistoryList',
   components: {
     HistoryImage,
-    HistoryCreate,
+    // HistoryCreate,
+  },
+  data() {
+    return {
+      histories: [],
+    };
+  },
+  async created() {
+    await axios
+      .get('http://localhost/history?pageNo=')
+      .then((response) => (this.histories = response.data));
   },
 };
 </script>
@@ -66,9 +58,9 @@ export default {
   display: grid;
   grid-template-columns: 1fr 5fr 1fr;
   grid-template-areas:
-    "left header right"
-    "left  main  right"
-    "left  page  right";
+    'left header right'
+    'left  main  right'
+    'left  page  right';
   align-items: stretch;
   justify-items: stretch;
 }

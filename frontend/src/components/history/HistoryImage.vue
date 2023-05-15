@@ -1,12 +1,14 @@
 <template>
   <div class="history-item">
-    <div class="card">
+    <!-- <div class="card" @click="checkHistoryInfo"> -->
+    <div class="card" @click="$router.push('/view/' + history.historyId)">
+      <!-- <img :src="require(`thumbnail`)" class="history-thumnail" /> -->
       <img src="@/assets/sample/sample_history.jpg" class="history-thumnail" />
       <div class="history-info">
-        <div class="history-title">기록이름도열자이내로</div>
+        <div class="history-title">{{ history.history.title }}</div>
         <div class="history-img">
           <img src="@/assets/common/image.svg" class="img-icon-vector" />
-          <div class="img-num">5</div>
+          <div class="img-num">{{ history.images.length }}</div>
         </div>
       </div>
     </div>
@@ -14,8 +16,29 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
-  name: "HistoryImage",
+  name: 'HistoryImage',
+  data() {
+    return {
+      history: Object,
+      //   sampleImageSrc: '@/assets/sample/sample_history.jpg',
+    };
+  },
+  props: {
+    historyId: Number,
+  },
+  methods: {
+    // imageSrc() {
+    //   return this.imageList ? this.imageList[0].imagePath : this.sampleImageSrc;
+    // },
+  },
+  async created() {
+    await axios
+      .get('http://localhost/history/' + this.historyId)
+      .then((response) => (this.history = response.data));
+    console.dir(this.history);
+  },
 };
 </script>
 
@@ -87,7 +110,7 @@ export default {
   width: 100%;
   height: 100%;
   /*블러처리를 했을 때 밖으로 튀어나오지 않게
-  크기를 1.1로 키운 뒤 overflow로 잘라줌*/
+    크기를 1.1로 키운 뒤 overflow로 잘라줌*/
   transform: scale(1.1);
   filter: blur(0px);
   transition: filter 0.3s ease-in;
