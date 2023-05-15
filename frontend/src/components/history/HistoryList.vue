@@ -1,8 +1,8 @@
 <template>
   <div class="history-container">
-    <!-- <div v-if="modalOpen === true">
-      <history-create></history-create>
-    </div> -->
+    <div v-if="viewModal === true">
+      <history-view></history-view>
+    </div>
     <div class="left-aside"></div>
     <div>
       <div class="inner-header">
@@ -19,6 +19,7 @@
         <history-image
           v-for="history in histories"
           :key="history.historyId"
+          @click="viewModalOpen()"
           :historyId="history.historyId"
         ></history-image>
       </div>
@@ -30,6 +31,7 @@
 
 <script>
 import HistoryImage from '../history/HistoryImage.vue';
+import HistoryView from './HistoryView.vue';
 // import HistoryCreate from '../history/HistoryCreate.vue';
 import axios from 'axios';
 
@@ -37,12 +39,20 @@ export default {
   name: 'HistoryList',
   components: {
     HistoryImage,
+    HistoryView,
     // HistoryCreate,
   },
   data() {
     return {
       histories: [],
+      viewModal: false,
     };
+  },
+  methods: {
+    viewModalOpen() {
+      this.viewModal = true;
+      console.log(this.viewModal);
+    },
   },
   async created() {
     await axios
