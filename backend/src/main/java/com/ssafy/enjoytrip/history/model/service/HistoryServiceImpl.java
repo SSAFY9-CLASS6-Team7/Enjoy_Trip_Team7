@@ -54,7 +54,7 @@ public class HistoryServiceImpl implements HistoryService {
         paramMap.put("dataId", historyId);
         
         Map<String, Object> result = new HashMap<>();
-        result.put("board", historyMapper.selectHistoryById(historyId));
+        result.put("history", historyMapper.selectHistoryById(historyId));
         result.put("images", imageMapper.selectImage(paramMap));
         return result;
 	}
