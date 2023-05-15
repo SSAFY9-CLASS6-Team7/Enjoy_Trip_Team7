@@ -11,7 +11,7 @@ public class EnjoytripApplication {
 	public static void main(String[] args) {
 		SpringApplication application = new SpringApplicationBuilder()
 				.sources(EnjoytripApplication.class)
-				.listeners(new ApplicationPidFileWriter("./application.pid"))
+				.listeners(new ApplicationPidFileWriter("/var/lib/jenkins/workspace/application.pid"))
 				.build();
 		application.run(args);
 	}

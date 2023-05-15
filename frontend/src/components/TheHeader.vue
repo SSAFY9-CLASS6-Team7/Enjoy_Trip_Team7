@@ -95,6 +95,7 @@ export default {
   box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.15);
   font-size: 15px;
   font-weight: 700;
+  min-width: 1920px;
 }
 
 .header-content {
