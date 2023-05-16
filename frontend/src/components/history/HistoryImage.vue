@@ -1,7 +1,8 @@
 <template>
   <div class="history-item">
-    <!-- <div class="card" @click="$router.push('view/' + history.history.historyId)"> -->
-    <div class="card">
+    <div class="card" @click="emitViewModalOn">
+      <!-- <div class="card" @click="$router.push('view/' + history.history.historyId)"> -->
+      <!-- <div class="card"> -->
       <!-- <img :src="require(`thumbnail`)" class="history-thumnail" /> -->
       <img src="@/assets/sample/sample_history.jpg" class="history-thumnail" />
       <div class="history-info">
@@ -33,6 +34,9 @@ export default {
     historyId: Number,
   },
   methods: {
+    emitViewModalOn() {
+      this.$emit('setViewModal', true, this.historyId);
+    },
     // imageSrc() {
     //   return this.imageList ? this.imageList[0].imagePath : this.sampleImageSrc;
     // },

@@ -1,7 +1,7 @@
 <template>
   <div class="history-container">
     <div v-if="viewModal === true">
-      <history-view></history-view>
+      <history-view @setViewModal="setViewModal" :historyId="this.focusedHistoryId"></history-view>
     </div>
     <div class="left-aside"></div>
     <div>
@@ -19,8 +19,8 @@
         <history-image
           v-for="history in histories"
           :key="history.historyId"
-          @click="viewModalOpen()"
           :historyId="history.historyId"
+          @setViewModal="setViewModal"
         ></history-image>
       </div>
       <div class="pagination">pagination</div>
@@ -46,13 +46,18 @@ export default {
     return {
       histories: [],
       viewModal: false,
+      focusedHistoryId: 0,
     };
   },
   methods: {
-    viewModalOpen() {
-      this.viewModal = true;
-      console.log(this.viewModal);
+    setViewModal(isViewModalOpen, historyId) {
+      this.focusedHistoryId = historyId;
+      this.viewModal = isViewModalOpen;
     },
+    // viewModalOpen() {
+    //   this.viewModal = true;
+    //   console.log(this.viewModal);
+    // },
   },
   async created() {
     await axios
