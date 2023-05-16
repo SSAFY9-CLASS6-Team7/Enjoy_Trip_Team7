@@ -1,9 +1,10 @@
 <template>
   <div class="modal">
     <div class="overlay" @click="emitViewModalOff"></div>
-    <div class="modal-card">
+    <div class="modal-card" v-if="history.history">
       <div class="img-area">
-        <img src="@/assets/sample/sample_history.jpg" />
+        <img :src="imageSrc()" class="history-thumnail" />
+        <img src="@/assets/sample/sample1.jpg" />
         <!-- <img src="@/assets/sample/flower_sample.jpg" /> -->
       </div>
       <div class="detail-area">
@@ -21,7 +22,7 @@
           </router-link>
           <router-link to="delete">
             <button class="deleteBtn">
-              <img class="create-btn-vector" src="@/assets/history/delete_icon.svg" />
+              <img class="create-btn-vector" src="@/assets/common/delete_icon.svg" />
             </button>
           </router-link>
         </div>
@@ -38,6 +39,7 @@ export default {
   data() {
     return {
       history: Object,
+      imageList: [],
     };
   },
   props: {
@@ -47,11 +49,20 @@ export default {
     emitViewModalOff() {
       this.$emit('setViewModal', false, 0);
     },
+    imageSrc() {
+      if (this.imageList.length > 0) {
+        return require(this.imageList[0].imagePath);
+      } else {
+        let sampleSrc = (this.historyId % 5) + 1;
+        return require('@/assets/sample/sample' + sampleSrc + '.jpg');
+      }
+    },
   },
   async mounted() {
     await axios
-      .get('http://localhost/history/' + this.historyId)
+      .get('http://43.201.218.74/history/' + this.historyId)
       .then((response) => (this.history = response.data));
+    this.imageList = this.history.images;
   },
 };
 </script>

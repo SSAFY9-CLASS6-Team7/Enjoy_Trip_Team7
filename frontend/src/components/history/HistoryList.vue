@@ -3,16 +3,17 @@
     <div v-if="viewModal === true">
       <history-view @setViewModal="setViewModal" :historyId="this.focusedHistoryId"></history-view>
     </div>
+    <div v-if="createModal === true">
+      <history-create @setCreateModal="setCreateModal"></history-create>
+    </div>
     <div class="left-aside"></div>
     <div>
       <div class="inner-header">
         <h2>기록</h2>
-        <router-link to="create">
-          <button class="create-btn">
-            <img class="create-btn-vector" src="../../assets/common/plus_icon.svg" />
-            기록 추가
-          </button>
-        </router-link>
+        <button class="create-btn" @setCreateModal="setCreateModal" @click="setCreateModal(true)">
+          <img class="create-btn-vector" src="../../assets/common/plus_icon_white.svg" />
+          기록 추가
+        </button>
       </div>
       <div class="line"></div>
       <div class="main">
@@ -32,7 +33,7 @@
 <script>
 import HistoryImage from '../history/HistoryImage.vue';
 import HistoryView from './HistoryView.vue';
-// import HistoryCreate from '../history/HistoryCreate.vue';
+import HistoryCreate from '../history/HistoryCreate.vue';
 import axios from 'axios';
 
 export default {
@@ -40,12 +41,13 @@ export default {
   components: {
     HistoryImage,
     HistoryView,
-    // HistoryCreate,
+    HistoryCreate,
   },
   data() {
     return {
       histories: [],
       viewModal: false,
+      createModal: false,
       focusedHistoryId: 0,
     };
   },
@@ -53,15 +55,18 @@ export default {
     setViewModal(isViewModalOpen, historyId) {
       this.focusedHistoryId = historyId;
       this.viewModal = isViewModalOpen;
+      /* 다른 창은 확실하게 off */
+      this.createModal = false;
     },
-    // viewModalOpen() {
-    //   this.viewModal = true;
-    //   console.log(this.viewModal);
-    // },
+    setCreateModal(isCreateModalOpen) {
+      this.createModal = isCreateModalOpen;
+      /* 다른 창은 확실하게 off */
+      this.viewModal = false;
+    },
   },
   async created() {
     await axios
-      .get('http://localhost/history?pageNo=')
+      .get(`http://43.201.218.74/history?pageNo=`)
       .then((response) => (this.histories = response.data));
   },
 };

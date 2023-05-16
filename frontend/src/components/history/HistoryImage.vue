@@ -3,8 +3,8 @@
     <div class="card" @click="emitViewModalOn">
       <!-- <div class="card" @click="$router.push('view/' + history.history.historyId)"> -->
       <!-- <div class="card"> -->
-      <!-- <img :src="require(`thumbnail`)" class="history-thumnail" /> -->
-      <img src="@/assets/sample/sample_history.jpg" class="history-thumnail" />
+      <img :src="imageSrc()" class="history-thumnail" />
+      <!-- <img src="@/assets/sample/sample1.jpg" class="history-thumnail" /> -->
       <div class="history-info">
         <div class="history-title" v-if="history.history">
           {{ history.history.title }}
@@ -27,7 +27,7 @@ export default {
   data() {
     return {
       history: Object,
-      //   sampleImageSrc: '@/assets/sample/sample_history.jpg',
+      imageList: [],
     };
   },
   props: {
@@ -37,14 +37,20 @@ export default {
     emitViewModalOn() {
       this.$emit('setViewModal', true, this.historyId);
     },
-    // imageSrc() {
-    //   return this.imageList ? this.imageList[0].imagePath : this.sampleImageSrc;
-    // },
+    imageSrc() {
+      if (this.imageList.length > 0) {
+        return require(this.imageList[0].imagePath);
+      } else {
+        let sampleSrc = (this.historyId % 5) + 1;
+        return require('@/assets/sample/sample' + sampleSrc + '.jpg');
+      }
+    },
   },
   async created() {
     await axios
-      .get('http://localhost/history/' + this.historyId)
+      .get('http://43.201.218.74/history/' + this.historyId)
       .then((response) => (this.history = response.data));
+    this.imageList = this.history.images;
   },
 };
 </script>
