@@ -193,7 +193,7 @@ export default {
 
 </script>
 
-<style>
+<style scoped>
 .main-img {
   height: 450px;
 }
