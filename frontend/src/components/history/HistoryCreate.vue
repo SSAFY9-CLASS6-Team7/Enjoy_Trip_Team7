@@ -16,18 +16,28 @@
           />
         </label>
         <p v-for="file in files" :key="file.name">{{ file.name }}</p>
-        <!-- <img src="@/assets/sample/sample_history.jpg" /> -->
-        <!-- <img src="@/assets/sample/flower_sample.jpg" /> -->
       </div>
       <div class="detail-area">
-        <input type="text" class="title-input" v-model.lazy="title">
-        <!-- <h2 class="title">title</h2> -->
-        <!-- <div class="date">startDay - endDay</div> -->
-        <input type="date" class="date-input"/>
-        -
-        <input type="date"/>
+        <input type="text" class="title-input" v-model.lazy="title" />
+        <div class="date-area">
+          <input
+            type="date"
+            class="date-input"
+            v-model="startDay"
+            required
+            aria-required="true"
+            @change="formatDate(this.startDay)"
+          />
+          -
+          <input
+            type="date"
+            class="date-input"
+            v-model="endDay"
+            @change="formatDate(this.endDay)"
+          />
+        </div>
         <div class="line"></div>
-        <div class="content">content</div>
+        <input type="text" class="content-input" v-model.lazy="content" />
         <div class="btn-area">
           <button class="createBtn" @clisk="checkValue">
             <img class="create-btn-vector" src="@/assets/common/check_icon_black.svg" />
@@ -49,9 +59,9 @@ export default {
   data() {
     return {
       title: '제목은최대10자입니다',
-      startDay: '',
+      startDay: '날짜선택',
       endDay: '',
-      content: '',
+      content: '내용은 최대 얼마나?',
       files: [],
       // history: Object,
     };
@@ -106,6 +116,10 @@ export default {
 </script>
 
 <style scoped>
+input {
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
 .modal,
 .overlay {
   width: 100%;
@@ -176,9 +190,32 @@ export default {
   margin: 0 3% 0 10%;
 }
 
-.title {
-  margin-top: 5%;
+.title-input {
+  width: 85%;
+  font-size: 20px;
+  margin: 5% 3% 0 5%;
+  padding: 3%;
+  border: none;
+  border-radius: 10px;
+  background-color: #f5f5f5;
 }
+
+.date-area {
+  /* width: 80%; */
+  display: flex;
+  justify-content: space-evenly;
+  margin: 5% 3% 0 5%;
+}
+
+.date-input {
+  border: none;
+  margin-bottom: 3%;
+  background-color: #f5f5f5; /* 배경색 설정 */
+  border-radius: 5px; /* 테두리 모서리 둥글게 설정 */
+  padding: 5px;
+}
+/* .date-input::-webkit-datetime-edit-fields-wrapper {
+} */
 
 .date {
   margin-bottom: 3%;
@@ -192,8 +229,15 @@ export default {
   margin: 0% 10%;
 }
 
-.content {
-  margin-top: 5%;
+.content-input {
+  width: 80%;
+  height: 60%;
+  margin: 5% 3% 0 5%;
+  padding: 3%;
+  border: none;
+  border-radius: 10px;
+  background-color: #f5f5f5;
+  text-align: left;
 }
 
 .btn-area {

@@ -9,7 +9,9 @@
       </div>
       <div class="detail-area">
         <h2 class="title">{{ history.history.title }}</h2>
-        <div class="date">{{ history.history.startDay }} - {{ history.history.endDay }}</div>
+        <div class="date">
+          {{ formatDate(history.history.startDay) }} - {{ formatDate(history.history.endDay) }}
+        </div>
         <div class="line"></div>
         <div class="content">
           {{ history.history.content }}
@@ -56,6 +58,13 @@ export default {
         let sampleSrc = (this.historyId % 5) + 1;
         return require('@/assets/sample/sample' + sampleSrc + '.jpg');
       }
+    },
+    formatDate(selectDate) {
+      console.log(selectDate);
+      const year = selectDate.substr(0, 2);
+      const month = selectDate.substr(2, 2);
+      const day = selectDate.substr(4, 2);
+      return `${year}.${month}.${day}`;
     },
   },
   async mounted() {
