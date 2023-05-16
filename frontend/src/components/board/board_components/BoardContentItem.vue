@@ -87,6 +87,12 @@ export default {
 </script>
 
 <style scoped>
+@font-face {
+     font-family: 'S-CoreDream-3Light';
+     src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-3Light.woff') format('woff');
+     font-weight: normal;
+     font-style: normal;
+}
 .board-content-item {
     display: flex;
     height: 100%;
@@ -98,7 +104,6 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    color: #1B1C37;
 }
 
 .divider {
@@ -111,14 +116,18 @@ export default {
 .board-id {
     flex-basis: 8%;
     color: #1B1C37;
+    font-family: 'S-CoreDream-3Light';
+    font-weight: 300;
 }
 
 .board-category {
     flex-basis: 8%;
+    color: #1B1C37;
 }
 
 .is-image {
     flex-basis: 8%;
+    color: #1B1C37;
 }
 
 .board-title {
@@ -128,22 +137,40 @@ export default {
     flex-basis: 59%;
     text-align: left;
     padding-left: 35px;
+    color: #1B1C37;
+    font-family: 'S-CoreDream-3Light';
+    font-weight: 600;
 }
 
 .writer {
+    font-family: 'S-CoreDream-3Light';
+    font-weight: 300;
     flex-basis: 15%;
+    color: #000000;
 }
 
 .create-time {
+    color: #b1b1b1;
+    font-size: 14px;
     flex-basis: 15%;
+    font-family: 'S-CoreDream-3Light';
+    font-weight: 200;
 }
 
 .hits {
+    color: #b1b1b1;
+    font-size: 14px;
     flex-basis: 8%;
+    font-family: 'S-CoreDream-3Light';
+    font-weight: 200;
 }
 
 .heart {
+    color: #b1b1b1;
+    font-size: 14px;
     flex-basis: 8%;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 200;
 }
 
 .comment-length {
