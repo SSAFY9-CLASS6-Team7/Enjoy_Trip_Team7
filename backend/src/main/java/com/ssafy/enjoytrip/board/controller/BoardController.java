@@ -25,7 +25,6 @@ public class BoardController {
 
 
     @GetMapping
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public List<Board> getBoardList(@RequestParam Map<String, Object> paramMap) throws SQLException {
         return boardService.getBoardList(paramMap);
     }
