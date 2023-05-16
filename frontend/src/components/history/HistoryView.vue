@@ -8,14 +8,22 @@
       </div>
       <div class="detail-area">
         <h2 class="title">{{ history.history.title }}</h2>
-        <div>{{ history.history.startDay }} - {{ history.history.endDay }}</div>
+        <div class="date">{{ history.history.startDay }} - {{ history.history.endDay }}</div>
         <div class="line"></div>
         <div class="content">
           {{ history.history.content }}
         </div>
         <div class="btn-area">
-          <button class="updateBtn">update</button>
-          <button class="deleteBtn">delete</button>
+          <router-link to="update">
+            <button class="updateBtn">
+              <img class="create-btn-vector" src="@/assets/common/modify_icon.svg" />
+            </button>
+          </router-link>
+          <router-link to="delete">
+            <button class="deleteBtn">
+              <img class="create-btn-vector" src="@/assets/history/delete_icon.svg" />
+            </button>
+          </router-link>
         </div>
       </div>
     </div>
@@ -41,11 +49,9 @@ export default {
     },
   },
   async mounted() {
-    // console.log(this.historyId);
     await axios
       .get('http://localhost/history/' + this.historyId)
       .then((response) => (this.history = response.data));
-    // console.log(this.history);
   },
 };
 </script>
@@ -95,25 +101,49 @@ export default {
   width: 300px;
 }
 
+.title,
+.date,
+.content {
+  text-align: left;
+  margin: 0 3% 0 10%;
+}
+
 .title {
-  margin: 5px 3px 0px 3px;
+  margin-top: 5%;
+}
+
+.date {
+  margin-bottom: 3%;
 }
 
 .line {
   width: 80%;
-  height: 3px;
+  height: 2px;
   background-color: #ebe8e8;
   border: 10px;
   margin: 0% 10%;
 }
 
+.content {
+  margin-top: 5%;
+}
+
 .btn-area {
   position: absolute;
-  top: 90%;
+  top: 88%;
   left: 85%;
+  display: flex;
 }
 
 .btn-area button {
-  margin: 3px;
+  width: 30px;
+  height: 30px;
+  margin: 5px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  border: 0;
 }
 </style>

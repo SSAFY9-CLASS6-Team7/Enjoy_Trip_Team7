@@ -9,7 +9,7 @@
         <h2>기록</h2>
         <router-link to="create">
           <button class="create-btn">
-            <img class="create-btn-vector" src="../../assets/common/create_btn.svg" />
+            <img class="create-btn-vector" src="../../assets/common/plus_icon.svg" />
             기록 추가
           </button>
         </router-link>

@@ -10,7 +10,7 @@
           {{ history.history.title }}
         </div>
         <div class="history-img">
-          <img src="@/assets/common/image.svg" class="img-icon-vector" />
+          <img src="@/assets/common/image_icon.svg" class="img-icon-vector" />
           <div class="img-num" v-if="history.history">
             {{ history.images.length }}
           </div>
