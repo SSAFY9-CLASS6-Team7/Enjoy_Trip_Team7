@@ -18,28 +18,42 @@
         <p v-for="file in files" :key="file.name">{{ file.name }}</p>
       </div>
       <div class="detail-area">
-        <input type="text" class="title-input" v-model.lazy="title" />
+        <input
+          type="text"
+          class="title-input"
+          v-model.lazy="title"
+          placeholder="제목은10글자이내로"
+          onfocus="this.placeholder=''"
+          onblur="this.placeholder='제목은10글자이내로'"
+          :style="{ backgroundColor: title ? 'white' : '' }"
+        />
         <div class="date-area">
           <input
             type="date"
             class="date-input"
             v-model="startDay"
-            required
-            aria-required="true"
-            @change="formatDate(this.startDay)"
+            :style="{ backgroundColor: startDay ? 'white' : '' }"
           />
           -
           <input
             type="date"
             class="date-input"
             v-model="endDay"
-            @change="formatDate(this.endDay)"
+            :style="{ backgroundColor: endDay ? 'white' : '' }"
           />
         </div>
         <div class="line"></div>
-        <input type="text" class="content-input" v-model.lazy="content" />
+        <textarea
+          class="content-input"
+          v-model.lazy="content"
+          ref="contentInput"
+          placeholder="내용은 최대 얼마나?"
+          onfocus="this.placeholder=''"
+          onblur="this.placeholder='내용은 최대 얼마나?'"
+          :style="{ backgroundColor: content ? 'white' : '' }"
+        ></textarea>
         <div class="btn-area">
-          <button class="createBtn" @clisk="checkValue">
+          <button class="createBtn" @click="checkValue">
             <img class="create-btn-vector" src="@/assets/common/check_icon_black.svg" />
           </button>
           <button class="cancelBtn" @click="emitCreateModalOff">
@@ -52,30 +66,29 @@
 </template>
 
 <script>
-// import axios from 'axios';
+import axios from "axios";
 
 export default {
-  name: 'HistoryCreate',
+  name: "HistoryCreate",
   data() {
     return {
-      title: '제목은최대10자입니다',
-      startDay: '날짜선택',
-      endDay: '',
-      content: '내용은 최대 얼마나?',
+      title: "",
+      startDay: "",
+      endDay: "",
+      content: "",
       files: [],
-      // history: Object,
     };
   },
   props: {},
   methods: {
     emitCreateModalOff() {
-      this.$emit('setCreateModal', false);
+      this.$emit("setCreateModal", false);
     },
     fileChange: function (e) {
-      console.log('파일 잘 들어옴');
+      console.log("파일 잘 들어옴");
       const files = e.target.files;
       let validation = true;
-      let message = '';
+      let message = "";
 
       if (files.length > 5) {
         validation = false;
@@ -88,7 +101,7 @@ export default {
           validation = false;
         }
 
-        if (files[i].type.indexOf('image') < 0) {
+        if (files[i].type.indexOf("image") < 0) {
           message = `${message} 이미지 파일만 업로드 가능합니다.`;
           validation = false;
         }
@@ -97,27 +110,48 @@ export default {
       if (validation) {
         this.files = e.target.files;
       } else {
-        this.files = '';
+        this.files = "";
         alert(message);
       }
       console.dir(this.files);
     },
     // 인풋 적절한지 체크
     checkValue() {
-      console.log('1.인풋 적절한지 체크!!');
-      this.createHistory();
+      let isAllValid = false;
+
+      if (this.title && this.startDay && this.endDay && this.content) isAllValid = true;
+      if (this.title.length > 10) isAllValid = false;
+      if (this.endDay < this.startDay) isAllValid = false;
+
+      if (isAllValid) {
+        this.createHistory();
+      } else {
+        alert("입력을 확인해주세요!");
+      }
     },
     //기록 등록
-    createHistory() {
-      console.log('2.인풋을 post로 보냄!!!');
+    async createHistory() {
+      let f = new FormData();
+      f.append("title", this.title);
+      f.append("content", this.content);
+      f.append("startDay", this.startDay);
+      f.append("endDay", this.endDay);
+      let tempFiles = this.files;
+
+      for (let j = 0; j < tempFiles.length; j++) {
+        f.append("files", tempFiles[j]);
+      }
+
+      await axios.post(`http://43.201.218.74/history`, f);
     },
   },
 };
 </script>
 
 <style scoped>
-input {
-  font-family: 'Noto Sans KR', sans-serif;
+input,
+textarea {
+  font-family: "Noto Sans KR", sans-serif;
 }
 
 .modal,
@@ -183,13 +217,6 @@ input {
   width: 300px;
 }
 
-.title,
-.date,
-.content {
-  text-align: left;
-  margin: 0 3% 0 10%;
-}
-
 .title-input {
   width: 85%;
   font-size: 20px;
@@ -201,7 +228,6 @@ input {
 }
 
 .date-area {
-  /* width: 80%; */
   display: flex;
   justify-content: space-evenly;
   margin: 5% 3% 0 5%;
@@ -232,12 +258,11 @@ input {
 .content-input {
   width: 80%;
   height: 60%;
-  margin: 5% 3% 0 5%;
+  margin: 5% 3% 3% 5%;
   padding: 3%;
   border: none;
   border-radius: 10px;
   background-color: #f5f5f5;
-  text-align: left;
 }
 
 .btn-area {
