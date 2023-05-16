@@ -50,7 +50,7 @@ public class HistoryContoller {
 	}
 
 	@PostMapping
-	public List<History> createHistory(@RequestPart History history, @RequestPart(required = false) List<MultipartFile> files, HttpSession session) throws SQLException, IOException {
+	public List<History> createHistory(History history, List<MultipartFile> files, HttpSession session) throws SQLException, IOException {
 		history.setUserId(getLoginUser(session).getUserId());
 		historyService.createHistory(history, files);
 		return getHistoryList("1", session);
