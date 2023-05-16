@@ -10,7 +10,8 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/board/{boardId}/comment")
+@CrossOrigin("*")
+@RequestMapping("`/board/{boardId}/comment`")
 @RequiredArgsConstructor
 public class CommentController {
 

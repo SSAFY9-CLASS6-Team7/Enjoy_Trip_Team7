@@ -6,14 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+
+import org.springframework.web.bind.annotation.*;
 
 import com.ssafy.enjoytrip.plan.model.Plan;
 import com.ssafy.enjoytrip.plan.model.PlanAttraction;
@@ -21,6 +15,7 @@ import com.ssafy.enjoytrip.plan.model.service.PlanService;
 import com.ssafy.enjoytrip.user.model.User;
 
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/plan")
 public class PlanController {
 	private PlanService planService;

@@ -15,6 +15,7 @@ import java.sql.SQLException;
 
 @Slf4j
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/user")
 @RequiredArgsConstructor
 public class UserController {
