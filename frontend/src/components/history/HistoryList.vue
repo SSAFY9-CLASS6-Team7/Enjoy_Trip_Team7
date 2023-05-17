@@ -6,6 +6,9 @@
     <div v-if="createModal === true">
       <history-create @setCreateModal="setCreateModal"></history-create>
     </div>
+    <div v-if="updateModal === true">
+      <history-update @setUpdateModal="setUpdateModal"></history-update>
+    </div>
     <div class="left-aside"></div>
     <div>
       <div class="inner-header">
@@ -48,6 +51,7 @@ export default {
       histories: [],
       viewModal: false,
       createModal: false,
+      updateModal: false,
       focusedHistoryId: 0,
     };
   },
@@ -57,11 +61,20 @@ export default {
       this.viewModal = isViewModalOpen;
       /* 다른 창은 확실하게 off */
       this.createModal = false;
+      this.updateModal = false;
     },
     setCreateModal(isCreateModalOpen) {
       this.createModal = isCreateModalOpen;
+      this.focusedHistoryId = 0;
       /* 다른 창은 확실하게 off */
       this.viewModal = false;
+      this.updateModal = false;
+    },
+    setUpdateModal(isUpdateModalOpen) {
+      this.updateModal = isUpdateModalOpen;
+      /* 다른 창은 확실하게 off */
+      this.viewModal = false;
+      this.createModal = false;
     },
   },
   watch: {

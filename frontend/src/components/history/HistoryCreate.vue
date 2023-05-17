@@ -47,9 +47,9 @@
           class="content-input"
           v-model.lazy="content"
           ref="contentInput"
-          placeholder="내용은 최대 얼마나?"
+          placeholder="내용을 입력해주세요."
           onfocus="this.placeholder=''"
-          onblur="this.placeholder='내용은 최대 얼마나?'"
+          onblur="this.placeholder='내용을 입력해주세요.'"
           :style="{ backgroundColor: content ? 'white' : '' }"
         ></textarea>
         <div class="btn-area">
@@ -140,7 +140,7 @@ export default {
         f.append('files', tempFiles[j]);
       }
 
-      await axios.post(`http://localhost/history`, f);
+      await axios.post(`http://43.201.218.74/history`, f);
       this.emitCreateModalOff();
     },
   },

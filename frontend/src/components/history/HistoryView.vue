@@ -1,11 +1,13 @@
 <template>
   <div class="modal">
+    <div class="bigPictureWrapper">
+      <div class="bigPicture"></div>
+    </div>
     <div class="overlay" @click="emitViewModalOff"></div>
     <div class="modal-card" v-if="history.history">
       <div class="img-area">
-        <img :src="imageSrc()" class="history-thumnail" />
-        <!-- <img src="@/assets/sample/sample1.jpg" /> -->
-        <!-- <img src="@/assets/sample/flower_sample.jpg" /> -->
+        <img :src="imageSrc()" class="history-thumnail" @click="bigImage()" />
+        <!-- TODO: 이미지 리스트로 스와이프 기능 추가 필요 -->
       </div>
       <div class="detail-area">
         <h2 class="title">{{ history.history.title }}</h2>
@@ -19,14 +21,12 @@
         <div class="btn-area">
           <router-link to="update">
             <button class="updateBtn">
-              <img class="create-btn-vector" src="@/assets/common/modify_icon.svg" />
+              <img class="update-btn-vector" src="@/assets/common/modify_icon.svg" />
             </button>
           </router-link>
-          <router-link to="delete">
-            <button class="deleteBtn">
-              <img class="create-btn-vector" src="@/assets/common/delete_icon.svg" />
-            </button>
-          </router-link>
+          <button class="deleteBtn" @click="checkAlert()">
+            <img class="delete-btn-vector" src="@/assets/common/delete_icon.svg" />
+          </button>
         </div>
       </div>
     </div>
@@ -60,12 +60,25 @@ export default {
       }
     },
     formatDate(selectDate) {
-      console.log(selectDate);
       const dateParts = selectDate.split('-');
       const year = dateParts[0].substr(2);
       const month = dateParts[1];
       const day = dateParts[2];
       return `${year}.${month}.${day}`;
+    },
+    bigImage: function () {
+      // TODO: 이미지 크게 띄우기
+      console.dir(this);
+      console.log('이미지 크게 띄우기');
+    },
+    checkAlert() {
+      if (confirm('정말 삭제하시겠습니까?') === true) {
+        this.deleteHistory();
+      } else return false;
+    },
+    deleteHistory() {
+      axios.delete(`http://43.201.218.74/history/` + this.historyId);
+      this.emitViewModalOff();
     },
   },
   async mounted() {
