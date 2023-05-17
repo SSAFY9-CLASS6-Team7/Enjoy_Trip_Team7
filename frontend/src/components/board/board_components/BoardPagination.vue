@@ -1,48 +1,107 @@
 <template>
-  <div>
-    <!-- 페이징된 데이터 표시 -->
-    <ul>
-      <li v-for="item in data" :key="item.id">{{ item }}</li>
-    </ul>
-
-    <!-- 페이징 컨트롤 -->
-    <paginate
-    :page-count="10"
-    :click-handler="functionName"
-    :prev-text="'Prev'"
-    :next-text="'Next'"
-    :container-class="'className'">
-    </paginate>
+  <div class="page-outer">
+    <button class="start-button" @click="moveStart"><img src="@/assets/board_icons/start.svg"></button>
+    <button class="tab-button" @click="moveTabLeft()" > <img src="@/assets/board_icons/leftpage.svg"></button>
+    <span class="page-no" v-if="pageResult.pageNo - 2 >= 1" @click="pageChange(pageResult.pageNo - 2)"> {{ pageResult.pageNo - 2 }} </span>
+    <span class="devider" v-if="pageResult.pageNo - 2 >= 1 && pageResult.pageNo - 1 >= 1"></span>
+    <span class="page-no" v-if="pageResult.pageNo - 1 >= 1" @click="pageChange(pageResult.pageNo - 1)"> {{ pageResult.pageNo - 1 }} </span>
+    <span class="devider" v-if="pageResult.pageNo - 1 >= 1"></span>
+    <span class="page-no selected" @click="pageChange(pageResult.pageNo)"> {{ pageResult.pageNo }} </span>
+    <span class="devider" v-if="pageResult.pageNo + 1 <= pageResult.lastPage"></span>
+    <span class="page-no" v-if="pageResult.pageNo + 1 <= pageResult.lastPage" @click="pageChange(pageResult.pageNo + 1)"> {{ pageResult.pageNo + 1 }} </span>
+    <span class="devider" v-if="pageResult.pageNo + 1 <= pageResult.lastPage && pageResult.pageNo + 2 <= pageResult.lastPage"></span>
+    <span class="page-no" v-if="pageResult.pageNo + 2 <= pageResult.lastPage" @click="pageChange(pageResult.pageNo + 2)"> {{ pageResult.pageNo + 2 }} </span>
+    <button class="tab-button" @click="moveTabRight()" > <img src="@/assets/board_icons/rightpage.svg"></button>
+    <button class="end-button" @click="moveEnd"><img src="@/assets/board_icons/end.svg"></button>
   </div>
 </template>
 
 <script>
 export default {
-  data() {
-    return {
-      data: [], // 전체 데이터 배열
-      currentPage: 1, // 현재 페이지 번호
-      itemsPerPage: 10, // 페이지 당 항목 수
-    };
-  },
-  computed: {
-    pageCount() {
-      return Math.ceil(this.data.length / this.itemsPerPage);
+    props: ['pageResult'],
+    data() {
+        return {
+            
+        };
     },
-    displayedData() {
-      const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-      const endIndex = startIndex + this.itemsPerPage;
-      return this.data.slice(startIndex, endIndex);
-    },
-  },
-  methods: {
-    changePage(pageNumber) {
-      this.currentPage = pageNumber;
-    },
-  },
-};
+    methods: {
+        pageChange(clickedPage){
+            this.$emit('pageChange', clickedPage);
+        },
+        moveStart(){
+            if (this.pageResult.pageNo > 1) {
+                this.$emit('pageChange', 1);
+            }
+        },
+        moveEnd() {
+            if (this.pageResult.pageNo < this.pageResult.lastPage) {
+                this.$emit('pageChange', this.pageResult.lastPage);
+            }
+        },
+        moveTabLeft() {
+            let nextPage = this.pageResult.pageNo - 5 > 1 ? this.pageResult.pageNo - 5 : 1;
+            this.$emit('pageChange', nextPage);
+        },
+        moveTabRight(){
+            let nextPage = this.pageResult.pageNo + 5 < this.pageResult.lastPage ? this.pageResult.pageNo + 5 : this.pageResult.lastPage;
+            this.$emit('pageChange', nextPage);
+        }
+    },  
+};  
 </script>
 
 <style scoped>
+
+.page-outer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.page-no {
+    margin: 0 10px 0 10px;
+    color: #1B1C37;
+    font-family: 'S-CoreDream-3Light';
+    font-weight: 300;
+}
+
+.page-no:hover {
+    cursor: pointer;
+}
+
+.start-button  {
+    border: 1px solid #0c0c0c;
+    padding: 2px 3px 0 2px;
+    background: #0c0c0c;
+    border-radius: 4px;
+    margin-right: 10px;
+}
+
+.end-button  {
+    border: 1px solid #0c0c0c;
+    padding: 2px 2px 0 3px;
+    background: #0c0c0c;
+    border-radius: 4px;
+    margin-left: 10px;
+}
+
+.tab-button  {
+    border: 1px solid #0c0c0c;
+    padding: 4px 5px 2px 5px;
+    background: #0c0c0c;
+    border-radius: 4px;
+}
+
+.devider {
+    height: 15px;
+    border: 1.5px solid #cccccc;
+}
+
+.selected {
+    background: #0c0c0c;
+    color: #cccccc;
+    padding: 0 7px 0 7px;
+    border-radius: 4px;
+}
 
 </style>
