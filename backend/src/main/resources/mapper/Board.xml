@@ -30,13 +30,13 @@
         <trim prefix="ORDER BY" suffix="DESC">
             <choose>
                 <when test="condition == 'heart'">
-                    heart DESC, createtime
+                    heart DESC, createtime DESC, boardId
                 </when>
                 <when test="condition == 'hits'">
-                    hits DESC, createtime
+                    hits DESC, createtime DESC, boardId
                 </when>
                 <otherwise>
-                    createtime
+                    createtime DESC, boardId
                 </otherwise>
             </choose>
         </trim>
