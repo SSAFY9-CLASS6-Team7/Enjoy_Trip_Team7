@@ -1,6 +1,6 @@
-package com.ssafy.enjoytrip.image.controller;
+package com.ssafy.enjoytrip.util.controller;
 
-import com.ssafy.enjoytrip.image.model.Image;
+import com.ssafy.enjoytrip.util.model.Image;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
