@@ -70,19 +70,26 @@ export default {
                 path = require('@/assets/board_icons/board_category/question.svg');
             }
             return path;
+        },
+        fetchComments() {
+            axios.get(`http://43.201.218.74/board/${this.board.boardId}/comment`)
+            .then(response => this.comments = response.data.length);
+        },
+        fetchImages() {
+            axios.get(`http://43.201.218.74/board/${this.board.boardId}`)
+            .then(response => this.images = response.data.images.length);
+        },
+    },
+    created() {
+        this.fetchComments();
+        this.fetchImages();
+    },
+    watch: {
+        board(){
+            this.fetchComments();
+            this.fetchImages();
         }
-    },
-    async created() {
-        await axios.get(`http://43.201.218.74/board/${this.board.boardId}/comment`)
-        .then(response => {
-                this.comments = response.data.length
-            }
-        );
-        await axios.get(`http://43.201.218.74/board/${this.board.boardId}`)
-        .then(response => {
-            this.images = response.data.images.length;
-        });
-    },
+    }
 };
 </script>
 

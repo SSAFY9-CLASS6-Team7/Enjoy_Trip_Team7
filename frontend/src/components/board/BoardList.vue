@@ -5,25 +5,25 @@
         <div class="header-left">
           <div class="title"> 게 시 판</div>
           <div class="tab-container">
-            <span :class="{ 'board-tab': true, 'bold-title': acitveBoardTab === '전체' }" @click="acitveBoardTab = '전체'"> 전체 </span>
+            <span :class="{ 'board-tab': true, 'bold-title': activeBoardTab === '' }" @click="tabChange('')"> 전체 </span>
             <span class="vertical-devider"></span>
-            <span :class="{ 'board-tab': true, 'bold-title': acitveBoardTab === '자유' }" @click="acitveBoardTab = '자유'"> 자유 </span>
+            <span :class="{ 'board-tab': true, 'bold-title': activeBoardTab === '100' }" @click="tabChange('100')"> 자유 </span>
             <span class="vertical-devider"></span>
-            <span :class="{ 'board-tab': true, 'bold-title': acitveBoardTab === '질문' }" @click="acitveBoardTab = '질문'"> 질문 </span>
+            <span :class="{ 'board-tab': true, 'bold-title': activeBoardTab === '103' }" @click="tabChange('103')"> 질문 </span>
             <span class="vertical-devider"></span>
-            <span :class="{ 'board-tab': true, 'bold-title': acitveBoardTab === '후기' }" @click="acitveBoardTab = '후기'"> 후기 </span>
+            <span :class="{ 'board-tab': true, 'bold-title': activeBoardTab === '101' }" @click="tabChange('101')"> 후기 </span>
             <span class="vertical-devider"></span>
-            <span :class="{ 'board-tab': true, 'bold-title': acitveBoardTab === '추천' }" @click="acitveBoardTab = '추천'"> 추천 </span>
+            <span :class="{ 'board-tab': true, 'bold-title': activeBoardTab === '102' }" @click="tabChange('102')"> 추천 </span>
           </div>
         </div>
         <div class="header-right">
-          <select class="condition-box">
-            <option value="none" selected>정렬 조건</option>
+          <select class="condition-box" v-model="selectedCondition">
+            <option value="" selected>정렬 조건</option>
             <option value="heart">좋아요</option>
             <option value="hits">조회수</option>
           </select>
           <div class="keyword-container">
-            <input type="text" class="keyword" placeholder="검색어를 입력하세요" @keyup.enter="goSearch">
+            <input type="text" class="keyword" placeholder="검색어를 입력하세요" @keyup.enter="goSearch" v-model="searchKeyword">
             <img src="@/assets/board_icons/search.svg" @click="goSearch">
           </div>
           <button class="write-button"><img src="@/assets/board_icons/write.svg"></button>
@@ -56,7 +56,9 @@ export default {
   components: { BoardContent },
   data(){
     return {
-      acitveBoardTab: '전체',
+      activeBoardTab: '',
+      searchKeyword: '',
+      selectedCondition: '',
       boards: [],
     }
   },
@@ -65,12 +67,20 @@ export default {
       this.$router.push("create");
     },
     goSearch(){
-      // TODO Search 
-      console.log("search!")
+      axios.get(`http://43.201.218.74/board?pageNo=&code=${this.activeBoardTab}&condition=${this.selectedCondition}&anonymous=&keyword=${this.searchKeyword}`)
+      .then(response => this.boards = response.data)
+    },
+    tabChange(code) {
+      axios.get(`http://43.201.218.74/board?pageNo=&code=${code}&condition=&anonymous=`)
+      .then(response => {
+        this.boards = response.data
+        this.activeBoardTab = code;
+        }
+      )
     }
   },
   async created(){
-    await axios.get(`http://43.201.218.74/board?pageNo=&code=&condition=&anonymous=`)
+    await axios.get(`http://43.201.218.74/board?pageNo=&code=${this.activeBoardTab}&condition=&anonymous=`)
     .then(response => this.boards = response.data);
   }
 }
@@ -86,7 +96,7 @@ export default {
 .container {
   width: 100%;
   /* height: 764px; */
-  height:86.5vh;
+  height: 81.5vh;
   display: grid;
   grid-template-columns: 1fr 5fr 1fr;
   grid-template-rows: 2fr 1fr 11fr 1fr;
@@ -105,8 +115,9 @@ export default {
 }
 
 .inner-header {
+  min-height: 107px;
   grid-area: header;
-    display: grid;
+  display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-areas: 'header-left header-right';
 }
@@ -231,6 +242,7 @@ export default {
   display: flex;
   font-family: 'S-CoreDream-3Light';
   font-weight: 600;
+  min-height: 51px;
 }
 
 .board-id {
