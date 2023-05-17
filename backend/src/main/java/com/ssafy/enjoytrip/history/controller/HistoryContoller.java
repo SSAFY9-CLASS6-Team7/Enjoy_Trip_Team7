@@ -50,22 +50,22 @@ public class HistoryContoller {
 	}
 
 	@PostMapping
-	public List<History> createHistory(History history, List<MultipartFile> files, HttpSession session) throws SQLException, IOException {
+	public void createHistory(History history, List<MultipartFile> files, HttpSession session) throws SQLException, IOException {
 		history.setUserId(getLoginUser(session).getUserId());
 		historyService.createHistory(history, files);
-		return getHistoryList("1", session);
+//		return getHistoryList("1", session);
 	}
 	
 	@PutMapping("{historyId}")
-	public List<History> updatehistory(@RequestPart History history, @PathVariable int historyId, HttpSession session, @RequestPart(required = false) List<MultipartFile> files) throws SQLException, IOException {
+	public void updatehistory(History history, @PathVariable int historyId, List<MultipartFile> files) throws SQLException, IOException {
 		history.setHistoryId(historyId);
 		historyService.updateHistory(history, files);
-		return getHistoryList("1", session);
+//		return getHistoryList("1", session);
 	}
 	
 	@DeleteMapping("{historyId}")
-	public List<History> deleteHistory(@PathVariable int historyId, HttpSession session) throws SQLException {
+	public void deleteHistory(@PathVariable int historyId) throws SQLException {
 		historyService.deleteHistory(historyId);
-		return getHistoryList("1", session);
+//		return getHistoryList("1", session);
 	}
 }
