@@ -66,29 +66,28 @@
 </template>
 
 <script>
-import axios from "axios";
+import axios from 'axios';
 
 export default {
-  name: "HistoryCreate",
+  name: 'HistoryCreate',
   data() {
     return {
-      title: "",
-      startDay: "",
-      endDay: "",
-      content: "",
+      title: '',
+      startDay: '',
+      endDay: '',
+      content: '',
       files: [],
     };
   },
   props: {},
   methods: {
     emitCreateModalOff() {
-      this.$emit("setCreateModal", false);
+      this.$emit('setCreateModal', false);
     },
     fileChange: function (e) {
-      console.log("파일 잘 들어옴");
       const files = e.target.files;
       let validation = true;
-      let message = "";
+      let message = '';
 
       if (files.length > 5) {
         validation = false;
@@ -101,7 +100,7 @@ export default {
           validation = false;
         }
 
-        if (files[i].type.indexOf("image") < 0) {
+        if (files[i].type.indexOf('image') < 0) {
           message = `${message} 이미지 파일만 업로드 가능합니다.`;
           validation = false;
         }
@@ -110,10 +109,9 @@ export default {
       if (validation) {
         this.files = e.target.files;
       } else {
-        this.files = "";
+        this.files = '';
         alert(message);
       }
-      console.dir(this.files);
     },
     // 인풋 적절한지 체크
     checkValue() {
@@ -126,23 +124,25 @@ export default {
       if (isAllValid) {
         this.createHistory();
       } else {
-        alert("입력을 확인해주세요!");
+        alert('입력을 확인해주세요!');
       }
     },
     //기록 등록
     async createHistory() {
       let f = new FormData();
-      f.append("title", this.title);
-      f.append("content", this.content);
-      f.append("startDay", this.startDay);
-      f.append("endDay", this.endDay);
+      f.append('title', this.title);
+      f.append('content', this.content);
+      f.append('startDay', this.startDay);
+      f.append('endDay', this.endDay);
       let tempFiles = this.files;
 
       for (let j = 0; j < tempFiles.length; j++) {
-        f.append("files", tempFiles[j]);
+        f.append('files', tempFiles[j]);
       }
 
-      await axios.post(`http://43.201.218.74/history`, f);
+      await axios.post(`http://43.201.218.74/history`, f).catch((error) => {
+        console.log(error.response);
+      });
     },
   },
 };
@@ -151,7 +151,7 @@ export default {
 <style scoped>
 input,
 textarea {
-  font-family: "Noto Sans KR", sans-serif;
+  font-family: 'Noto Sans KR', sans-serif;
 }
 
 .modal,

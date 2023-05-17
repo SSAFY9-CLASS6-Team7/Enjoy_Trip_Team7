@@ -4,7 +4,7 @@
     <div class="modal-card" v-if="history.history">
       <div class="img-area">
         <img :src="imageSrc()" class="history-thumnail" />
-        <img src="@/assets/sample/sample1.jpg" />
+        <!-- <img src="@/assets/sample/sample1.jpg" /> -->
         <!-- <img src="@/assets/sample/flower_sample.jpg" /> -->
       </div>
       <div class="detail-area">
