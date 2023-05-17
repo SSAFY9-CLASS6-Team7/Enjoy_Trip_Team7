@@ -1,65 +1,62 @@
 <template>
-  <div class="modal">
-    <div class="overlay" @click="emitCreateModalOff"></div>
-    <div class="modal-card">
-      <div class="img-area">
-        <label for="file">
-          <div class="btn-upload">파일 업로드하기</div>
-          <input
-            type="file"
-            class="file"
-            id="file"
-            accept="image/*"
-            @change="fileChange"
-            ref="files"
-            multiple
-          />
-        </label>
-        <p v-for="file in files" :key="file.name">{{ file.name }}</p>
-      </div>
-      <div class="detail-area">
+  <div class="modal-card">
+    <div class="img-area">
+      <label for="file">
+        <div class="btn-upload">파일 업로드하기</div>
         <input
-          type="text"
-          class="title-input"
-          v-model.lazy="title"
-          placeholder="제목은10글자이내로"
-          onfocus="this.placeholder=''"
-          onblur="this.placeholder='제목은10글자이내로'"
-          :style="{ backgroundColor: title ? 'white' : '' }"
+          type="file"
+          class="file"
+          id="file"
+          accept="image/*"
+          @change="fileChange"
+          ref="files"
+          multiple
         />
-        <div class="date-area">
-          <input
-            type="date"
-            class="date-input"
-            v-model="startDay"
-            :style="{ backgroundColor: startDay ? 'white' : '' }"
-          />
-          -
-          <input
-            type="date"
-            class="date-input"
-            v-model="endDay"
-            :style="{ backgroundColor: endDay ? 'white' : '' }"
-          />
-        </div>
-        <div class="line"></div>
-        <textarea
-          class="content-input"
-          v-model.lazy="content"
-          ref="contentInput"
-          placeholder="내용을 입력해주세요."
-          onfocus="this.placeholder=''"
-          onblur="this.placeholder='내용을 입력해주세요.'"
-          :style="{ backgroundColor: content ? 'white' : '' }"
-        ></textarea>
-        <div class="btn-area">
-          <button class="createBtn" @click="checkValue">
-            <img class="create-btn-vector" src="@/assets/common/check_icon_black.svg" />
-          </button>
-          <button class="cancelBtn" @click="emitCreateModalOff">
-            <img class="cancel-btn-vector" src="@/assets/common/x_icon.svg" />
-          </button>
-        </div>
+      </label>
+      <p v-for="file in files" :key="file.name">{{ file.name }}</p>
+    </div>
+    <div class="detail-area">
+      <input
+        type="text"
+        class="title-input"
+        v-model.lazy="title"
+        placeholder="제목은10글자이내로"
+        onfocus="this.placeholder=''"
+        onblur="this.placeholder='제목은10글자이내로'"
+        :style="{ backgroundColor: title ? 'white' : '' }"
+      />
+      <div class="date-area">
+        <input
+          type="date"
+          class="date-input"
+          v-model="startDay"
+          :style="{ backgroundColor: startDay ? 'white' : '' }"
+        />
+        -
+        <input
+          type="date"
+          class="date-input"
+          v-model="endDay"
+          :style="{ backgroundColor: endDay ? 'white' : '' }"
+        />
+      </div>
+      <div class="line"></div>
+      <textarea
+        class="content-input"
+        v-model.lazy="content"
+        ref="contentInput"
+        placeholder="내용을 입력해주세요."
+        onfocus="this.placeholder=''"
+        onblur="this.placeholder='내용을 입력해주세요.'"
+        :style="{ backgroundColor: content ? 'white' : '' }"
+      ></textarea>
+      <div class="btn-area">
+        <button class="createBtn" @click="checkValue">
+          <img class="create-btn-vector" src="@/assets/common/check_icon_black.svg" />
+        </button>
+        <button class="cancelBtn" @click="emitModalOff">
+          <img class="cancel-btn-vector" src="@/assets/common/x_icon.svg" />
+        </button>
       </div>
     </div>
   </div>
@@ -81,9 +78,11 @@ export default {
   },
   props: {},
   methods: {
-    emitCreateModalOff() {
-      this.$emit('setCreateModal', false);
+    //모달창을 닫기
+    emitModalOff() {
+      this.$emit('emitModalOff');
     },
+    //파일 입력 관련한 체크 진행하기
     fileChange: function (e) {
       const files = e.target.files;
       let validation = true;
@@ -91,17 +90,17 @@ export default {
 
       if (files.length > 5) {
         validation = false;
-        message = `파일은 다섯 개만 등록 가능합니다.`;
+        message = `파일은 다섯 개만 등록 가능합니다. `;
       }
 
       for (let i = 0; i < files.length; i++) {
         if (files[i].size > 1024 * 1024 * 25) {
-          message = `${message} 파일은 용량은 25MB 이하만 가능합니다.`;
+          message = `${message} 파일은 용량은 25MB 이하만 가능합니다. `;
           validation = false;
         }
 
         if (files[i].type.indexOf('image') < 0) {
-          message = `${message} 이미지 파일만 업로드 가능합니다.`;
+          message = `${message} 이미지 파일만 업로드 가능합니다. `;
           validation = false;
         }
       }
@@ -113,7 +112,7 @@ export default {
         alert(message);
       }
     },
-    // 인풋 적절한지 체크
+    // 파일 외의 인풋이 적절한지 체크
     checkValue() {
       let isAllValid = false;
 
@@ -127,7 +126,7 @@ export default {
         alert('입력을 확인해주세요!');
       }
     },
-    //기록 등록
+    //기록 등록 진행하기
     async createHistory() {
       let f = new FormData();
       f.append('title', this.title);
@@ -136,12 +135,13 @@ export default {
       f.append('endDay', this.endDay);
       let tempFiles = this.files;
 
-      for (let j = 0; j < tempFiles.length; j++) {
-        f.append('files', tempFiles[j]);
+      for (let c = 0; c < tempFiles.length; c++) {
+        f.append('files', tempFiles[c]);
       }
 
       await axios.post(`http://43.201.218.74/history`, f);
-      this.emitCreateModalOff();
+      this.$emit('emitNeedToUpdate');
+      this.emitModalOff();
     },
   },
 };
@@ -151,31 +151,13 @@ export default {
 input,
 textarea {
   font-family: 'Noto Sans KR', sans-serif;
-}
-
-.modal,
-.overlay {
-  width: 100%;
-  height: 100%;
-  position: fixed;
-  left: 0;
-  top: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10;
-}
-
-.overlay {
-  opacity: 0.5;
-  background-color: black;
+  font-weight: 400;
 }
 
 .modal-card {
   position: relative;
   border-radius: 30px;
   background-color: white;
-  z-index: 11;
   display: flex;
 }
 
@@ -224,6 +206,8 @@ textarea {
   border: none;
   border-radius: 10px;
   background-color: #f5f5f5;
+  font-size: 1.5em;
+  font-weight: bold;
 }
 
 .date-area {
