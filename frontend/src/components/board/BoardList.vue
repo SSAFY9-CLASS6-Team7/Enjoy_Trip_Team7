@@ -142,8 +142,6 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  grid-area: header-left;
-  
 }
 
 .header-right {

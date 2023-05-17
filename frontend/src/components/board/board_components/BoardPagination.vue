@@ -98,9 +98,10 @@ export default {
 }
 
 .selected {
-    background: #0c0c0c;
-    color: #cccccc;
-    padding: 0 7px 0 7px;
+    /* background: #0c0c0c;
+    color: #cccccc; */
+    font-weight: 800;
+    color: #e1306c;
     border-radius: 4px;
 }
 
