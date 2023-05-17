@@ -67,7 +67,7 @@ export default {
       this.$router.push("create");
     },
     goSearch(){
-      axios.get(`http://43.201.218.74/board?pageNo=&code=${this.activeBoardTab}&condition=${this.selectedCondition}&anonymous=&keyword=${this.searchKeyword}`)
+      axios.get(`http://localhost/board?pageNo=&code=${this.activeBoardTab}&condition=${this.selectedCondition}&anonymous=&keyword=${this.searchKeyword}`)
       .then(response => this.boards = response.data)
     },
     tabChange(code) {
