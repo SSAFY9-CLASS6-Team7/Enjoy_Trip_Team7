@@ -185,3 +185,4 @@ $RECYCLE.BIN/
 
 #Servers ignore
 Servers/
+backend/application.pid

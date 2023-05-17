@@ -27,6 +27,7 @@ export default {
   font-size: 13px;
   font-weight: 400;
   color: #333333;
+  min-width: 1920px;
 }
 
 .menu-set {

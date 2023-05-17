@@ -69,7 +69,7 @@ const routes = [
         component: () => import(/* webpackChunkName: "history" */ '@/components/history/HistoryUpdate.vue'),
       },
       {
-        path: "view",
+        path: "view/:historyId",
         name: "historyview",
         component: () => import(/* webpackChunkName: "history" */ '@/components/history/HistoryView.vue'),
       },

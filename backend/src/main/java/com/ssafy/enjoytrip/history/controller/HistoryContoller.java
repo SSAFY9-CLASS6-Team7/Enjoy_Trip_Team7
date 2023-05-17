@@ -8,15 +8,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ssafy.enjoytrip.history.model.History;
@@ -27,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/history")
 public class HistoryContoller {
 	private HistoryService historyService;
@@ -38,7 +31,7 @@ public class HistoryContoller {
 	private User getLoginUser(HttpSession session) {
 		// ----- DUMMY USER FOR TEST -----
 		User dummyUser = new User();
-		dummyUser.setUserId("ssafy");
+		dummyUser.setUserId("TestUser1");
 		session.setAttribute("loginUser", dummyUser);
 		// --------------------------------
 		return (User) session.getAttribute("loginUser");

@@ -6,7 +6,7 @@
       <div class="menu-set">
         <div
           :class="{ 'nav-item': true, active: activeMenuItem === 'attraction' }"
-          @click="activeMenuItem = 'attraction'"
+          @click="setActiveMenuItem('attraction')"
         >
           <img class="nav-item-vector" src="../assets/header_icon/attraction.svg" />
           <router-link to="/attraction">여행지</router-link>
@@ -14,7 +14,7 @@
 
         <div
           :class="{ 'nav-item': true, active: activeMenuItem === 'plan' }"
-          @click="activeMenuItem = 'plan'"
+          @click="setActiveMenuItem('plan')"
         >
           <img class="nav-item-vector" src="../assets/header_icon/plan.svg" />
           <router-link to="/plan">계 획</router-link>
@@ -22,7 +22,7 @@
 
         <div
           :class="{ 'nav-item': true, active: activeMenuItem === 'history' }"
-          @click="activeMenuItem = 'history'"
+          @click="setActiveMenuItem('history')"
         >
           <img class="nav-item-vector" src="../assets/header_icon/history.svg" />
           <router-link to="/history">기 록</router-link>
@@ -30,7 +30,7 @@
 
         <div
           :class="{ 'nav-item': true, active: activeMenuItem === 'board' }"
-          @click="activeMenuItem = 'board'"
+          @click="setActiveMenuItem('board')"
         >
           <img class="nav-item-vector" src="../assets/header_icon/community.svg" />
           <router-link to="/board">게시판</router-link>
@@ -49,14 +49,25 @@ export default {
   name: "TheHeader",
   data() {
     return {
-      activeMenuItem: '-1',
+      // activeMenuItem: '',
     }
+  },
+  computed: {  
+    activeMenuItem : function() {
+      return this.$store.state.activeMenuItem;
+    },
   },
   methods: {
     toMain(){
-      if(this.$route.path  !== '/') this.$router.push("/");
-    }
-  }
+      if(this.$route.path !== '/') {
+        this.$router.push("/");
+        this.setActiveMenuItem('-1');
+      }
+    },
+    setActiveMenuItem(menuItem) {
+      this.$store.commit('activeMenuChange', menuItem);
+    },
+  },
 };
 </script>
 
@@ -95,6 +106,7 @@ export default {
   box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.15);
   font-size: 15px;
   font-weight: 700;
+  min-width: 1920px;
 }
 
 .header-content {
