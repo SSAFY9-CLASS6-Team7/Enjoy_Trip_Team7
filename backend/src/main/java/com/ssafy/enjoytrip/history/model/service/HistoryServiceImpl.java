@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import static com.ssafy.enjoytrip.image.controller.ImageUtils.deleteImageFile;
 import static com.ssafy.enjoytrip.image.controller.ImageUtils.saveFile;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class HistoryServiceImpl implements HistoryService {
@@ -64,15 +66,18 @@ public class HistoryServiceImpl implements HistoryService {
 	public void createHistory(History history, List<MultipartFile> files) throws SQLException, IOException {
 		historyMapper.insertHistory(history);
 		int dataId = history.getHistoryId();
-		for (int i = 0; i < files.size(); i++) {
-            String imagePath = saveFile(files.get(i), fileDir);
+        if (files != null) {
+            for (int i = 0; i < files.size(); i++) {
 
-            Image image = new Image();
-            image.setDataId(dataId);
-            image.setImagePath(imagePath);
-            image.setType(TYPE);
+                String imagePath = saveFile(files.get(i), fileDir);
 
-            imageMapper.insertImage(image);
+                Image image = new Image();
+                image.setDataId(dataId);
+                image.setImagePath(imagePath);
+                image.setType(TYPE);
+
+                imageMapper.insertImage(image);
+            }
         }
 	}
 
