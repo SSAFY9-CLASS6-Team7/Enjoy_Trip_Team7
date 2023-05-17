@@ -24,14 +24,21 @@
         <where>
             <if test="code != ''">AND code = ${code}</if>
             <if test="anonymous != ''">AND anonymous = #{anonymous}</if>
+            <if test="keyword != ''">AND title LIKE CONCAT('%', #{keyword}, '%')</if>
         </where>
 
         <trim prefix="ORDER BY" suffix="DESC">
-          <choose>
-            <when test="condition == 'heart'">`heart`</when>
-            <when test="condition == 'hits'">`hits` </when>
-            <when test="condition == ''"> `createtime` </when>
-          </choose>
+            <choose>
+                <when test="condition == 'heart'">
+                    heart DESC, createtime
+                </when>
+                <when test="condition == 'hits'">
+                    hits DESC, createtime
+                </when>
+                <otherwise>
+                    createtime
+                </otherwise>
+            </choose>
         </trim>
          LIMIT #{start}, #{size}
     </select>
