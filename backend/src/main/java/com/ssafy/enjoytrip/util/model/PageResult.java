@@ -10,6 +10,7 @@ public class PageResult {
     private int tabSize;
     private int beginPage;
     private int endPage;
+    private int lastPage;
     private boolean prev;
     private boolean next;
 
@@ -22,9 +23,9 @@ public class PageResult {
         this.count = count;
         this.listSize = listSize;
         this.tabSize = tabSize;
+        this.lastPage = (int) Math.ceil(count / 10d);
 
         int currentTab = ((pageNo - 1) / tabSize) + 1;
-        int lastPage = (int) Math.ceil(count / 10d);
 
         this.beginPage = ((currentTab - 1) * tabSize) + 1;
         this.endPage = (currentTab * tabSize);
