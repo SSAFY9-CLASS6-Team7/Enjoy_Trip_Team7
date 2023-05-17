@@ -1,85 +1,106 @@
 <template>
-  <div class="modal">
-    <div class="overlay" @click="emitCreateModalOff"></div>
-    <div class="modal-card">
-      <div class="img-area">
-        <label for="file">
-          <div class="btn-upload">파일 업로드하기</div>
-          <input
-            type="file"
-            class="file"
-            id="file"
-            accept="image/*"
-            @change="fileChange"
-            ref="files"
-            multiple
-          />
-        </label>
-        <p v-for="file in files" :key="file.name">{{ file.name }}</p>
-        <!-- <img src="@/assets/sample/sample_history.jpg" /> -->
-        <!-- <img src="@/assets/sample/flower_sample.jpg" /> -->
-      </div>
-      <div class="detail-area">
-        <input type="text" class="title-input" v-model.lazy="title">
-        <!-- <h2 class="title">title</h2> -->
-        <!-- <div class="date">startDay - endDay</div> -->
-        <input type="date" class="date-input"/>
+  <div class="modal-card">
+    <div class="img-area">
+      <label for="file">
+        <div class="btn-upload">파일 업로드하기</div>
+        <input
+          type="file"
+          class="file"
+          id="file"
+          accept="image/*"
+          @change="fileChange"
+          ref="files"
+          multiple
+        />
+      </label>
+      <p v-for="file in files" :key="file.name">{{ file.name }}</p>
+    </div>
+    <div class="detail-area">
+      <input
+        type="text"
+        class="title-input"
+        v-model.lazy="title"
+        placeholder="제목은10글자이내로"
+        onfocus="this.placeholder=''"
+        onblur="this.placeholder='제목은10글자이내로'"
+        :style="{ backgroundColor: title ? 'white' : '' }"
+      />
+      <div class="date-area">
+        <input
+          type="date"
+          class="date-input"
+          v-model="startDay"
+          :style="{ backgroundColor: startDay ? 'white' : '' }"
+        />
         -
-        <input type="date"/>
-        <div class="line"></div>
-        <div class="content">content</div>
-        <div class="btn-area">
-          <button class="createBtn" @clisk="checkValue">
-            <img class="create-btn-vector" src="@/assets/common/check_icon_black.svg" />
-          </button>
-          <button class="cancelBtn" @click="emitCreateModalOff">
-            <img class="cancel-btn-vector" src="@/assets/common/x_icon.svg" />
-          </button>
-        </div>
+        <input
+          type="date"
+          class="date-input"
+          v-model="endDay"
+          :style="{ backgroundColor: endDay ? 'white' : '' }"
+        />
+      </div>
+      <div class="line"></div>
+      <textarea
+        class="content-input"
+        v-model.lazy="content"
+        ref="contentInput"
+        placeholder="내용을 입력해주세요."
+        onfocus="this.placeholder=''"
+        onblur="this.placeholder='내용을 입력해주세요.'"
+        :style="{ backgroundColor: content ? 'white' : '' }"
+      ></textarea>
+      <div class="btn-area">
+        <button class="createBtn" @click="checkValue">
+          <img class="create-btn-vector" src="@/assets/common/check_icon_black.svg" />
+        </button>
+        <button class="cancelBtn" @click="emitModalOff">
+          <img class="cancel-btn-vector" src="@/assets/common/x_icon.svg" />
+        </button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-// import axios from 'axios';
+import axios from 'axios';
 
 export default {
   name: 'HistoryCreate',
   data() {
     return {
-      title: '제목은최대10자입니다',
+      title: '',
       startDay: '',
       endDay: '',
       content: '',
       files: [],
-      // history: Object,
     };
   },
   props: {},
   methods: {
-    emitCreateModalOff() {
-      this.$emit('setCreateModal', false);
+    //모달창을 닫기
+    emitModalOff() {
+      this.$emit('emitModalOff');
     },
+    //파일 입력 관련한 체크 진행하기
     fileChange: function (e) {
-      console.log('파일 잘 들어옴');
       const files = e.target.files;
       let validation = true;
       let message = '';
 
       if (files.length > 5) {
         validation = false;
-        message = `파일은 다섯 개만 등록 가능합니다.`;
+        message = `파일은 다섯 개만 등록 가능합니다. `;
       }
 
       for (let i = 0; i < files.length; i++) {
         if (files[i].size > 1024 * 1024 * 25) {
-          message = `${message} 파일은 용량은 25MB 이하만 가능합니다.`;
+          message = `${message} 파일은 용량은 25MB 이하만 가능합니다. `;
           validation = false;
         }
 
         if (files[i].type.indexOf('image') < 0) {
-          message = `${message} 이미지 파일만 업로드 가능합니다.`;
+          message = `${message} 이미지 파일만 업로드 가능합니다. `;
           validation = false;
         }
       }
@@ -90,45 +111,53 @@ export default {
         this.files = '';
         alert(message);
       }
-      console.dir(this.files);
     },
-    // 인풋 적절한지 체크
+    // 파일 외의 인풋이 적절한지 체크
     checkValue() {
-      console.log('1.인풋 적절한지 체크!!');
-      this.createHistory();
+      let isAllValid = false;
+
+      if (this.title && this.startDay && this.endDay && this.content) isAllValid = true;
+      if (this.title.length > 10) isAllValid = false;
+      if (this.endDay < this.startDay) isAllValid = false;
+
+      if (isAllValid) {
+        this.createHistory();
+      } else {
+        alert('입력을 확인해주세요!');
+      }
     },
-    //기록 등록
-    createHistory() {
-      console.log('2.인풋을 post로 보냄!!!');
+    //기록 등록 진행하기
+    async createHistory() {
+      let f = new FormData();
+      f.append('title', this.title);
+      f.append('content', this.content);
+      f.append('startDay', this.startDay);
+      f.append('endDay', this.endDay);
+      let tempFiles = this.files;
+
+      for (let c = 0; c < tempFiles.length; c++) {
+        f.append('files', tempFiles[c]);
+      }
+
+      await axios.post(`http://43.201.218.74/history`, f);
+      this.$emit('emitNeedToUpdate');
+      this.emitModalOff();
     },
   },
 };
 </script>
 
 <style scoped>
-.modal,
-.overlay {
-  width: 100%;
-  height: 100%;
-  position: fixed;
-  left: 0;
-  top: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10;
-}
-
-.overlay {
-  opacity: 0.5;
-  background-color: black;
+input,
+textarea {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 400;
 }
 
 .modal-card {
   position: relative;
   border-radius: 30px;
   background-color: white;
-  z-index: 11;
   display: flex;
 }
 
@@ -169,16 +198,33 @@ export default {
   width: 300px;
 }
 
-.title,
-.date,
-.content {
-  text-align: left;
-  margin: 0 3% 0 10%;
+.title-input {
+  width: 85%;
+  font-size: 20px;
+  margin: 5% 3% 0 5%;
+  padding: 3%;
+  border: none;
+  border-radius: 10px;
+  background-color: #f5f5f5;
+  font-size: 1.5em;
+  font-weight: bold;
 }
 
-.title {
-  margin-top: 5%;
+.date-area {
+  display: flex;
+  justify-content: space-evenly;
+  margin: 5% 3% 0 5%;
 }
+
+.date-input {
+  border: none;
+  margin-bottom: 3%;
+  background-color: #f5f5f5; /* 배경색 설정 */
+  border-radius: 5px; /* 테두리 모서리 둥글게 설정 */
+  padding: 5px;
+}
+/* .date-input::-webkit-datetime-edit-fields-wrapper {
+} */
 
 .date {
   margin-bottom: 3%;
@@ -192,8 +238,14 @@ export default {
   margin: 0% 10%;
 }
 
-.content {
-  margin-top: 5%;
+.content-input {
+  width: 80%;
+  height: 60%;
+  margin: 5% 3% 3% 5%;
+  padding: 3%;
+  border: none;
+  border-radius: 10px;
+  background-color: #f5f5f5;
 }
 
 .btn-area {

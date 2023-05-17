@@ -1,16 +1,25 @@
 <template>
   <div class="history-container">
-    <div v-if="viewModal === true">
-      <history-view @setViewModal="setViewModal" :historyId="this.focusedHistoryId"></history-view>
-    </div>
-    <div v-if="createModal === true">
-      <history-create @setCreateModal="setCreateModal"></history-create>
+    <div class="test" v-if="this.isModalOpen === true">
+      <history-modal
+        :modaltype="this.modaltype"
+        :historyId="this.focusedHistoryId"
+        @setType="setType"
+        @setModal="setModal"
+        @setNeedToUpdate="setNeedToUpdate"
+      ></history-modal>
     </div>
     <div class="left-aside"></div>
     <div>
       <div class="inner-header">
         <h2>기록</h2>
-        <button class="create-btn" @setCreateModal="setCreateModal" @click="setCreateModal(true)">
+        <button
+          class="create-btn"
+          @click="
+            setType('create');
+            setModal(true);
+          "
+        >
           <img class="create-btn-vector" src="../../assets/common/plus_icon_white.svg" />
           기록 추가
         </button>
@@ -21,6 +30,7 @@
           v-for="history in histories"
           :key="history.historyId"
           :historyId="history.historyId"
+          :needToUpdate="needToUpate"
           @setViewModal="setViewModal"
         ></history-image>
       </div>
@@ -32,42 +42,65 @@
 
 <script>
 import HistoryImage from '../history/HistoryImage.vue';
-import HistoryView from './HistoryView.vue';
-import HistoryCreate from '../history/HistoryCreate.vue';
+import HistoryModal from './HistoryModal.vue';
 import axios from 'axios';
 
 export default {
   name: 'HistoryList',
   components: {
     HistoryImage,
-    HistoryView,
-    HistoryCreate,
+    HistoryModal,
   },
   data() {
     return {
       histories: [],
-      viewModal: false,
-      createModal: false,
       focusedHistoryId: 0,
+      modaltype: '',
+      isModalOpen: false,
+      needToUpate: false,
     };
   },
   methods: {
-    setViewModal(isViewModalOpen, historyId) {
-      this.focusedHistoryId = historyId;
-      this.viewModal = isViewModalOpen;
-      /* 다른 창은 확실하게 off */
-      this.createModal = false;
+    //열리는 모달 창의 타입(생성/조회/수정) 변경
+    setType(type) {
+      this.modaltype = type;
     },
-    setCreateModal(isCreateModalOpen) {
-      this.createModal = isCreateModalOpen;
-      /* 다른 창은 확실하게 off */
-      this.viewModal = false;
+    //모달 창 오픈 여부 변경
+    setModal(value) {
+      //모달 닫을 때면 초기화
+      if (value === false) {
+        this.setType('');
+        this.focusedHistoryId = 0;
+      }
+      this.isModalOpen = value;
+    },
+    setNeedToUpdate(value) {
+      this.needToUpate = value;
+    },
+    //기록 조회 모달 열기
+    setViewModal(historyId) {
+      this.focusedHistoryId = historyId;
+      this.setType('view');
+      this.setModal(true);
+    },
+    // 기록 리스트 로딩
+    async loadHistories() {
+      await axios
+        .get(`http://43.201.218.74/history?pageNo=`)
+        .then((response) => (this.histories = response.data));
     },
   },
-  async created() {
-    await axios
-      .get(`http://43.201.218.74/history?pageNo=`)
-      .then((response) => (this.histories = response.data));
+  watch: {
+    // 히스토리 목록 내용이 변경 시 다시 로딩
+    needToUpate: async function () {
+      if (this.needToUpate === true) {
+        await this.loadHistories();
+        this.setNeedToUpdate(false);
+      }
+    },
+  },
+  created() {
+    this.loadHistories();
   },
 };
 </script>

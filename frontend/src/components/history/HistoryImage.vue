@@ -1,10 +1,7 @@
 <template>
   <div class="history-item">
     <div class="card" @click="emitViewModalOn">
-      <!-- <div class="card" @click="$router.push('view/' + history.history.historyId)"> -->
-      <!-- <div class="card"> -->
       <img :src="imageSrc()" class="history-thumnail" />
-      <!-- <img src="@/assets/sample/sample1.jpg" class="history-thumnail" /> -->
       <div class="history-info">
         <div class="history-title" v-if="history.history">
           {{ history.history.title }}
@@ -32,11 +29,14 @@ export default {
   },
   props: {
     historyId: Number,
+    needToUpdate: Boolean,
   },
   methods: {
+    //기록 조회 모달창 열기
     emitViewModalOn() {
-      this.$emit('setViewModal', true, this.historyId);
+      this.$emit('setViewModal', this.historyId);
     },
+    //이미지 소스 가져오기
     imageSrc() {
       if (this.imageList.length > 0) {
         return require(this.imageList[0].imagePath);
@@ -45,12 +45,22 @@ export default {
         return require('@/assets/sample/sample' + sampleSrc + '.jpg');
       }
     },
+    async loadHistory() {
+      await axios
+        .get('http://43.201.218.74/history/' + this.historyId)
+        .then((response) => (this.history = response.data));
+      this.imageList = this.history.images;
+    },
   },
-  async created() {
-    await axios
-      .get('http://43.201.218.74/history/' + this.historyId)
-      .then((response) => (this.history = response.data));
-    this.imageList = this.history.images;
+  watch: {
+    needToUpdate: function () {
+      if (this.needToUpdate === true) {
+        this.loadHistory();
+      }
+    },
+  },
+  created() {
+    this.loadHistory();
   },
 };
 </script>
@@ -70,10 +80,6 @@ export default {
   overflow: hidden;
   width: 100%;
   height: 100%;
-  /* width: 340px;
-  height: 340px; */
-  /* min-width: 340px;
-  min-height: 340px; */
 }
 
 .card:hover .history-info {
