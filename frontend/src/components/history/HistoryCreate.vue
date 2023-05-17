@@ -140,9 +140,8 @@ export default {
         f.append('files', tempFiles[j]);
       }
 
-      await axios.post(`http://43.201.218.74/history`, f).catch((error) => {
-        console.log(error.response);
-      });
+      await axios.post(`http://localhost/history`, f);
+      this.emitCreateModalOff();
     },
   },
 };

@@ -61,9 +61,10 @@ export default {
     },
     formatDate(selectDate) {
       console.log(selectDate);
-      const year = selectDate.substr(0, 2);
-      const month = selectDate.substr(2, 2);
-      const day = selectDate.substr(4, 2);
+      const dateParts = selectDate.split('-');
+      const year = dateParts[0].substr(2);
+      const month = dateParts[1];
+      const day = dateParts[2];
       return `${year}.${month}.${day}`;
     },
   },

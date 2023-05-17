@@ -64,6 +64,14 @@ export default {
       this.viewModal = false;
     },
   },
+  watch: {
+    // 히스토리 목록 내용이 변경 시 다시 로딩
+    histories: async function () {
+      await axios
+        .get(`http://43.201.218.74/history?pageNo=`)
+        .then((response) => (this.histories = response.data));
+    },
+  },
   async created() {
     await axios
       .get(`http://43.201.218.74/history?pageNo=`)
