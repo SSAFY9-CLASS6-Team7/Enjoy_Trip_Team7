@@ -4,8 +4,10 @@ import com.ssafy.enjoytrip.board.model.Board;
 import com.ssafy.enjoytrip.board.model.Comment;
 import com.ssafy.enjoytrip.board.model.mapper.BoardMapper;
 import com.ssafy.enjoytrip.board.model.mapper.CommentMapper;
-import com.ssafy.enjoytrip.image.model.Image;
-import com.ssafy.enjoytrip.image.model.mapper.ImageMapper;
+import com.ssafy.enjoytrip.util.model.Image;
+import com.ssafy.enjoytrip.util.model.Page;
+import com.ssafy.enjoytrip.util.model.PageResult;
+import com.ssafy.enjoytrip.util.model.mapper.ImageMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,8 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.ssafy.enjoytrip.image.controller.ImageUtils.deleteImageFile;
-import static com.ssafy.enjoytrip.image.controller.ImageUtils.saveFile;
+import static com.ssafy.enjoytrip.util.controller.ImageUtils.deleteImageFile;
+import static com.ssafy.enjoytrip.util.controller.ImageUtils.saveFile;
 
 @Slf4j
 @Service
@@ -29,6 +31,7 @@ public class BoardServiceImpl implements BoardService {
     static final int TYPE = 100;
     // 페이지 사이즈
     private final int LIST_SIZE = 10;
+
     @Value("${file.dir}")
     private String fileDir;
 
@@ -37,13 +40,19 @@ public class BoardServiceImpl implements BoardService {
     private final ImageMapper imageMapper;
 
     @Override
-    public List<Board> getBoardList(Map<String, Object> paramMap) throws SQLException {
-        int pageNo;
-        if ("".equals((String) paramMap.get("pageNo"))) pageNo = 1;
-        else pageNo = Integer.parseInt((String) paramMap.get("pageNo"));
-        paramMap.put("start", pageNo * LIST_SIZE - LIST_SIZE);
-        paramMap.put("size", LIST_SIZE);
-        return boardMapper.selectBoard(paramMap);
+    public Map<String, Object> getBoardList(Map<String, Object> paramMap) throws SQLException {
+        Page page = new Page();
+        int pageNo = Integer.parseInt(String.valueOf(paramMap.get("pageNo")));
+        page.setPageNo(pageNo);
+        paramMap.put("page", page);
+
+        Map<String, Object> result = new HashMap<>();
+
+        int totalCount = boardMapper.selectBoardCount(String.valueOf(paramMap.get("keyword")));
+        PageResult pageResult = new PageResult(pageNo, totalCount);
+        result.put("boards",  boardMapper.selectBoard(paramMap));
+        result.put("pageResult", pageResult);
+        return result;
     }
 
     @Transactional

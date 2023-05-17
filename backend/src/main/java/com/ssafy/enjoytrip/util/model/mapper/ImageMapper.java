@@ -1,6 +1,6 @@
-package com.ssafy.enjoytrip.image.model.mapper;
+package com.ssafy.enjoytrip.util.model.mapper;
 
-import com.ssafy.enjoytrip.image.model.Image;
+import com.ssafy.enjoytrip.util.model.Image;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.sql.SQLException;

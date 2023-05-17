@@ -40,7 +40,14 @@
                 </otherwise>
             </choose>
         </trim>
-         LIMIT #{start}, #{size}
+         LIMIT #{page.beginPage}, #{page.listSize}
+    </select>
+
+    <!-- 게시글 전체 개수 조회 -->
+    <select id="selectBoardCount" resultType="int" parameterType="string">
+        SELECT COUNT(*)
+          FROM board
+        <if test="keyword != ''">WHERE title LIKE CONCAT('%', #{keyword}, '%')</if>
     </select>
 
     <!-- 게시글 상세 내용 조회 -->

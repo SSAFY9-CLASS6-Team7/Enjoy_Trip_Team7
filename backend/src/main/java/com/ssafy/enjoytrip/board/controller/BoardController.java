@@ -2,10 +2,8 @@ package com.ssafy.enjoytrip.board.controller;
 
 import com.ssafy.enjoytrip.board.model.Board;
 import com.ssafy.enjoytrip.board.model.service.BoardService;
-import com.ssafy.enjoytrip.image.model.Image;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,7 +23,7 @@ public class BoardController {
 
 
     @GetMapping
-    public List<Board> getBoardList(@RequestParam Map<String, Object> paramMap) throws SQLException {
+    public Map<String, Object> getBoardList(@RequestParam Map<String, Object> paramMap) throws SQLException {
         return boardService.getBoardList(paramMap);
     }
 

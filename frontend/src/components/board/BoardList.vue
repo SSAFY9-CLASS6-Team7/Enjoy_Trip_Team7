@@ -42,24 +42,27 @@
 
       <!-- child Component 영역 -->
       <board-content :boards='boards'></board-content>
-      <div class="pagenation"> .. </div>
+      <board-pagination class="pagination"></board-pagination>
       <div class="right-aside"></div>
     </div>
 </template>
 
 <script >
 import BoardContent from '@/components/board/board_components/BoardContent.vue'
+import BoardPagination from '@/components/board/board_components/BoardPagination.vue'
 import axios from 'axios'
 
 export default {
   name : 'BoardList',
-  components: { BoardContent },
+  components: { BoardContent, BoardPagination },
   data(){
     return {
       activeBoardTab: '',
       searchKeyword: '',
       selectedCondition: '',
+      pageNo: 1,
       boards: [],
+      pageResult: {},
     }
   },
   methods: {
@@ -67,11 +70,11 @@ export default {
       this.$router.push("create");
     },
     goSearch(){
-      axios.get(`http://localhost/board?pageNo=&code=${this.activeBoardTab}&condition=${this.selectedCondition}&anonymous=&keyword=${this.searchKeyword}`)
+      axios.get(`http://43.201.218.74/board?pageNo=${this.pageNo}&code=${this.activeBoardTab}&condition=${this.selectedCondition}&anonymous=&keyword=${this.searchKeyword}`)
       .then(response => this.boards = response.data)
     },
     tabChange(code) {
-      axios.get(`http://43.201.218.74/board?pageNo=&code=${code}&condition=&anonymous=`)
+      axios.get(`http://43.201.218.74/board?pageNo=${this.pageNo}&code=${code}&condition=&anonymous=&keyword=`)
       .then(response => {
         this.boards = response.data
         this.activeBoardTab = code;
@@ -80,8 +83,12 @@ export default {
     }
   },
   async created(){
-    await axios.get(`http://43.201.218.74/board?pageNo=&code=${this.activeBoardTab}&condition=&anonymous=`)
-    .then(response => this.boards = response.data);
+    await axios.get(`http://43.201.218.74/board?pageNo=${this.pageNo}&code=${this.activeBoardTab}&condition=&anonymous=&keyword=`)
+    .then(response => {
+      this.boards = response.data.boards;
+      this.pageResult = response.data.pageResult;
+      }
+    );
   }
 }
 </script>
@@ -298,7 +305,7 @@ export default {
   flex-basis: 8%;
 }
 
-.pagenation {
+.pagination {
   grid-area: pagenation;
   background: #55f52d;
 }
