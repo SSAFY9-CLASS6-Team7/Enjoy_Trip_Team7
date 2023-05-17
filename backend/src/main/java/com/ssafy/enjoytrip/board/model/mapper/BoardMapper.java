@@ -12,6 +12,8 @@ public interface BoardMapper {
 
     List<Board> selectBoard(Map<String, Object> paramMap) throws SQLException;
 
+    int selectBoardCount(String keyword) throws SQLException;
+
     void insertBoard(Board board) throws SQLException;
 
     void updateBoard(Board board) throws SQLException;

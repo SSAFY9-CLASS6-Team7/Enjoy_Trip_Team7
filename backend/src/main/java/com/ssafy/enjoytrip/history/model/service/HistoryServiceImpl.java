@@ -14,13 +14,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ssafy.enjoytrip.history.model.History;
 import com.ssafy.enjoytrip.history.model.mapper.HistoryMapper;
-import com.ssafy.enjoytrip.image.model.Image;
-import com.ssafy.enjoytrip.image.model.mapper.ImageMapper;
+import com.ssafy.enjoytrip.util.model.Image;
+import com.ssafy.enjoytrip.util.model.mapper.ImageMapper;
 
 import lombok.RequiredArgsConstructor;
 
-import static com.ssafy.enjoytrip.image.controller.ImageUtils.deleteImageFile;
-import static com.ssafy.enjoytrip.image.controller.ImageUtils.saveFile;
+import static com.ssafy.enjoytrip.util.controller.ImageUtils.deleteImageFile;
+import static com.ssafy.enjoytrip.util.controller.ImageUtils.saveFile;
 
 @Slf4j
 @Service

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface BoardService {
-    List<Board> getBoardList(Map<String, Object> paramMap) throws SQLException;
+    Map<String, Object> getBoardList(Map<String, Object> paramMap) throws SQLException;
 
     Map<String, Object> getBoard(int boardId) throws SQLException;
 

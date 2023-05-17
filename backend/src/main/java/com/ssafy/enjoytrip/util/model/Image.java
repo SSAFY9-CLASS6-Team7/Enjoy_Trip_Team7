@@ -1,4 +1,4 @@
-package com.ssafy.enjoytrip.image.model;
+package com.ssafy.enjoytrip.util.model;
 
 import lombok.Data;
 
