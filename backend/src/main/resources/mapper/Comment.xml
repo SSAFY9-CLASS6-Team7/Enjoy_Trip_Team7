@@ -5,11 +5,12 @@
 <mapper namespace="com.ssafy.enjoytrip.board.model.mapper.CommentMapper">
 
     <resultMap type="comment" id="commentMap">
-        <result column="commentId" property="comment_id"/>
-        <result column="boardId" property="board_id"/>
+        <result column="comment_id" property="commentId"/>
+        <result column="board_id" property="boardId"/>
         <result column="createtime" property="createTime"/>
         <result column="comment_content" property="commentContent"/>
         <result column="heart" property="heart"/>
+        <result column="user_id" property="userId"/>
         <result column="anonymous" property="anonymous"/>
     </resultMap>
 

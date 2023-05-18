@@ -9,7 +9,7 @@
             <div class="is-image">
                 <img v-if="images > 0" src="@/assets/board_icons/isImage.svg"/>
             </div>
-            <div class="board-title">
+            <div class="board-title" @click="boardView">
                 {{ board.title }}
                 <div v-if="comments > 0" class="comment-length">
                    [{{ comments }}]
@@ -78,6 +78,10 @@ export default {
         fetchImages() {
             axios.get(`http://43.201.218.74/board/${this.board.boardId}`)
             .then(response => this.images = response.data.images.length);
+        },
+        boardView(){
+            console.log(this.board.boardId);
+            this.$router.push('/board/view/'+this.board.boardId);
         },
     },
     created() {
