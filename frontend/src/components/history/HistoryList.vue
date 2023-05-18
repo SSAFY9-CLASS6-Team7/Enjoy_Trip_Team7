@@ -34,15 +34,20 @@
           @setViewModal="setViewModal"
         ></history-image>
       </div>
-      <div class="pagination">pagination</div>
+      <history-pagination
+        class="pagination"
+        :pageResult="pageResult"
+        @pageChange="pageChange"
+      ></history-pagination>
     </div>
     <div class="right-aside"></div>
   </div>
 </template>
 
 <script>
-import HistoryImage from '../history/HistoryImage.vue';
-import HistoryModal from './HistoryModal.vue';
+import HistoryImage from './history_components/HistoryImage.vue';
+import HistoryModal from './history_components/HistoryModal.vue';
+import HistoryPagination from './history_components/HistoryPagination.vue';
 import axios from 'axios';
 
 export default {
@@ -50,6 +55,7 @@ export default {
   components: {
     HistoryImage,
     HistoryModal,
+    HistoryPagination,
   },
   data() {
     return {
@@ -58,6 +64,8 @@ export default {
       modaltype: '',
       isModalOpen: false,
       needToUpate: false,
+      pageNo: 1,
+      pageResult: {},
     };
   },
   methods: {
@@ -83,11 +91,16 @@ export default {
       this.setType('view');
       this.setModal(true);
     },
+    async pageChange(clickedPage) {
+      this.pageNo = clickedPage;
+      await this.loadHistories();
+    },
     // 기록 리스트 로딩
     async loadHistories() {
-      await axios
-        .get(`http://43.201.218.74/history?pageNo=`)
-        .then((response) => (this.histories = response.data));
+      await axios.get(`http://43.201.218.74/history?pageNo=${this.pageNo}`).then((response) => {
+        this.histories = response.data.histories;
+        this.pageResult = response.data.pageResult;
+      });
     },
   },
   watch: {
@@ -144,11 +157,11 @@ export default {
 
 .main {
   grid-area: main;
-  margin: 20px 0;
+  margin-top: 20px;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr;
-  background-color: antiquewhite;
+  background-color: white;
 }
 
 .create-btn {
@@ -171,7 +184,7 @@ export default {
 
 .pagination {
   grid-area: page;
-  background-color: #fcaf45;
+  min-height: 60px;
 }
 
 button {

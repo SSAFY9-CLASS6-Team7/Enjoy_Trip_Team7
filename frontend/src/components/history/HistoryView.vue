@@ -33,6 +33,7 @@
             <div class="swiper-button-next img-next" slot="button-next">
               <img src="@/assets/right.svg" width="40px" height="40px" style="right: 30px" />
             </div>
+            <div class="swiper-pagination" slot="pagination"></div>
           </swiper>
         </div>
       </div>
@@ -42,9 +43,7 @@
           {{ formatDate(history.history.startDay) }} - {{ formatDate(history.history.endDay) }}
         </div>
         <div class="line"></div>
-        <div class="content">
-          {{ history.history.content }}
-        </div>
+        <div class="content" v-html="formatBoardContent(history.history.content)"></div>
         <div class="btn-area">
           <button class="updateBtn" @click="emitGotoUpdate()">
             <img class="update-btn-vector" src="@/assets/common/modify_icon.svg" />
@@ -129,6 +128,10 @@ export default {
     emitGotoUpdate() {
       this.$emit('emitSetType', 'update');
     },
+    //엔터를 <br>로
+    formatBoardContent(content) {
+      return content.replace(/\n/g, '<br>');
+    },
     //삭제 확인용 알림 띄우기
     checkAlert() {
       if (confirm('정말 삭제하시겠습니까?') === true) {
@@ -196,6 +199,17 @@ export default {
   display: none;
 }
 
+.swiper-pagination >>> .swiper-pagination-bullet {
+  opacity: 1;
+  border: white solid 1px;
+  background-color: white;
+  opacity: 0.2;
+}
+.swiper-pagination >>> .swiper-pagination-bullet-active {
+  background-color: white;
+  opacity: 1;
+}
+
 .detail-area {
   width: 300px;
 }
@@ -225,6 +239,8 @@ export default {
 
 .content {
   margin-top: 5%;
+  height: 330px;
+  overflow: auto;
 }
 
 .btn-area {

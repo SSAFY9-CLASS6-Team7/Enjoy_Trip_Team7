@@ -30,9 +30,9 @@
   </div>
 </template>
 <script>
-import HistoryCreate from './HistoryCreate.vue';
-import HistoryUpdate from './HistoryUpdate.vue';
-import HistoryView from './HistoryView.vue';
+import HistoryCreate from '../HistoryCreate.vue';
+import HistoryUpdate from '../HistoryUpdate.vue';
+import HistoryView from '../HistoryView.vue';
 
 export default {
   name: 'HistoryModal',
