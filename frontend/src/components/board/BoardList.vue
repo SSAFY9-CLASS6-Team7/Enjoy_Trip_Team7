@@ -42,8 +42,10 @@
 
       <!-- child Component 영역 -->
       <board-content :boards='boards'></board-content>
-      <board-pagination class="pagination"></board-pagination>
+
+      <board-pagination class="pagination" @pageChange="pageChanged" :pageResult="pageResult"></board-pagination>
       <div class="right-aside"></div>
+
     </div>
 </template>
 
@@ -70,16 +72,23 @@ export default {
       this.$router.push("create");
     },
     goSearch(){
-      axios.get(`http://43.201.218.74/board?pageNo=${this.pageNo}&code=${this.activeBoardTab}&condition=${this.selectedCondition}&anonymous=&keyword=${this.searchKeyword}`)
-      .then(response => this.boards = response.data)
+      axios.get(`http://43.201.218.74/board?pageNo=1&code=${this.activeBoardTab}&condition=${this.selectedCondition}&anonymous=&keyword=${this.searchKeyword}`)
+      .then(response => this.boards = response.data.boards)
     },
     tabChange(code) {
-      axios.get(`http://43.201.218.74/board?pageNo=${this.pageNo}&code=${code}&condition=&anonymous=&keyword=`)
+      axios.get(`http://43.201.218.74/board?pageNo=1&code=${code}&condition=${this.selectedCondition}&anonymous=&keyword=${this.searchKeyword}`)
       .then(response => {
-        this.boards = response.data
+        this.boards = response.data.boards
         this.activeBoardTab = code;
         }
       )
+    },
+    pageChanged(clickedPage){
+      axios.get(`http://43.201.218.74/board?pageNo=${clickedPage}&code=${this.activeBoardTab}&condition=${this.selectedCondition}&anonymous=&keyword=${this.searchKeyword}`)
+      .then( response => {
+        this.boards = response.data.boards
+        this.pageResult = response.data.pageResult;
+      })
     }
   },
   async created(){
@@ -107,7 +116,7 @@ export default {
   display: grid;
   grid-template-columns: 1fr 5fr 1fr;
   grid-template-rows: 2fr 1fr 11fr 1fr;
-  grid-template-areas: 'left header right' 'left table-title right' 'left main right' 'left pagenation right';
+  grid-template-areas: 'left header right' 'left table-title right' 'left main right' 'left pagination right';
   justify-items: stretch;
   min-width: 1900px;
   /* max-height: 86.5vh; */
@@ -133,8 +142,6 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  grid-area: header-left;
-  
 }
 
 .header-right {
@@ -306,8 +313,7 @@ export default {
 }
 
 .pagination {
-  grid-area: pagenation;
-  background: #55f52d;
+  grid-area: pagination;
 }
 
 </style>
