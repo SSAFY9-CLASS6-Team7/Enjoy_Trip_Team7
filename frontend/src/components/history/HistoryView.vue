@@ -33,6 +33,7 @@
             <div class="swiper-button-next img-next" slot="button-next">
               <img src="@/assets/right.svg" width="40px" height="40px" style="right: 30px" />
             </div>
+            <div class="swiper-pagination" slot="pagination"></div>
           </swiper>
         </div>
       </div>
@@ -194,6 +195,17 @@ export default {
 .swiper-button-next::after,
 .swiper-button-prev::after {
   display: none;
+}
+
+.swiper-pagination >>> .swiper-pagination-bullet {
+  opacity: 1;
+  border: white solid 1px;
+  background-color: white;
+  opacity: 0.2;
+}
+.swiper-pagination >>> .swiper-pagination-bullet-active {
+  background-color: white;
+  opacity: 1;
 }
 
 .detail-area {
