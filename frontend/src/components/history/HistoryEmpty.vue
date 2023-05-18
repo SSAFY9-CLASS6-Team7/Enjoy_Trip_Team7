@@ -1,7 +1,7 @@
 <template>
-  <div class="container">
+  <div class="history-empty-container">
     <h1>아직 여행을 다녀온 기록이 없어요!</h1>
-    <button class="create-link" @click="emitCreateModalOn()"></button>
+    <button class="create-big-btn" @click="emitCreateModalOn()"></button>
   </div>
 </template>
 <script>
@@ -15,7 +15,7 @@ export default {
 };
 </script>
 <style scoped>
-.container {
+.history-empty-container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -23,7 +23,7 @@ export default {
   min-height: 775px;
 }
 
-.create-link {
+.create-big-btn {
   width: 500px;
   height: 100px;
   background-image: url('@/assets/history_assets/emptyPage_btn.svg');

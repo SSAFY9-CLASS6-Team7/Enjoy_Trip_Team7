@@ -1,6 +1,6 @@
 <template>
   <div class="history-container">
-    <div class="modal" v-if="this.isModalOpen === true">
+    <div class="history-modal-area" v-if="this.isModalOpen === true">
       <history-modal
         :modaltype="this.modaltype"
         :historyId="this.focusedHistoryId"
