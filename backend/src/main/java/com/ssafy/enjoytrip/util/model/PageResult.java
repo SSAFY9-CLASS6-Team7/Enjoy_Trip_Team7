@@ -23,7 +23,7 @@ public class PageResult {
         this.count = count;
         this.listSize = listSize;
         this.tabSize = tabSize;
-        this.lastPage = (int) Math.ceil(count / 10d);
+        this.lastPage = (int) Math.ceil(count / (double)listSize);
 
         int currentTab = ((pageNo - 1) / tabSize) + 1;
 
