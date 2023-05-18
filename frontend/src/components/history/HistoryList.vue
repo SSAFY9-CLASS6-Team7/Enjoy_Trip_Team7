@@ -1,6 +1,6 @@
 <template>
   <div class="history-container">
-    <div class="test" v-if="this.isModalOpen === true">
+    <div class="history-modal-area" v-if="this.isModalOpen === true">
       <history-modal
         :modaltype="this.modaltype"
         :historyId="this.focusedHistoryId"
@@ -25,20 +25,25 @@
         </button>
       </div>
       <div class="line"></div>
-      <div class="main">
-        <history-image
-          v-for="history in histories"
-          :key="history.historyId"
-          :historyId="history.historyId"
-          :needToUpdate="needToUpate"
-          @setViewModal="setViewModal"
-        ></history-image>
+      <div class="empty-main" v-if="histories.length === 0">
+        <history-empty @setCreateModal="setCreateModal"></history-empty>
       </div>
-      <history-pagination
-        class="pagination"
-        :pageResult="pageResult"
-        @pageChange="pageChange"
-      ></history-pagination>
+      <div class="history-main" v-if="histories.length !== 0">
+        <div class="main">
+          <history-image
+            v-for="history in histories"
+            :key="history.historyId"
+            :historyId="history.historyId"
+            :needToUpdate="needToUpate"
+            @setViewModal="setViewModal"
+          ></history-image>
+        </div>
+        <history-pagination
+          class="pagination"
+          :pageResult="pageResult"
+          @pageChange="pageChange"
+        ></history-pagination>
+      </div>
     </div>
     <div class="right-aside"></div>
   </div>
@@ -48,6 +53,7 @@
 import HistoryImage from './history_components/HistoryImage.vue';
 import HistoryModal from './history_components/HistoryModal.vue';
 import HistoryPagination from './history_components/HistoryPagination.vue';
+import HistoryEmpty from './HistoryEmpty.vue';
 import axios from 'axios';
 
 export default {
@@ -56,6 +62,7 @@ export default {
     HistoryImage,
     HistoryModal,
     HistoryPagination,
+    HistoryEmpty,
   },
   data() {
     return {
@@ -91,13 +98,19 @@ export default {
       this.setType('view');
       this.setModal(true);
     },
+    //기록 생성 모달 열기
+    setCreateModal() {
+      this.setType('create');
+      this.setModal(true);
+    },
     async pageChange(clickedPage) {
       this.pageNo = clickedPage;
       await this.loadHistories();
     },
     // 기록 리스트 로딩
     async loadHistories() {
-      await axios.get(`http://43.201.218.74/history?pageNo=${this.pageNo}`).then((response) => {
+      await axios.get(`http://localhost/history?pageNo=${this.pageNo}`).then((response) => {
+        // await axios.get(`http://43.201.218.74/history?pageNo=${this.pageNo}`).then((response) => {
         this.histories = response.data.histories;
         this.pageResult = response.data.pageResult;
       });

@@ -1,5 +1,5 @@
 <template>
-  <div class="modal">
+  <div class="history-modal">
     <div class="blackbg" @click="emitModalOff"></div>
     <div class="whitebg">
       <div class="modal-area">
@@ -62,7 +62,7 @@ export default {
 </script>
 
 <style scopeed>
-.modal,
+.history-modal,
 .blackbg {
   width: 100%;
   height: 100%;
