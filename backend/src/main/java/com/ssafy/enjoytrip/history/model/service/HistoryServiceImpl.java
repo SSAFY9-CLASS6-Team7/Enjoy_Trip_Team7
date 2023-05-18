@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.ssafy.enjoytrip.util.model.Page;
+import com.ssafy.enjoytrip.util.model.PageResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -32,21 +34,36 @@ public class HistoryServiceImpl implements HistoryService {
     private String fileDir;
     
     //페이징 용 : 한 페이지에 보일 글의 수
-    private final int LIST_SIZE = 10;
+    private final int LIST_SIZE = 8;
 	
 	private final HistoryMapper historyMapper;
 	private final ImageMapper imageMapper;
 	
 	//~~~~~~~~ 페이징 적용 리스트 ~~~~~~~~
 	@Override
-	public List<History> getHistoryList(Map<String, String> map) throws SQLException {
-		Map<String, Object> param = new HashMap<String, Object>();
-		int pgNo = Integer.parseInt(map.get("pgno") == "" ? "1" : map.get("pgno"));
-		int start = pgNo * LIST_SIZE - LIST_SIZE;
-		param.put("userId", map.get("userId"));
-		param.put("start", start);
-		param.put("listsize", LIST_SIZE);
-		return historyMapper.selectHistoryList(param);
+	public Map<String, Object> getHistoryList(Map<String, Object> map) throws SQLException {
+		Page page = new Page();
+        int pageNo = Integer.parseInt(String.valueOf(map.get("pgno")));
+        page.setPageNo(pageNo);
+        page.setListSize(LIST_SIZE);
+        map.put("page", page);
+        map.put("userId", map.get("userId"));
+
+        Map<String, Object> result = new HashMap<>();
+
+        int totalCount = historyMapper.selectBoardCount();
+        PageResult pageResult = new PageResult(pageNo, totalCount, LIST_SIZE, 5);
+        result.put("histories", historyMapper.selectHistoryList(map));
+        result.put("pageResult", pageResult);
+        return result;
+
+//        Map<String, Object> param = new HashMap<String, Object>();
+//		int pgNo = Integer.parseInt(map.get("pgno") == "" ? "1" : map.get("pgno"));
+//		int start = pgNo * LIST_SIZE - LIST_SIZE;
+//		param.put("userId", map.get("userId"));
+//		param.put("start", start);
+//		param.put("listsize", LIST_SIZE);
+//		return historyMapper.selectHistoryList(param);
 	}
 
 	@Override
