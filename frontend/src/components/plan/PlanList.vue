@@ -1,6 +1,8 @@
 <template>
   <div class="plan-container">
-    <div class="plan-modal"></div>
+    <div class="plan-modal">
+      <plan-search></plan-search>
+    </div>
     <div class="left-aside"></div>
     <div>
       <div class="inner-header">
@@ -26,11 +28,14 @@
 
 <script>
 import PlanListItem from './plan_components/PlanListItem.vue';
+import PlanSearch from './PlanSearch.vue';
 import axios from 'axios';
+
 export default {
   name: 'PlanList',
   components: {
     PlanListItem,
+    PlanSearch,
   },
   data() {
     return {
