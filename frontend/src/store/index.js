@@ -6,6 +6,10 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     activeMenuItem: localStorage.getItem("activeMenuItem") || "",
+    loginUser: {
+      // 임시 값
+      userId: 'TestUser1',
+    },
   },
   getters: {
   },
