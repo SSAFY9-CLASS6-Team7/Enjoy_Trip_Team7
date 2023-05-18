@@ -1,5 +1,5 @@
 /**
- * Swiper 9.3.1
+ * Swiper 9.3.2
  * Most modern mobile touch slider and framework with hardware accelerated transitions
  * https://swiperjs.com
  *
@@ -7,7 +7,7 @@
  *
  * Released under the MIT License
  *
- * Released on: May 10, 2023
+ * Released on: May 15, 2023
  */
 
 /**
@@ -430,7 +430,7 @@ function calcSupport() {
   const window = getWindow();
   const document = getDocument();
   return {
-    smoothScroll: document.documentElement && 'scrollBehavior' in document.documentElement.style,
+    smoothScroll: document.documentElement && document.documentElement.style && 'scrollBehavior' in document.documentElement.style,
     touch: !!('ontouchstart' in window || window.DocumentTouch && document instanceof window.DocumentTouch)
   };
 }
@@ -2939,6 +2939,9 @@ function onScroll() {
 function onLoad(e) {
   const swiper = this;
   processLazyPreloader(swiper, e.target);
+  if (swiper.params.cssMode || swiper.params.slidesPerView !== 'auto' && !swiper.params.autoHeight) {
+    return;
+  }
   swiper.update();
 }
 
@@ -4444,7 +4447,8 @@ function Mousewheel(_ref) {
       sensitivity: 1,
       eventsTarget: 'container',
       thresholdDelta: null,
-      thresholdTime: null
+      thresholdTime: null,
+      noMousewheelClass: 'swiper-no-mousewheel'
     }
   });
   swiper.mousewheel = {
@@ -4590,6 +4594,9 @@ function Mousewheel(_ref) {
     let e = event;
     let disableParentSwiper = true;
     if (!swiper.enabled) return;
+
+    // Ignore event if the target or its parents have the swiper-no-mousewheel class
+    if (event.target.closest(`.${swiper.params.mousewheel.noMousewheelClass}`)) return;
     const params = swiper.params.mousewheel;
     if (swiper.params.cssMode) {
       e.preventDefault();
@@ -7213,8 +7220,7 @@ function HashNavigation(_ref) {
     const activeSlideHash = activeSlideEl ? activeSlideEl.getAttribute('data-hash') : '';
     if (newHash !== activeSlideHash) {
       const newIndex = swiper.params.hashNavigation.getSlideIndex(swiper, newHash);
-      console.log(newIndex);
-      if (typeof newIndex === 'undefined') return;
+      if (typeof newIndex === 'undefined' || Number.isNaN(newIndex)) return;
       swiper.slideTo(newIndex);
     }
   };

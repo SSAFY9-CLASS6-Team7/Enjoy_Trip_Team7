@@ -4,7 +4,7 @@ function calcSupport() {
   const window = getWindow();
   const document = getDocument();
   return {
-    smoothScroll: document.documentElement && 'scrollBehavior' in document.documentElement.style,
+    smoothScroll: document.documentElement && document.documentElement.style && 'scrollBehavior' in document.documentElement.style,
     touch: !!('ontouchstart' in window || window.DocumentTouch && document instanceof window.DocumentTouch)
   };
 }

@@ -17,7 +17,8 @@ export default function Mousewheel({
       sensitivity: 1,
       eventsTarget: 'container',
       thresholdDelta: null,
-      thresholdTime: null
+      thresholdTime: null,
+      noMousewheelClass: 'swiper-no-mousewheel'
     }
   });
   swiper.mousewheel = {
@@ -163,6 +164,9 @@ export default function Mousewheel({
     let e = event;
     let disableParentSwiper = true;
     if (!swiper.enabled) return;
+
+    // Ignore event if the target or its parents have the swiper-no-mousewheel class
+    if (event.target.closest(`.${swiper.params.mousewheel.noMousewheelClass}`)) return;
     const params = swiper.params.mousewheel;
     if (swiper.params.cssMode) {
       e.preventDefault();

@@ -73,6 +73,9 @@ function updateSwiper({
   updateParams.forEach(key => {
     if (isObject(currentParams[key]) && isObject(passedParams[key])) {
       extend(currentParams[key], passedParams[key]);
+      if ((key === 'navigation' || key === 'pagination' || key === 'scrollbar') && 'enabled' in passedParams[key] && !passedParams[key].enabled) {
+        destroyModule(key);
+      }
     } else {
       const newValue = passedParams[key];
       if ((newValue === true || newValue === false) && (key === 'navigation' || key === 'pagination' || key === 'scrollbar')) {

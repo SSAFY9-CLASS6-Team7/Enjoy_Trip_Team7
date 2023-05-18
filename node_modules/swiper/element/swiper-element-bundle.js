@@ -1,5 +1,5 @@
 /**
- * Swiper Custom Element 9.3.1
+ * Swiper Custom Element 9.3.2
  * Most modern mobile touch slider and framework with hardware accelerated transitions
  * https://swiperjs.com
  *
@@ -7,7 +7,7 @@
  *
  * Released under the MIT License
  *
- * Released on: May 10, 2023
+ * Released on: May 15, 2023
  */
 
 /* eslint-disable spaced-comment */
@@ -88,7 +88,7 @@ class SwiperContainer extends ClassToExtend {
     }
 
     this.cssLinks().forEach((url) => {
-      const linkExists = document.querySelector(`link[href="${url}"]`);
+      const linkExists = this.shadowEl.querySelector(`link[href="${url}"]`);
       if (linkExists) return;
       const linkEl = document.createElement('link');
       linkEl.rel = 'stylesheet';
@@ -177,8 +177,8 @@ class SwiperContainer extends ClassToExtend {
     this.initialized = false;
   }
 
-  updateSwiperOnPropChange(propName) {
-    const { params: swiperParams, passedParams } = getParams(this);
+  updateSwiperOnPropChange(propName, propValue) {
+    const { params: swiperParams, passedParams } = getParams(this, propName, propValue);
     this.passedParams = passedParams;
     this.swiperParams = swiperParams;
 
@@ -207,6 +207,9 @@ class SwiperContainer extends ClassToExtend {
 
   attributeChangedCallback(attr, prevValue, newValue) {
     if (!this.initialized) return;
+    if (prevValue === 'true' && newValue === null) {
+      newValue = false;
+    }
     this.updateSwiperOnPropChange(attr, newValue);
   }
 
@@ -235,7 +238,7 @@ paramsList.forEach((paramName) => {
       if (!this.passedParams) this.passedParams = {};
       this.passedParams[paramName] = value;
       if (!this.initialized) return;
-      this.updateSwiperOnPropChange(paramName, value);
+      this.updateSwiperOnPropChange(paramName);
     },
   });
 });

@@ -1,5 +1,5 @@
 /**
- * Swiper Custom Element 9.3.1
+ * Swiper Custom Element 9.3.2
  * Most modern mobile touch slider and framework with hardware accelerated transitions
  * https://swiperjs.com
  *
@@ -7,7 +7,7 @@
  *
  * Released under the MIT License
  *
- * Released on: May 10, 2023
+ * Released on: May 15, 2023
  */
 
 (function () {
@@ -433,7 +433,7 @@
       const window = getWindow();
       const document = getDocument();
       return {
-        smoothScroll: document.documentElement && 'scrollBehavior' in document.documentElement.style,
+        smoothScroll: document.documentElement && document.documentElement.style && 'scrollBehavior' in document.documentElement.style,
         touch: !!('ontouchstart' in window || window.DocumentTouch && document instanceof window.DocumentTouch)
       };
     }
@@ -2942,6 +2942,9 @@
     function onLoad(e) {
       const swiper = this;
       processLazyPreloader(swiper, e.target);
+      if (swiper.params.cssMode || swiper.params.slidesPerView !== 'auto' && !swiper.params.autoHeight) {
+        return;
+      }
       swiper.update();
     }
 
@@ -4447,7 +4450,8 @@
           sensitivity: 1,
           eventsTarget: 'container',
           thresholdDelta: null,
-          thresholdTime: null
+          thresholdTime: null,
+          noMousewheelClass: 'swiper-no-mousewheel'
         }
       });
       swiper.mousewheel = {
@@ -4593,6 +4597,9 @@
         let e = event;
         let disableParentSwiper = true;
         if (!swiper.enabled) return;
+
+        // Ignore event if the target or its parents have the swiper-no-mousewheel class
+        if (event.target.closest(`.${swiper.params.mousewheel.noMousewheelClass}`)) return;
         const params = swiper.params.mousewheel;
         if (swiper.params.cssMode) {
           e.preventDefault();
@@ -7216,8 +7223,7 @@
         const activeSlideHash = activeSlideEl ? activeSlideEl.getAttribute('data-hash') : '';
         if (newHash !== activeSlideHash) {
           const newIndex = swiper.params.hashNavigation.getSlideIndex(swiper, newHash);
-          console.log(newIndex);
-          if (typeof newIndex === 'undefined') return;
+          if (typeof newIndex === 'undefined' || Number.isNaN(newIndex)) return;
           swiper.slideTo(newIndex);
         }
       };
@@ -9071,7 +9077,7 @@
     }
 
     /**
-     * Swiper 9.3.1
+     * Swiper 9.3.2
      * Most modern mobile touch slider and framework with hardware accelerated transitions
      * https://swiperjs.com
      *
@@ -9079,7 +9085,7 @@
      *
      * Released under the MIT License
      *
-     * Released on: May 10, 2023
+     * Released on: May 15, 2023
      */
 
     // Swiper Class
@@ -9139,7 +9145,7 @@
       return val;
     };
     const modulesParamsList = ['a11y', 'autoplay', 'controller', 'cards-effect', 'coverflow-effect', 'creative-effect', 'cube-effect', 'fade-effect', 'flip-effect', 'free-mode', 'grid', 'hash-navigation', 'history', 'keyboard', 'mousewheel', 'navigation', 'pagination', 'parallax', 'scrollbar', 'thumbs', 'virtual', 'zoom'];
-    function getParams(element) {
+    function getParams(element, propName, propValue) {
       const params = {};
       const passedParams = {};
       extend(params, defaults);
@@ -9155,12 +9161,19 @@
       });
 
       // Attributes
-      [...element.attributes].forEach(attr => {
+      const attrsList = [...element.attributes];
+      if (typeof propName === 'string' && typeof propValue !== 'undefined') {
+        attrsList.push({
+          name: propName,
+          value: propValue
+        });
+      }
+      attrsList.forEach(attr => {
         const moduleParam = modulesParamsList.filter(mParam => attr.name.indexOf(`${mParam}-`) === 0)[0];
         if (moduleParam) {
           const parentObjName = attrToProp(moduleParam);
           const subObjName = attrToProp(attr.name.split(`${moduleParam}-`)[1]);
-          if (!passedParams[parentObjName]) passedParams[parentObjName] = {};
+          if (typeof passedParams[parentObjName] === 'undefined') passedParams[parentObjName] = {};
           if (passedParams[parentObjName] === true) {
             passedParams[parentObjName] = {
               enabled: true
@@ -9288,6 +9301,9 @@
       updateParams.forEach(key => {
         if (isObject(currentParams[key]) && isObject(passedParams[key])) {
           extend(currentParams[key], passedParams[key]);
+          if ((key === 'navigation' || key === 'pagination' || key === 'scrollbar') && 'enabled' in passedParams[key] && !passedParams[key].enabled) {
+            destroyModule(key);
+          }
         } else {
           const newValue = passedParams[key];
           if ((newValue === true || newValue === false) && (key === 'navigation' || key === 'pagination' || key === 'scrollbar')) {
@@ -9430,7 +9446,7 @@
           this.shadowEl.appendChild(this.stylesEl);
         }
         this.cssLinks().forEach(url => {
-          const linkExists = document.querySelector(`link[href="${url}"]`);
+          const linkExists = this.shadowEl.querySelector(`link[href="${url}"]`);
           if (linkExists) return;
           const linkEl = document.createElement('link');
           linkEl.rel = 'stylesheet';
@@ -9512,11 +9528,11 @@
         }
         this.initialized = false;
       }
-      updateSwiperOnPropChange(propName) {
+      updateSwiperOnPropChange(propName, propValue) {
         const {
           params: swiperParams,
           passedParams
-        } = getParams(this);
+        } = getParams(this, propName, propValue);
         this.passedParams = passedParams;
         this.swiperParams = swiperParams;
         updateSwiper({
@@ -9537,6 +9553,9 @@
       }
       attributeChangedCallback(attr, prevValue, newValue) {
         if (!this.initialized) return;
+        if (prevValue === 'true' && newValue === null) {
+          newValue = false;
+        }
         this.updateSwiperOnPropChange(attr, newValue);
       }
       static get observedAttributes() {
@@ -9556,7 +9575,7 @@
           if (!this.passedParams) this.passedParams = {};
           this.passedParams[paramName] = value;
           if (!this.initialized) return;
-          this.updateSwiperOnPropChange(paramName, value);
+          this.updateSwiperOnPropChange(paramName);
         }
       });
     });

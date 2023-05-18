@@ -32,8 +32,7 @@ export default function HashNavigation({
     const activeSlideHash = activeSlideEl ? activeSlideEl.getAttribute('data-hash') : '';
     if (newHash !== activeSlideHash) {
       const newIndex = swiper.params.hashNavigation.getSlideIndex(swiper, newHash);
-      console.log(newIndex);
-      if (typeof newIndex === 'undefined') return;
+      if (typeof newIndex === 'undefined' || Number.isNaN(newIndex)) return;
       swiper.slideTo(newIndex);
     }
   };
