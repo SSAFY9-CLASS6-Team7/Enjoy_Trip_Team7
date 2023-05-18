@@ -1,7 +1,7 @@
 <template>
   <div class="create-container">
   <div class="create-area">
-    <div class="tab-title">글 쓰기</div>
+    <div class="tab-title">글쓰기</div>
     <div class="category-anonymous-container">
       <div class="category-container">
         <div class="inner-title">말머리</div>
@@ -14,7 +14,8 @@
       </div>
       <div class="anonymous-container">
         <div class="inner-title">익명</div>
-        <input type="checkbox" class="is-anonymous"/>
+        <input type="checkbox" id="anonymousFlag"/>
+        <label for="anonymousFlag" class="is-anonymous"></label>
       </div>
 
     </div>
@@ -37,9 +38,25 @@
     </div>
     <div class="attraction-container">
       <div class="inner-title">관광지 선택</div>
+      <div class="select-attraction">
+        <div class="empty-attraction">선택된 관광지가 없습니다.</div>
+      </div>
     </div>
 
-    <button @click="boardSubmit">전송</button>
+    <div class="upload-container">
+      <div class="inner-title">사진 업로드</div>
+      <div class="filebox">
+        <label class="upload-search-button" for="file">찾아보기...</label> 
+        <div v-if="selectedFiles.length == 0" class="upload-name">선택된 파일 없음</div>
+        <div v-if="selectedFiles.length > 0" class="upload-name"> {{ selectedFiles.join(', ') }} </div>
+        <input type="file" id="file" @change="handleFileChange" multiple >
+      </div>
+    </div>
+
+    <div class="buttons">
+      <button class="cancel-button" @click="cancel">취 소</button>
+      <button class="board-submit" @click="boardSubmit">글쓰기</button>
+    </div>
   </div>
   <div class="left-aside"></div>
   <dif class="right-aside"></dif>
@@ -63,6 +80,9 @@ export default {
     return {
       selectedCode: '100',
       content: '',
+      selectedAttractionId: '',
+      selectedAttraction: '',
+      selectedFiles: [],
     };
   },
   created() {},
@@ -79,6 +99,10 @@ export default {
           console.log(response.data)
         )
       );
+    },
+    handleFileChange(event) {
+      const fileInput = event.target;
+      this.selectedFiles = Array.from(fileInput.files).map(file => file.name);
     },
   },
 };
@@ -99,19 +123,16 @@ export default {
 }
 
 .create-area {
-  border: 1px solid #333333;
   grid-area: main;
   min-height: 81.2vh;
   min-width: 1200px;
 }
 
 .left-aside{
-  border: 1px solid #333333;
   grid-area: left;
 }
 
 .right-aside {
-  border: 1px solid #333333;
   grid-area: right;
 }
 
@@ -129,7 +150,6 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: start;
-  border: 1px solid #333333;
 }
 
 .condition-box {
@@ -139,9 +159,9 @@ export default {
   font-family: 'S-CoreDream-3Light';
   font-weight: 600;
   font-size: 14px;
-  /* color: #9b9b9b; */
   text-align: left;
   height: 30px;
+  width: 120px;
   border: 2px solid #5C5C5C;
   border-radius: 4px; 
   padding: 0 40px 1px 15px;
@@ -152,17 +172,38 @@ export default {
   background-repeat: no-repeat;
 }
 
+.anonymous-container input {
+  display: none;
+}
+
+.is-anonymous {
+  border: 2px solid #5C5C5C;
+  border-radius: 4px; 
+  width: 30px;
+  height: 30px;
+  position: relative;
+}
+
+input[id="anonymousFlag"]:checked + label::after {
+  content: '⭕';
+  width: 27px;
+  height: 30px;
+  position: absolute;
+  text-align: center;
+  padding:0 5px 0 0;
+  left: 0;
+  top: 0;
+}
+
 .anonymous-container {
   display: flex;
   flex-direction: column;
-  align-items: start;
-  border: 1px solid #333333;
+  align-items: center;
 }
 
 .title-input-container {
   display: flex;
   flex-direction: column;
-  border: 1px solid #333333;
 }
 
 .board-title-input {
@@ -188,7 +229,7 @@ export default {
 }
 
 .editor >>> .ql-editor {
-  min-height: 30vh;
+  min-height: 22vh;
   overflow-y: hidden;
   font-family: 'S-CoreDream-3Light';
   font-weight: 600;
@@ -203,12 +244,105 @@ export default {
   color: #333333;
 }
 
+.select-attraction {
+  margin: 10px 0 10px 0;
+}
+
+.empty-attraction {
+  height: 100px;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+
+  border: none;
+  border-radius: 8px;
+  background: #c7c6c6;
+
+  font-family: 'S-CoreDream-3Light';
+  font-weight: 800;
+  font-size: 16px;
+  padding: 0 0 0 10px; 
+}
+
+.filebox {
+  display: flex;
+  align-items: center;
+
+  height: 100px;
+  width: 100%;
+  padding: 0 0 0 10px; 
+  border: none;
+  border-radius: 8px;
+  background: #c7c6c6;
+  font-family: 'S-CoreDream-3Light';
+  font-weight: 800;
+  font-size: 16px; 
+}
+
+.upload-search-button {
+  border-radius: 8px;
+  padding: 5px 7px 5px 10px;
+  margin: 0 10px 0 0 ;
+  border: none;
+  background: #9b9b9b;
+}
+
+.upload-name {
+  outline: none;
+  border: none;
+  width: 80%;
+  text-align: start;
+  background: #c7c6c6;
+  font-family: 'S-CoreDream-3Light';
+  font-weight: 800;
+  font-size: 16px;
+}
+
+.filebox input[type="file"] {
+    position: absolute;
+    width: 0;
+    height: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+}
+
+.buttons {
+  margin: 20px 0 20px 0;
+}
+
+.cancel-button {
+  border: none;
+  color: #333333;
+  font-family: 'S-CoreDream-3Light';
+  font-weight: 800;
+  font-size: 18px;
+  background: #9b9b9b;
+  border-radius: 8px;
+  padding: 10px 23px 10px 23px;
+  min-width: 100px;
+  margin-right: 40px;
+}
+.board-submit {
+  border: none;
+  color: #ffffff;
+  font-family: 'S-CoreDream-3Light';
+  font-weight: 800;
+  font-size: 18px;
+  background: linear-gradient(95.36deg, #E1306C 2.32%, #FF699A 68.42%, #FCAF45 104.98%);
+  background-blend-mode: darken;
+  border-radius: 8px;
+  padding: 10px 20px 10px 20px;
+  min-width: 100px;
+  margin-left: 40px;
+}
 
 
 .inner-title {
   font-size: 25px;
   font-weight: 600;
   text-align: left;
+  margin: 20px 0 10px 0;
 }
 
 </style>
