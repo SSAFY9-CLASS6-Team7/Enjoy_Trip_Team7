@@ -43,9 +43,7 @@
           {{ formatDate(history.history.startDay) }} - {{ formatDate(history.history.endDay) }}
         </div>
         <div class="line"></div>
-        <div class="content">
-          {{ history.history.content }}
-        </div>
+        <div class="content" v-html="formatBoardContent(history.history.content)"></div>
         <div class="btn-area">
           <button class="updateBtn" @click="emitGotoUpdate()">
             <img class="update-btn-vector" src="@/assets/common/modify_icon.svg" />
@@ -129,6 +127,10 @@ export default {
     //update 모달로 변경하기
     emitGotoUpdate() {
       this.$emit('emitSetType', 'update');
+    },
+    //엔터를 <br>로
+    formatBoardContent(content) {
+      return content.replace(/\n/g, '<br>');
     },
     //삭제 확인용 알림 띄우기
     checkAlert() {
@@ -237,6 +239,8 @@ export default {
 
 .content {
   margin-top: 5%;
+  height: 330px;
+  overflow: auto;
 }
 
 .btn-area {
