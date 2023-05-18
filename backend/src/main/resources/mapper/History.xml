@@ -20,7 +20,7 @@
 		from history
 		where user_id = #{userId}
 		order by createtime desc
-		limit #{page.beginPage}, #{page.listsize}
+		limit #{page.beginPage}, #{page.listSize}
 	</select>
 
 	<!-- int selectBoardCount() -->
