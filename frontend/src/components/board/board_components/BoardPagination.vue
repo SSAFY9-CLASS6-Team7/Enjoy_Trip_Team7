@@ -98,8 +98,6 @@ export default {
 }
 
 .selected {
-    /* background: #0c0c0c;
-    color: #cccccc; */
     font-weight: 800;
     color: #e1306c;
     border-radius: 4px;
