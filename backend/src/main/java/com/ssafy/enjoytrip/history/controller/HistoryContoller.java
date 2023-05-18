@@ -37,8 +37,8 @@ public class HistoryContoller {
 		return (User) session.getAttribute("loginUser");
 	}
 	@GetMapping
-	public List<History> getHistoryList(@RequestParam(required = false) String pageNo, HttpSession session) throws SQLException {
-		Map<String, String> param = new HashMap<String, String>();
+	public Map<String, Object> getHistoryList(@RequestParam(required = false) String pageNo, HttpSession session) throws SQLException {
+		Map<String, Object> param = new HashMap<>();
 		param.put("userId", getLoginUser(session).getUserId());
 		param.put("pgno", pageNo);
 		return historyService.getHistoryList(param);

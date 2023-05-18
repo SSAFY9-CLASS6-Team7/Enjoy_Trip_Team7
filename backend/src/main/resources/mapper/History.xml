@@ -20,9 +20,15 @@
 		from history
 		where user_id = #{userId}
 		order by createtime desc
-		limit #{start}, #{listsize}
+		limit #{page.beginPage}, #{page.listsize}
 	</select>
-	
+
+	<!-- int selectBoardCount() -->
+	<select id="selectBoardCount" resultType="int">
+		select count(*)
+		from history
+	</select>
+
 	<!-- History selectHistoryById(int historyId)-->
 	<select id="selectHistoryById" parameterType="int" resultMap="historyResultMap">
 		select *
