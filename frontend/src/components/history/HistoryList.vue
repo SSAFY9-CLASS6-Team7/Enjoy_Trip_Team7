@@ -26,7 +26,7 @@
       </div>
       <div class="line"></div>
       <div class="empty-main" v-if="histories.length === 0">
-        <history-empty></history-empty>
+        <history-empty @setCreateModal="setCreateModal"></history-empty>
       </div>
       <div class="history-main" v-if="histories.length !== 0">
         <div class="main">
@@ -98,13 +98,19 @@ export default {
       this.setType('view');
       this.setModal(true);
     },
+    //기록 생성 모달 열기
+    setCreateModal() {
+      this.setType('create');
+      this.setModal(true);
+    },
     async pageChange(clickedPage) {
       this.pageNo = clickedPage;
       await this.loadHistories();
     },
     // 기록 리스트 로딩
     async loadHistories() {
-      await axios.get(`http://43.201.218.74/history?pageNo=${this.pageNo}`).then((response) => {
+      await axios.get(`http://localhost/history?pageNo=${this.pageNo}`).then((response) => {
+        // await axios.get(`http://43.201.218.74/history?pageNo=${this.pageNo}`).then((response) => {
         this.histories = response.data.histories;
         this.pageResult = response.data.pageResult;
       });
