@@ -1,13 +1,13 @@
 <template>
   <div class="plan-container">
-    <div class="plan-modal">
-      <attraction-search-modal></attraction-search-modal>
+    <div class="plan-modal" v-if="isModalOpen">
+      <attraction-search-modal @setModal="setModal"></attraction-search-modal>
     </div>
     <div class="left-aside"></div>
     <div>
       <div class="inner-header">
         <h2>계획</h2>
-        <button class="create-btn">
+        <button class="create-btn" @click="createModalOpen">
           <img class="create-btn-vector" src="../../assets/common/plus_icon_white.svg" />
           계획 추가
         </button>
@@ -40,8 +40,19 @@ export default {
   data() {
     return {
       plans: [],
+      isModalOpen: false,
       pageNo: 1,
     };
+  },
+  methods: {
+    //모달 창 오픈 여부 변경
+    setModal(value) {
+      this.isModalOpen = value;
+    },
+    //(변경필요)모달열기
+    createModalOpen() {
+      this.setModal(true);
+    },
   },
   async created() {
     await axios
