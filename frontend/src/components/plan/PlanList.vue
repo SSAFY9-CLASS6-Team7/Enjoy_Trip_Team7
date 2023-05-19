@@ -1,7 +1,7 @@
 <template>
   <div class="plan-container">
     <div class="plan-modal">
-      <plan-search></plan-search>
+      <attraction-search-modal></attraction-search-modal>
     </div>
     <div class="left-aside"></div>
     <div>
@@ -28,14 +28,14 @@
 
 <script>
 import PlanListItem from './plan_components/PlanListItem.vue';
-import PlanSearch from './PlanSearch.vue';
+import AttractionSearchModal from '../AttractionSearchModal.vue';
 import axios from 'axios';
 
 export default {
   name: 'PlanList',
   components: {
     PlanListItem,
-    PlanSearch,
+    AttractionSearchModal,
   },
   data() {
     return {

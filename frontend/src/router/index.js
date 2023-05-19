@@ -102,11 +102,11 @@ const routes = [
         name: 'planlist',
         component: () => import(/* webpackChunkName: "plan" */ '@/components/plan/PlanList.vue'),
       },
-      {
-        path: 'search',
-        name: 'plansearch',
-        component: () => import(/* webpackChunkName: "plan" */ '@/components/plan/PlanSearch.vue'),
-      },
+      // {
+      //   path: 'search',
+      //   name: 'plansearch',
+      //   component: () => import(/* webpackChunkName: "plan" */ '@/components/plan/PlanSearch.vue'),
+      // },
       {
         path: 'update',
         name: 'planupdate',

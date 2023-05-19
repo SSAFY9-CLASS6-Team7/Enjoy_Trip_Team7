@@ -135,7 +135,7 @@ export default {
         f.append('files', tempFiles[c]);
       }
 
-      await axios.post(`http://43.201.218.74/history`, f);
+      await axios.post(`http://localhost/history`, f);
       this.$emit('emitNeedToUpdate');
       this.emitModalOff();
     },
