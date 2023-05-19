@@ -1,7 +1,11 @@
 <template>
   <div class="history-item">
+    <!-- <img src="@/assets/sample/sample1.jpg"/>
+    <img src="C:/enjoytrip_image/images/987bd1d4-79cc-4a9c-b378-259870b517dc.png"/> -->
     <div class="card" @click="emitViewModalOn">
-      <img :src="imageSrc()" class="history-thumnail" />
+      <!-- <img :src="imageSrc()" class="history-thumnail" /> -->
+      <img :src="setThumbnailSrc()" class="history-thumnail" />
+
       <div class="history-info">
         <div class="history-title" v-if="history.history">
           {{ history.history.title }}
@@ -36,20 +40,21 @@ export default {
     emitViewModalOn() {
       this.$emit('setViewModal', this.historyId);
     },
-    //이미지 소스 가져오기
-    imageSrc() {
-      if (this.imageList.length > 0) {
-        return require(this.imageList[0].imagePath);
-      } else {
-        let sampleSrc = (this.historyId % 5) + 1;
-        return require('@/assets/sample/sample' + sampleSrc + '.jpg');
-      }
-    },
     async loadHistory() {
       await axios
         .get('http://localhost/history/' + this.historyId)
         .then((response) => (this.history = response.data));
       this.imageList = this.history.images;
+      // this.setThumbnailSrc();
+    },
+    //이미지 소스 가져오기
+    setThumbnailSrc() {
+      if (this.imageList.length > 0) {
+        return 'http://localhost/imagePath/' + this.imageList[0].imagePath;
+      } else {
+        let sampleSrc = (this.historyId % 5) + 1;
+        return require(`@/assets/sample/sample${sampleSrc}.jpg`);
+      }
     },
   },
   watch: {

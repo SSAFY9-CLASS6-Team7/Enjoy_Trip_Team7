@@ -2,9 +2,8 @@
   <div class="viewModal">
     <div class="modal-card" v-if="history.history">
       <div class="img-area">
-        <!-- 기존 이미지 불러오기(현재는 썸네일만) -->
-        <img :src="imageSrc()" class="history-thumnail" @click="bigImage()" />
-        <!-- TODO: 이미지 스와이프 후 마지막에 추가하게? -->
+        <!-- 기존 이미지 불러오기(썸네일만) -->
+        <img :src="setThumbnailSrc()" class="history-thumnail" />
         <div class="file-area">
           <label for="file">
             <div class="btn-upload">파일 업로드하기</div>
@@ -73,6 +72,7 @@ export default {
       //기존 데이터
       history: Object,
       imageList: [],
+      thumnailUrl: '',
       //새로운 데이터
       title: '',
       startDay: '',
@@ -86,14 +86,14 @@ export default {
   },
   methods: {
     //이미지 소스를 세팅하기
-    imageSrc() {
-      if (this.imageList.length > 0) {
-        return require(this.imageList[0].imagePath);
-      } else {
-        let sampleSrc = (this.historyId % 5) + 1;
-        return require('@/assets/sample/sample' + sampleSrc + '.jpg');
-      }
-    },
+    // imageSrc() {
+    //   if (this.imageList.length > 0) {
+    //     return require(this.imageList[0].imagePath);
+    //   } else {
+    //     let sampleSrc = (this.historyId % 5) + 1;
+    //     return require('@/assets/sample/sample' + sampleSrc + '.jpg');
+    //   }
+    // },
     //날짜 출력 형식을 변경하기
     formatDate(selectDate) {
       const dateParts = selectDate.split('-');
@@ -167,11 +167,21 @@ export default {
       this.$emit('emitNeedToUpdate');
       this.$emit('emitModalOff');
     },
+    setThumbnailSrc() {
+      if (this.imageList.length > 0) {
+        return 'http://localhost/imagePath/' + this.imageList[0].imagePath;
+        // this.thumnailUrl = 'http://localhost/imagePath/' + this.imageList[0].imagePath;
+      } else {
+        let sampleSrc = (this.historyId % 5) + 1;
+        return require(`@/assets/sample/sample${sampleSrc}.jpg`);
+        // this.thumnailUrl = `@/assets/sample/sample${sampleSrc}.jpg`;
+      }
+    },
   },
   //TODO: db에서 이미지 로딩으로 문제 발생시 나머지 데이터들도 로딩안됨
   async mounted() {
     await axios
-      .get('http://43.201.218.74/history/' + this.historyId)
+      .get('http://localhost/history/' + this.historyId)
       .then((response) => (this.history = response.data));
     //미리 정보 로딩
     this.imageList = this.history.images;
@@ -179,6 +189,7 @@ export default {
     this.startDay = this.history.history.startDay;
     this.endDay = this.history.history.endDay;
     this.content = this.history.history.content;
+    // this.setThumbnailSrc();
   },
 };
 </script>
@@ -211,7 +222,7 @@ export default {
   position: absolute;
   top: 0%;
   left: 0%;
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, 0.6);
   width: 500px;
   height: 500px;
   border-radius: 30px;
