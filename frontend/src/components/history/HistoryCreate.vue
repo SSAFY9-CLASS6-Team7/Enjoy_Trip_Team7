@@ -21,8 +21,6 @@
         class="title-input"
         v-model.lazy="title"
         placeholder="제목은10글자이내로"
-        onfocus="this.placeholder=''"
-        onblur="this.placeholder='제목은10글자이내로'"
         :style="{ backgroundColor: title ? 'white' : '' }"
       />
       <div class="date-area">
@@ -46,8 +44,6 @@
         v-model.lazy="content"
         ref="contentInput"
         placeholder="내용을 입력해주세요."
-        onfocus="this.placeholder=''"
-        onblur="this.placeholder='내용을 입력해주세요.'"
         :style="{ backgroundColor: content ? 'white' : '' }"
       ></textarea>
       <div class="btn-area">
