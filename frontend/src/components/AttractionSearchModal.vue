@@ -1,6 +1,6 @@
 <template>
   <div class="att-search-modal">
-    <div class="search-blackbg"></div>
+    <div class="search-blackbg" @click="emitModalOff"></div>
     <div class="search-whitebg">
       <div class="top-bar"></div>
       <div class="search-modal-area">
@@ -13,13 +13,13 @@
               </button>
               <ul ref="sidoDropdownMenu" class="dropdown-menu">
                 <li>
-                  <label><input type="checkbox" value="서울" />서울</label>
+                  <label><input type="checkbox" name="sido" value="서울" /> 서울 </label>
                 </li>
                 <li>
-                  <label><input type="checkbox" value="대전" />대전</label>
+                  <label><input type="checkbox" name="sido" value="대전" /> 대전 </label>
                 </li>
                 <li>
-                  <label><input type="checkbox" value="부산" />부산</label>
+                  <label><input type="checkbox" name="sido" value="부산" /> 부산 </label>
                 </li>
               </ul>
             </div>
@@ -30,19 +30,19 @@
               </button>
               <ul ref="categoryDropdownMenu" class="dropdown-menu">
                 <li>
-                  <label><input type="checkbox" value="관광" />관광</label>
+                  <label><input type="checkbox" value="관광" /> 관광 </label>
                 </li>
                 <li>
-                  <label><input type="checkbox" value="식당" />식당</label>
+                  <label><input type="checkbox" value="식당" /> 식당 </label>
                 </li>
                 <li>
-                  <label><input type="checkbox" value="행사" />행사</label>
+                  <label><input type="checkbox" value="행사" /> 행사 </label>
                 </li>
                 <li>
-                  <label><input type="checkbox" value="숙박" />숙박</label>
+                  <label><input type="checkbox" value="숙박" /> 숙박 </label>
                 </li>
                 <li>
-                  <label><input type="checkbox" value="기타" />기타</label>
+                  <label><input type="checkbox" value="기타" /> 기타 </label>
                 </li>
               </ul>
             </div>
@@ -50,7 +50,7 @@
           <div class="keyword-search-area">
             <div class="search-box">
               <input type="text" placeholder="검색어 입력" />
-              <img src="@/assets/plan_icon/search.svg" @click="kewordSearch" />
+              <img src="@/assets/plan_icon/search.svg" @click="keywordSearch" />
             </div>
           </div>
           <div class="att-list-area">
@@ -67,6 +67,18 @@
 <script>
 export default {
   name: 'PlanSearch',
+  data() {
+    return {
+      sido: [],
+      category: [],
+      keyword: '',
+    };
+  },
+  computed: {
+    sidoCode() {
+      return this.$store.getters.getSidoCode;
+    },
+  },
   methods: {
     toggleDropdown(dropdownStyle) {
       var dropdownMenu = null;
@@ -74,8 +86,11 @@ export default {
       if (dropdownStyle === 'category') dropdownMenu = this.$refs.categoryDropdownMenu;
       dropdownMenu.style.display = dropdownMenu.style.display === 'none' ? 'block' : 'none';
     },
-    kewordSearch() {
+    keywordSearch() {
       console.log('lets search');
+    },
+    emitModalOff() {
+      this.$emit('setModal', false);
     },
   },
 };
