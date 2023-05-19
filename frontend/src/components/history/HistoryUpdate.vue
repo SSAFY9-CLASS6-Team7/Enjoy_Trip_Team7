@@ -163,7 +163,7 @@ export default {
       for (let u = 0; u < tempFiles.length; u++) {
         f.append('files', tempFiles[u]);
       }
-      await axios.put(`http://43.201.218.74/history/` + this.historyId, f);
+      await axios.put(`http://localhost/history/` + this.historyId, f);
       this.$emit('emitNeedToUpdate');
       this.$emit('emitModalOff');
     },

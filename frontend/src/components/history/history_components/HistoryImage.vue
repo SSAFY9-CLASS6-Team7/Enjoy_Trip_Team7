@@ -47,7 +47,7 @@ export default {
     },
     async loadHistory() {
       await axios
-        .get('http://43.201.218.74/history/' + this.historyId)
+        .get('http://localhost/history/' + this.historyId)
         .then((response) => (this.history = response.data));
       this.imageList = this.history.images;
     },
