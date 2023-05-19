@@ -1,9 +1,9 @@
 <template>
-  <div class="plan-search-modal">
-    <div class="blackbg"></div>
-    <div class="whitebg">
+  <div class="att-search-modal">
+    <div class="search-blackbg"></div>
+    <div class="search-whitebg">
       <div class="top-bar"></div>
-      <div class="modal-area">
+      <div class="search-modal-area">
         <div class="content-area">
           <div class="dropdown-area">
             <div class="dropdown">
@@ -82,7 +82,7 @@ export default {
 </script>
 <style scoped>
 .plan-search-modal,
-.blackbg {
+.search-blackbg {
   width: 100%;
   height: 100%;
   position: fixed;
@@ -94,12 +94,12 @@ export default {
   z-index: 10;
 }
 
-.blackbg {
+.search-blackbg {
   opacity: 0.5;
   background-color: black;
 }
 
-.whitebg {
+.search-whitebg {
   width: 1300px;
   height: 700px;
   min-width: 1000px;
@@ -116,7 +116,7 @@ export default {
   width: 100%;
 }
 
-.modal-area {
+.search-modal-area {
   width: 100%;
   height: 100%;
   display: flex;
@@ -183,7 +183,7 @@ export default {
 
 .search-box {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-evenly;
   border: 1px solid rgb(37, 37, 37);
   border-radius: 4px;
   background-color: white;
