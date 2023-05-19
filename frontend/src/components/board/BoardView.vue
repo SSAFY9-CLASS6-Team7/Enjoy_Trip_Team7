@@ -126,11 +126,11 @@ export default {
     },
     created(){
         this.board.boardId = this.$route.params.boardId;
-        axios.get("http://43.201.218.74/board/"+ this.board.boardId)
+        axios.get("http://localhost/board/"+ this.board.boardId)
         .then(response =>{
             this.board = response.data.board        
         } );
-        axios.get("http://43.201.218.74/board/"+ this.board.boardId +"/comment")
+        axios.get("http://localhost/board/"+ this.board.boardId +"/comment")
         .then(response =>{
             console.log(response.data);
             this.comments = response.data;
