@@ -26,7 +26,7 @@
             <input type="text" class="keyword" placeholder="검색어를 입력하세요" @keyup.enter="goSearch" v-model="searchKeyword">
             <img src="@/assets/board_icons/search.svg" @click="goSearch">
           </div>
-          <button class="write-button"><img src="@/assets/board_icons/write.svg"></button>
+          <button class="write-button" @click="createBoard"><img src="@/assets/board_icons/write.svg"></button>
         </div>
       </div>
       <div class="table-title"> 
@@ -86,10 +86,14 @@ export default {
     pageChanged(clickedPage){
       axios.get(`http://43.201.218.74/board?pageNo=${clickedPage}&code=${this.activeBoardTab}&condition=${this.selectedCondition}&anonymous=&keyword=${this.searchKeyword}`)
       .then( response => {
-        this.boards = response.data.boards
+        this.boards = response.data.boards;
         this.pageResult = response.data.pageResult;
       })
+    },
+    createBoard(){
+      this.$router.push("/board/create");
     }
+
   },
   async created(){
     await axios.get(`http://43.201.218.74/board?pageNo=${this.pageNo}&code=${this.activeBoardTab}&condition=&anonymous=&keyword=`)
