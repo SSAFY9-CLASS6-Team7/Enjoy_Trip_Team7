@@ -7,7 +7,7 @@
       <div class="img-area">
         <!-- 이미지 없으면 샘플이미지 1개 -->
         <img
-          :src="imageSrc()"
+          :src="setSampleImageSrc()"
           class="history-img"
           v-if="this.imageList.length === 0"
           @click="bigImage()"
@@ -20,16 +20,12 @@
             </div>
             <swiper-slide
               class="img-swiper-item"
-              v-for="image in sampleImageList"
+              v-for="image in imageList"
               :key="image.imageId"
               style="100%"
             >
-              <!-- TODO: 이미지db에서 주소가져오는 부분 해결 -->
-              <img :src="imageSrc()" class="history-img" @click="bigImage()" />
+              <img :src="setImageSrc(image)" class="history-img" @click="bigImage()" />
             </swiper-slide>
-            <!-- <swiper-slide class="img-swiper-item" v-for="image in imageList" :key="image.imageId">
-              <img :src="imageSrc(image)" class="history-img" @click="bigImage()" />
-            </swiper-slide> -->
             <div class="swiper-button-next img-next" slot="button-next">
               <img src="@/assets/right.svg" width="40px" height="40px" style="right: 30px" />
             </div>
@@ -72,15 +68,7 @@ export default {
     return {
       history: Object,
       imageList: [],
-      //스와이프 테스트용 샘플 데이터
-      //TODO: db에서 이미지 읽어올 수 있게되면 지울 부분
-      sampleImageList: [
-        { imagePath: require('@/assets/sample/sample1.jpg') },
-        { imagePath: require('@/assets/sample/sample2.jpg') },
-        { imagePath: require('@/assets/sample/sample3.jpg') },
-        { imagePath: require('@/assets/sample/sample4.jpg') },
-        { imagePath: require('@/assets/sample/sample5.jpg') },
-      ],
+      imageUrl: [],
       //스와이프 관련 설정
       swiperOption: {
         slidesPerView: 1,
@@ -101,16 +89,6 @@ export default {
     historyId: Number,
   },
   methods: {
-    //이미지 소스를 세팅하기
-    imageSrc(image) {
-      if (image) {
-        let path = image.imagePath;
-        return require(path);
-      } else {
-        let sampleSrc = (this.historyId % 5) + 1;
-        return require('@/assets/sample/sample' + sampleSrc + '.jpg');
-      }
-    },
     //날짜 출력 형식을 변경하기
     formatDate(selectDate) {
       const dateParts = selectDate.split('-');
@@ -143,6 +121,15 @@ export default {
       await axios.delete(`http://43.201.218.74/history/` + this.historyId);
       this.$emit('emitNeedToUpdate');
       this.$emit('emitModalOff');
+    },
+    //이미지 소스를 세팅하기
+    setImageSrc(image) {
+      return 'http://localhost/imagePath/' + image.imagePath;
+    },
+    //샘플 이미지 소스를 세팅하기
+    setSampleImageSrc() {
+      let sampleSrc = (this.historyId % 5) + 1;
+      return require(`@/assets/sample/sample${sampleSrc}.jpg`);
     },
   },
   async mounted() {
