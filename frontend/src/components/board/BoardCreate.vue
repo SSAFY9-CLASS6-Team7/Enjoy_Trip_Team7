@@ -39,7 +39,7 @@
     <div class="attraction-container">
       <div class="inner-title">관광지 선택</div>
       <div class="select-attraction">
-        <div class="empty-attraction">선택된 관광지가 없습니다.</div>
+        <div class="empty-attraction" @click="selectAttraction">선택된 관광지가 없습니다.</div>
       </div>
     </div>
 
@@ -48,7 +48,10 @@
       <div class="filebox">
         <label class="upload-search-button" for="file">찾아보기...</label> 
         <div v-if="selectedFiles.length == 0" class="upload-name">선택된 파일 없음</div>
-        <div v-if="selectedFiles.length > 0" class="upload-name"> {{ selectedFiles.join(', ') }} </div>
+        <!-- <div v-if="selectedFiles.length > 0" class="upload-name"> {{ selectedFiles.join(', ') }} </div> -->
+        <div v-if="selectedFiles.length > 0" class="upload-name" >
+          <span v-for="file in this.selectedFiles" :key="file"> {{ file.name }} </span>
+        </div>
         <input type="file" id="file" @change="handleFileChange" multiple >
       </div>
     </div>
@@ -94,15 +97,17 @@ export default {
     boardSubmit(){
       let f = new FormData();
       f.append('boardContent', this.content);
-      axios.post('http://43.201.218.74/board', f).then(
+      axios.post('http://localhost/board', f).then(
         response => (
           console.log(response.data)
         )
       );
     },
     handleFileChange(event) {
-      const fileInput = event.target;
-      this.selectedFiles = Array.from(fileInput.files).map(file => file.name);
+      this.selectedFiles = Array.from(event.target.files);
+    },
+    selectAttraction() {
+
     },
   },
 };
@@ -264,6 +269,10 @@ input[id="anonymousFlag"]:checked + label::after {
   padding: 0 0 0 10px; 
 }
 
+.empty-attraction:hover {
+  cursor: pointer;
+}
+
 .filebox {
   display: flex;
   align-items: center;
@@ -285,6 +294,10 @@ input[id="anonymousFlag"]:checked + label::after {
   margin: 0 10px 0 0 ;
   border: none;
   background: #9b9b9b;
+}
+
+.upload-search-button:hover {
+  cursor: pointer;
 }
 
 .upload-name {
@@ -323,6 +336,7 @@ input[id="anonymousFlag"]:checked + label::after {
   min-width: 100px;
   margin-right: 40px;
 }
+
 .board-submit {
   border: none;
   color: #ffffff;
@@ -336,7 +350,6 @@ input[id="anonymousFlag"]:checked + label::after {
   min-width: 100px;
   margin-left: 40px;
 }
-
 
 .inner-title {
   font-size: 25px;

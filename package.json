@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "swiper": "^9.3.2",
-    "vue-quill-editor": "^3.0.6"
-  }
-}
