@@ -12,15 +12,19 @@
                 <img src="@/assets/board_icons/dropdown.svg" />
               </button>
               <ul ref="sidoDropdownMenu" class="dropdown-menu">
-                <li>
-                  <label><input type="checkbox" name="sido" value="서울" /> 서울 </label>
-                </li>
-                <li>
-                  <label><input type="checkbox" name="sido" value="대전" /> 대전 </label>
-                </li>
-                <li>
-                  <label><input type="checkbox" name="sido" value="부산" /> 부산 </label>
-                </li>
+                <div class="dropdown-li" v-for="sido in sidoCode" :key="sido.code">
+                  <li>
+                    <label
+                      ><input
+                        type="checkbox"
+                        name="sido"
+                        :value="sido.code"
+                        @change="sidoUpdate()"
+                      />
+                      {{ sido.text }}
+                    </label>
+                  </li>
+                </div>
               </ul>
             </div>
             <div class="dropdown">
@@ -29,32 +33,38 @@
                 <img src="@/assets/board_icons/dropdown.svg" />
               </button>
               <ul ref="categoryDropdownMenu" class="dropdown-menu">
-                <li>
-                  <label><input type="checkbox" value="관광" /> 관광 </label>
-                </li>
-                <li>
-                  <label><input type="checkbox" value="식당" /> 식당 </label>
-                </li>
-                <li>
-                  <label><input type="checkbox" value="행사" /> 행사 </label>
-                </li>
-                <li>
-                  <label><input type="checkbox" value="숙박" /> 숙박 </label>
-                </li>
-                <li>
-                  <label><input type="checkbox" value="기타" /> 기타 </label>
-                </li>
+                <div
+                  class="dropdown-li"
+                  v-for="category in contentTypeId"
+                  :key="category.id"
+                  @change="cateUpdate()"
+                >
+                  <li>
+                    <label
+                      ><input type="checkbox" name="category" :value="category.id" />
+                      {{ category.text }}
+                    </label>
+                  </li>
+                </div>
               </ul>
             </div>
           </div>
           <div class="keyword-search-area">
             <div class="search-box">
-              <input type="text" placeholder="검색어 입력" />
+              <input type="text" placeholder="검색어 입력" v-model.lazy="keyword" />
               <img src="@/assets/plan_icon/search.svg" @click="keywordSearch" />
             </div>
           </div>
           <div class="att-list-area">
-            <div class="att-list"></div>
+            <div class="att-list">
+              <div
+                class="search-results"
+                v-for="result in searchResults"
+                :key="result.attractionId"
+              >
+                <plan-attraction-item :attraction="result"></plan-attraction-item>
+              </div>
+            </div>
           </div>
           <div class="att-detail-area">
             <div class="att-detail"></div>
@@ -65,30 +75,66 @@
   </div>
 </template>
 <script>
+import PlanAttractionItem from './plan/plan_components/PlanAttractionItem.vue';
+import axios from 'axios';
+
 export default {
-  name: 'PlanSearch',
+  name: 'AttractionSearchModal',
+  components: {
+    PlanAttractionItem,
+  },
   data() {
     return {
       sido: [],
       category: [],
       keyword: '',
+      searchResults: [],
+      pageNo: 1,
     };
   },
   computed: {
     sidoCode() {
       return this.$store.getters.getSidoCode;
     },
+    contentTypeId() {
+      return this.$store.getters.getContentTypeId;
+    },
   },
   methods: {
+    //버튼 클릭시 해당하는 드롭다운을 토글
     toggleDropdown(dropdownStyle) {
+      console.log(dropdownStyle, 1);
+
       var dropdownMenu = null;
       if (dropdownStyle === 'sido') dropdownMenu = this.$refs.sidoDropdownMenu;
       if (dropdownStyle === 'category') dropdownMenu = this.$refs.categoryDropdownMenu;
+      console.log(dropdownMenu.style.display); //TODO: 처음 버튼 클릭 시 여기가 null도 아니고 아무것도 안찍히는데 해결 필요
       dropdownMenu.style.display = dropdownMenu.style.display === 'none' ? 'block' : 'none';
+      console.log(dropdownStyle, 2);
+      console.log(dropdownMenu.style.display);
     },
-    keywordSearch() {
+    //인풋이 변경되면 sido 배열을 업데이트
+    sidoUpdate() {
+      const checkedInputs = Array.from(document.querySelectorAll('input[name="sido"]:checked'));
+      this.sido = checkedInputs.map((input) => input.value);
+    },
+    cateUpdate() {
+      const checkedInputs = Array.from(document.querySelectorAll('input[name="category"]:checked'));
+      this.category = checkedInputs.map((input) => input.value);
+    },
+    //키워드로 검색하기
+    async keywordSearch() {
       console.log('lets search');
+      await axios
+        .get(
+          `http://localhost/attraction?pageNo=${this.pageNo}&code=${this.category}&sido=${this.sido}&keyword=${this.keyword}`
+        )
+        .then((response) => (this.searchResults = response.data));
+      //검색하면 드롭다운 닫기
+      this.$refs.sidoDropdownMenu.style.display = 'none';
+      this.$refs.categoryDropdownMenu.style.display = 'none';
     },
+    //모달 창을 닫기
     emitModalOff() {
       this.$emit('setModal', false);
     },
@@ -167,6 +213,7 @@ export default {
   font-size: 12px;
   margin: 0 20px;
 }
+
 .dropdown-menu {
   display: none;
   position: absolute;
@@ -177,15 +224,17 @@ export default {
   min-width: 200px;
   text-align: left;
   margin: 0 20px;
+  max-height: 300px;
+  overflow-y: auto;
 }
-.dropdown-menu li {
+.dropdown-li li {
   margin-bottom: 5px;
 }
-.dropdown-menu li:hover {
+.dropdown-li li:hover {
   margin-bottom: 5px;
   background-color: #ececec;
 }
-.dropdown-menu li label {
+.dropdown-li li label {
   display: block;
   padding: 12px 20px;
 }
@@ -230,12 +279,16 @@ export default {
   align-items: center;
   justify-content: center;
   border-right: 0.5px solid #cacaca;
+  overflow: hidden;
 }
 
 .att-list {
   width: 80%;
   height: 95%;
-  background-color: aquamarine;
+  max-height: 95%;
+  overflow: auto;
+  background-color: #f6f6f6;
+  border-radius: 20px;
 }
 
 .att-detail-area {
