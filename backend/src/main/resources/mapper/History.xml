@@ -23,8 +23,8 @@
 		limit #{page.beginPage}, #{page.listSize}
 	</select>
 
-	<!-- int selectBoardCount() -->
-	<select id="selectBoardCount" resultType="int">
+	<!-- int selectHistoryCount() -->
+	<select id="selectHistoryCount" resultType="int">
 		select count(*)
 		from history
 	</select>
