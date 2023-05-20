@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface AttractionService {
-    List<Attraction> getAttractionList(Map<String, Object> paramMap) throws SQLException;
+    Map<String, Object> getAttractionList(Map<String, Object> paramMap) throws SQLException;
 
     Attraction getAttraction(int attractionId) throws SQLException;
 }
