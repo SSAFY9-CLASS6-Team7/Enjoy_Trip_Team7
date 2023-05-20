@@ -281,10 +281,12 @@ input {
 }
 
 .success {
+    border-radius: 4px;
     border: 1px solid #09A552 !important;
 }
 
 .fail {
+    border-radius: 4px;
     border: 1px solid #FB0808 !important;
 }
 
@@ -335,6 +337,9 @@ input {
     text-align: center;
 }
 
+.birth-input {
+    text-align: center;
+}
 .gender-input-container {
     width: 100%;
     display: flex;
