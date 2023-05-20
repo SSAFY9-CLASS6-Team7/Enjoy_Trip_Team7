@@ -28,7 +28,7 @@
 	<select id="selectPlanAttractionListByPlanId" parameterType="int" resultType="planAttraction">
 		SELECT plan_attraction_id planAttractionId, plan_id planId, attraction_id attractionId, sequence, plan_date planDate
 		FROM plan_attraction
-		WHERE plan_id = #{id}
+		WHERE plan_id = #{planId}
 		order by sequence
 	</select>
 
@@ -38,7 +38,13 @@
 		from plan
 		where user_id = #{userId}
 		order by createtime desc
-		limit #{start}, #{listsize}
+		limit #{page.beginPage}, #{page.listSize}
+	</select>
+
+	<!-- selectPlanCount -->
+	<select id="selectPlanCount" resultType="int">
+		select count(*)
+		from plan
 	</select>
 
 	<!-- Plan selectPlanById(int planId) -->

@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.ssafy.enjoytrip.util.model.Page;
+import com.ssafy.enjoytrip.util.model.PageResult;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.enjoytrip.plan.model.Plan;
@@ -15,7 +17,7 @@ import com.ssafy.enjoytrip.plan.model.mapper.PlanMapper;
 public class PlanServiceImpl implements PlanService {
 	
 	//페이징 용 : 한 페이지에 보일 글의 수
-    private final int LIST_SIZE = 10;
+    private final int LIST_SIZE = 4;
 
 	private PlanMapper planMapper;
 	
@@ -24,14 +26,20 @@ public class PlanServiceImpl implements PlanService {
 	}
 
 	@Override
-	public List<Plan> getPlanList(Map<String, String> map) throws SQLException {
-		Map<String, Object> param = new HashMap<String, Object>();
-		int pgNo = Integer.parseInt(map.get("pgno") == "" ? "1" : map.get("pgno"));
-		int start = pgNo * LIST_SIZE - LIST_SIZE;
-		param.put("userId", map.get("userId"));
-		param.put("start", start);
-		param.put("listsize", LIST_SIZE);
-		return planMapper.selectPlanList(param);
+	public Map<String, Object> getPlanList(Map<String, Object> map) throws SQLException {
+		Page page = new Page();
+		int pageNo = Integer.parseInt(String.valueOf(map.get("pgno")));
+		page.setPageNo(pageNo);
+		page.setListSize(LIST_SIZE);
+		map.put("page", page);
+		map.put("userId", map.get("userId"));
+
+		Map<String, Object> result = new HashMap<>();
+		int totalCount = planMapper.selectPlanCount();
+		PageResult pageResult = new PageResult(pageNo, totalCount, LIST_SIZE, 5);
+		result.put("plans", planMapper.selectPlanList(map));
+		result.put("pageResult", pageResult);
+		return result;
 	}
 
 	@Override
@@ -56,7 +64,10 @@ public class PlanServiceImpl implements PlanService {
 	}
 
 	//-----------이하 Plan Attraction 관련 -----------
-	
+	public List<PlanAttraction> getPlanAttractionList(int planId) throws SQLException{
+		return planMapper.selectPlanAttractionListByPlanId(planId);
+	}
+
 	@Override
 	public void createPlanAttraction(PlanAttraction planAttraction) throws SQLException {
 		planMapper.insertPlanAttraction(planAttraction);
