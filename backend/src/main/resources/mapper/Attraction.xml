@@ -23,11 +23,26 @@
           FROM attraction_description des
           JOIN attraction_info i USING (attraction_id)
         <where>
-            <if test="code != ''">AND i.content_type_id = ${code}</if>
-            <if test="sido != ''">AND i.sido_code = ${sido}</if>
+            <if test="codes.size != 0">
+                AND i.content_type_id IN
+                <foreach collection="codes" index="index" item="code" open="(" close=")" separator=",">
+                    #{code}
+                </foreach>
+            </if>
+            <if test="sidos.size != 0">
+                AND i.sido_code IN
+                <foreach collection="sidos" index="index" item="sido" open="(" close=")" separator=",">
+                    #{sido}
+                </foreach>
+            </if>
             <if test="keyword != ''">AND i.title LIKE CONCAT('%', #{keyword}, '%')</if>
         </where>
-         LIMIT #{start}, #{size}
+         LIMIT #{page.beginPage}, #{page.listSize}
+    </select>
+
+    <select id="selectAttractionCount" resultType="int">
+        select count(*)
+        from attraction_info
     </select>
     
     <!-- 관광지 상세 조회 -->

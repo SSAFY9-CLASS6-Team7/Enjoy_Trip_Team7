@@ -20,7 +20,8 @@ public class AttractionController {
     private final AttractionService attractionService;
 
     @GetMapping
-    public List<Attraction> getAttractionList(@RequestParam Map<String, Object> paramMap) throws SQLException {
+    public Map<String, Object> getAttractionList(@RequestParam Map<String, Object> paramMap) throws SQLException {
+        log.info("paramMap: {}", paramMap);
         return attractionService.getAttractionList(paramMap);
     }
 
