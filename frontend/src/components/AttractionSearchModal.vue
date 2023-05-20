@@ -68,6 +68,10 @@
                   @setFocusedAttId="setFocusedAttId"
                 ></plan-search-item>
               </div>
+              <infinite-loading
+                v-if="infiniteScrollFeature"
+                @infinite="infiniteHandler"
+              ></infinite-loading>
             </div>
           </div>
           <div class="att-detail-area">
@@ -88,13 +92,16 @@
 <script>
 import PlanSearchItem from './plan/plan_components/PlanSearchItem.vue';
 import PlanAttractionItem from './plan/plan_components/PlanAttractionItem.vue';
+import InfiniteLoading from 'vue-infinite-loading';
 import axios from 'axios';
+import qs from 'qs';
 
 export default {
   name: 'AttractionSearchModal',
   components: {
     PlanSearchItem,
     PlanAttractionItem,
+    InfiniteLoading,
   },
   data() {
     return {
@@ -104,8 +111,10 @@ export default {
       searchResults: [],
       focusedAttId: 0,
       pageNo: 1,
+      pageResult: {},
       sidoDropdownOpen: 0,
       categoryDropdownOpen: 0,
+      infiniteScrollFeature: false,
     };
   },
   computed: {
@@ -137,7 +146,7 @@ export default {
       const checkedInputs = Array.from(document.querySelectorAll('input[name="category"]:checked'));
       this.category = checkedInputs.map((input) => input.value);
       //기타 처리
-      if (this.category === '0') this.category = ['14', '25', '28', '38'];
+      if (this.category.includes('0')) this.category.push(...['14', '25', '28', '38']);
     },
     //클릭한 서치 결과의 관광지 아이디 세팅
     setFocusedAttId(id) {
@@ -145,14 +154,17 @@ export default {
     },
     //키워드로 검색하기
     async keywordSearch() {
-      await axios
-        .get(
-          `http://localhost/attraction?pageNo=${this.pageNo}&code=${this.category}&sido=${this.sido}&keyword=${this.keyword}`
-        )
-        .then((response) => (this.searchResults = response.data));
-      //검색하면 드롭다운 닫기
+      this.infiniteScrollFeature = false; //무한 스크롤 기능 껐다가
+      await this.refresh();
+      this.infiniteScrollFeature = true; //무한 스크롤 기능 다시 켜주기
+    },
+    //초기화 작업(비동기처리를 위해 분리)
+    refresh() {
       this.sidoDropdownOpen = 0;
       this.categoryDropdownOpen = 0;
+      this.pageNo = 1;
+      this.searchResults = [];
+      this.pageResult = {};
     },
     //모달 창을 닫기
     emitModalOff() {
@@ -162,6 +174,43 @@ export default {
     emitAddAttraction(attraction) {
       this.$emit('addAttraction', attraction);
       this.emitModalOff(); //전달하고 모달 창 닫기
+    },
+    //무한 스크롤
+    async infiniteHandler($state) {
+      this.infiniteState = $state;
+      await axios({
+        url: `http://localhost/attraction`,
+        method: 'GET',
+        params: {
+          pageNo: this.pageNo,
+          code: this.category,
+          sido: this.sido,
+          keyword: this.keyword,
+        },
+        paramsSerializer: (params) => {
+          // code와 sido 값이 배열 형태인지 확인하여 배열이 아니면 단일 값으로 전달
+          const code = Array.isArray(params.code) ? params.code : [params.code];
+          const sido = Array.isArray(params.sido) ? params.sido : [params.sido];
+
+          return qs.stringify(
+            {
+              ...params,
+              code: code.join(','), // 배열 형태의 값을 쉼표로 구분하여 문자열로 변환
+              sido: sido.join(','), // 배열 형태의 값을 쉼표로 구분하여 문자열로 변환
+            },
+            { arrayFormat: 'comma' }
+          );
+        },
+      }).then((response) => {
+        if (response.data.attractions.length) {
+          this.pageNo += 1;
+          this.searchResults.push(...response.data.attractions);
+          this.pageResult = response.data.pageResult;
+          $state.loaded();
+        } else {
+          $state.complete();
+        }
+      });
     },
   },
 };
