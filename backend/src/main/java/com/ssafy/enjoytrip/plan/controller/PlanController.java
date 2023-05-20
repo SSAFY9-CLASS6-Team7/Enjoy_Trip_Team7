@@ -34,8 +34,8 @@ public class PlanController {
 	}
 	
 	@GetMapping
-	public List<Plan> getPlanList(@RequestParam(required = false) String pageNo, HttpSession session) throws SQLException {
-		Map<String, String> param = new HashMap<String, String>();
+	public Map<String, Object> getPlanList(@RequestParam(required = false) String pageNo, HttpSession session) throws SQLException {
+		Map<String, Object> param = new HashMap<>();
 		param.put("userId", getLoginUser(session).getUserId());
 		param.put("pgno", pageNo);
 		return planService.getPlanList(param);
@@ -47,47 +47,46 @@ public class PlanController {
 	}
 
 	@PostMapping
-	public List<Plan> createPlan(@RequestBody Plan plan, HttpSession session) throws SQLException {
+	public void createPlan(@RequestBody Plan plan, HttpSession session) throws SQLException {
 		plan.setUserId(getLoginUser(session).getUserId());
 		planService.createPlan(plan);
-		return getPlanList("1", session);
 	}
 	
 	@PostMapping("{planId}")
-	public List<Plan> updatePlan(@RequestBody Plan plan, @PathVariable int planId, HttpSession session) throws SQLException {
+	public void updatePlan(@RequestBody Plan plan, @PathVariable int planId, HttpSession session) throws SQLException {
 		plan.setPlanId(planId);
 		planService.updatePlan(plan);
-		return getPlanList("1", session);
 	}
 	
 	@DeleteMapping("{planId}")
-	public List<Plan> deletePlan(@PathVariable int planId, HttpSession session) throws SQLException {
+	public void deletePlan(@PathVariable int planId, HttpSession session) throws SQLException {
 		planService.deletePlan(planId);
-		return getPlanList("1", session);
 	}
 	
 	//-----------이하 Plan Attraction 관련 -----------
-	
+	@GetMapping("{planId}/attraction")
+	public List<PlanAttraction> getPlanAttractionList(@PathVariable int planId) throws SQLException{
+		return planService.getPlanAttractionList(planId);
+	}
+
+
 	@PostMapping("{planId}/attraction")
-	public Plan createPlanAttraction(@RequestBody PlanAttraction planAttraction, @PathVariable int planId) throws SQLException {
+	public void createPlanAttraction(@RequestBody PlanAttraction planAttraction, @PathVariable int planId) throws SQLException {
 		planAttraction.setPlanId(planId);
 		int sequence = getPlan(planId).getPlanAttractions().size();
 		planAttraction.setSequence(sequence);
 		planService.createPlanAttraction(planAttraction);
-		return planService.getPlan(planId);
 	}
 	
 	@PostMapping("{planId}/attraction/{planAttractionId}")
-	public Plan updatePlanAttraction(@RequestBody PlanAttraction planAttraction, @PathVariable int planId, @PathVariable int planAttractionId) throws SQLException {
+	public void updatePlanAttraction(@RequestBody PlanAttraction planAttraction, @PathVariable int planId, @PathVariable int planAttractionId) throws SQLException {
 		planAttraction.setPlanId(planId);
 		planAttraction.setPlanAttractionId(planAttractionId);
 		planService.updatePlanAttraction(planAttraction);
-		return planService.getPlan(planId);
 	}
 	
 	@DeleteMapping("{planId}/attraction/{planAttractionId}")
-	public Plan deletePlanAttraction(@PathVariable int planId, @PathVariable int planAttractionId) throws SQLException {
+	public void deletePlanAttraction(@PathVariable int planId, @PathVariable int planAttractionId) throws SQLException {
 		planService.deletePlanAttraction(planAttractionId);
-		return planService.getPlan(planId);
 	}
 }
