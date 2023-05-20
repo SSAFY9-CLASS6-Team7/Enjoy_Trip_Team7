@@ -1,13 +1,14 @@
 <template>
     <div class="container">
+        <sign-up-modal v-if='modal' @modalOff="moveLogin"></sign-up-modal>
         <div class="left-aside"></div>
         <div class="main-container">
             <div class="inner-title">아이디</div>
             <div class="id-input-container">
-                <input type="text" class="id-input" :class="{ 'success': idFlag === true, 'fail': idFlag === false }" v-model="id" @change="idCheck">
+                <input type="text" class="id-input" :class="{ 'success': idFlag === true, 'fail': idFlag === false }" v-model="id" @change="idEmpty"/>
                 <img v-if="idFlag === true" src="@/assets/user_icons/success.svg" class="id-status-icon">
                 <img v-if="idFlag === false" src="@/assets/user_icons/fail.svg" class="id-status-icon">
-                <button class="duplicate-check" @click="duplicateCheck">중복 확인</button>
+                <button class="id-check-button" @click="idCheck">중복 확인</button>
             </div>
             <div class="id-check-result" :class="{ 'result-success': idFlag === true, 'result-fail': idFlag === false }">{{ idCheckResult }}</div>
 
@@ -61,7 +62,7 @@
             <input type="email" class="email-input">
             
             <div class="sign-up-container">
-                <button class="sign-up">회원가입</button>
+                <button class="sign-up" @click="signUp">회원가입</button>
             </div>
         </div>
         <div class="right-aside"></div>
@@ -69,9 +70,10 @@
 </template>
 
 <script>
+import SignUpModal from './user_components/SignUpModal.vue';
 export default {
     name: 'UserSignUp',
-    components: {},
+    components: {SignUpModal },
     data() {
         return {
             id: '',
@@ -85,6 +87,7 @@ export default {
             phone1: '',
             phone2: '',
             phone3: '',
+            modal: false,
         };
     },
     computed: {
@@ -110,17 +113,27 @@ export default {
                     this.idCheckResult = '아이디는 영어와 숫자의 조합이어야 합니다.';
                 }
                 else {
+                    // 중복 체크 로직
+                    // this.idFlag = false;
+                    // this.idCheckResult = '중복된 아이디가 있습니다.';
                     this.idFlag = true;
                     this.idCheckResult = '사용할 수 있는 아이디입니다.';
+                    
+                    // else {
+                    //     this.idFlag = true;
+                    //     this.idCheckResult = '사용할 수 있는 아이디입니다.';
+                    // }
                 }
             }
         },
-        duplicateCheck() {
-            this.idFlag = false;
-            this.idCheckResult = '중복된 아이디가 있습니다.';
-        },
+        idEmpty(){
+            if(this.id.length == 0) {
+                this.idFlag = '';
+                this.idCheckResult = '';  
+            }
+        }, 
         passwordCheck() {
-            if (this.password.length < 8 && (this.password.length > 0 && this.passwordSecond.length > 0)) {
+            if (this.password.length < 8 && this.password.length > 0) {
                 this.passwordFlag = false;
                 this.passwordCheckResult = '비밀번호는 8자 이상입니다.';
             }else if (this.password.length >= 8){
@@ -135,7 +148,14 @@ export default {
                 this.passwordFlag = ''
                 this.passwordCheckResult= ''
             }
-        }
+        },
+        moveLogin() {
+            this.modal = false;
+            this.$router.push('/user/login');
+        },
+        signUp() {
+            this.modal = true;
+        },
     },
 }
 
@@ -196,12 +216,15 @@ input {
 }
 
 .id-input-container {
+    width: 100%;
     position: relative;
+    display: flex;
+    justify-content: space-between;
 }
 
 .id-status-icon {
     position: absolute;
-    right: 22%;
+    right: 19%;
 }
 
 .password-input-container {
@@ -242,7 +265,19 @@ input {
 
 .id-input {
     height: 35px;
-    width: 80%;
+    width: 83%;
+}
+
+.id-check-button {
+    font-size: 14px;
+    font-family: 'S-CoreDream-3Light';
+    height: 35px;
+    background: #5F6073;
+    color: #ffffff;
+    border:none;
+    padding: 0 10px 0 10px;
+    border: none;
+    border-radius: 4px;
 }
 
 .success {

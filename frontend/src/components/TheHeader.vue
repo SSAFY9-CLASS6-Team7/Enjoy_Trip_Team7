@@ -36,7 +36,7 @@
           <router-link to="/board">게시판</router-link>
         </div>
       </div>
-      <div class="user-area">
+      <div class="user-area" @click="setActiveMenuItem('-1')">
         <img class="profile-img" src="../assets/header_icon/profile.svg" />
         <router-link to="/user/login">로그인</router-link>
       </div>
