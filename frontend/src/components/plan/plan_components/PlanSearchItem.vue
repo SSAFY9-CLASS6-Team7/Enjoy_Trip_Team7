@@ -17,7 +17,7 @@ export default {
   name: 'PlanSearchItem',
   data() {
     return {
-      contentTypeSrc: 'require("@/assets/content_type_icon/etc.svg")',
+      contentTypeSrc: '',
     };
   },
   props: ['attraction'],
@@ -35,6 +35,7 @@ export default {
       this.contentTypeSrc = require('@/assets/content_type_icon/stay.svg');
     else if (this.attraction.code === 39)
       this.contentTypeSrc = require('@/assets/content_type_icon/restaurant.svg');
+    else this.contentTypeSrc = require('@/assets/content_type_icon/etc.svg');
   },
 };
 </script>
