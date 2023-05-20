@@ -153,9 +153,8 @@ export default {
     grid-template-areas: 'left content right';
     justify-items: stretch;
     min-width: 1900px;
-    max-width: 1900px;
-
 }
+
 .left-aside {
     grid-area: left;
 }
