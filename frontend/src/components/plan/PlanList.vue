@@ -1,7 +1,10 @@
 <template>
   <div class="plan-container">
     <div class="plan-modal" v-if="isModalOpen">
-      <attraction-search-modal @setModal="setModal"></attraction-search-modal>
+      <attraction-search-modal
+        @setModal="setModal"
+        @addAttraction="addAttraction"
+      ></attraction-search-modal>
     </div>
     <div class="left-aside"></div>
     <div>
@@ -49,9 +52,12 @@ export default {
     setModal(value) {
       this.isModalOpen = value;
     },
-    //(변경필요)모달열기
+    //TODO: (변경필요)모달열기
     createModalOpen() {
       this.setModal(true);
+    },
+    addAttraction(attraction) {
+      console.log('---관광지 정보 넘어옴 : ' + attraction.title);
     },
   },
   async created() {

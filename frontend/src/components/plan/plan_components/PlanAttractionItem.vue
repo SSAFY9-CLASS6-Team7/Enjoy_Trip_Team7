@@ -1,54 +1,145 @@
 <template>
-  <div class="plan-attraction-item-container">
-    <div class="title-and-category">
-      <div class="attraction-title">{{ attraction.title }}</div>
-      <div class="content-type-area">
-        <img src="@/assets/content_type_icon/etc.svg" class="content-type" />
-      </div>
+  <div class="plan-attraction-item">
+    <div class="title-and-btn">
+      <div class="plan-attraction-title">{{ attraction.title }}</div>
+      <button class="plus-btn" @click="emitAddAttraction">
+        <img src="@/assets/plan_icon/circle_add.svg" />
+      </button>
     </div>
-    <div class="attraction-address">
-      <img src="@/assets/plan_icon/pin.svg" alt="" class="pin" />
-      <div class="address-text">{{ attraction.address }}</div>
+    <div class="plan-attraction-type" v-if="contentTypeSrc">
+      <img :src="contentTypeSrc" />
     </div>
+    <div class="plan-attraction-image" v-if="attraction.thumbnail">
+      <img :src="attraction.thumbnail" />
+    </div>
+    <div class="info-title"><img src="@/assets/plan_icon/search_location.svg" />소개</div>
+    <div class="plan-attraction-info">{{ attraction.overView }}</div>
+    <div class="address-title"><img src="@/assets/plan_icon/pin.svg" />위치</div>
+    <div class="plan-attraction-address">{{ attraction.address }}</div>
+    <div class="map-area">Map</div>
   </div>
 </template>
 <script>
+import axios from 'axios';
 export default {
   name: 'PlanAttractionItem',
-  props: ['attraction'],
+  data() {
+    return {
+      attraction: Object,
+      contentTypeSrc: '',
+    };
+  },
+  props: ['attractionId'],
+  watch: {
+    attractionId: function () {
+      this.loadData(this.attractionId);
+    },
+  },
+  methods: {
+    async loadData(attractionId) {
+      await axios
+        .get(`http://localhost/attraction/${attractionId}`)
+        .then((response) => (this.attraction = response.data));
+      this.setContentTypeSrc();
+    },
+    //관광지 타입 설정하기
+    setContentTypeSrc() {
+      if (this.attraction.code === 12)
+        this.contentTypeSrc = require('@/assets/content_type_icon/tour.svg');
+      else if (this.attraction.code === 15)
+        this.contentTypeSrc = require('@/assets/content_type_icon/event.svg');
+      else if (this.attraction.code === 32)
+        this.contentTypeSrc = require('@/assets/content_type_icon/stay.svg');
+      else if (this.attraction.code === 39)
+        this.contentTypeSrc = require('@/assets/content_type_icon/restaurant.svg');
+      else this.contentTypeSrc = require('@/assets/content_type_icon/etc.svg');
+    },
+    //선택한 관광지 정보를 부모 객체로 전달
+    emitAddAttraction() {
+      this.$emit('emitAddAttraction', this.attraction);
+    },
+  },
+  mounted() {
+    this.loadData(this.attractionId);
+  },
 };
 </script>
 <style scoped>
-.plan-attraction-item-container {
-  margin: 30px;
-  padding: 10px;
-  border-radius: 15px;
-  background-color: white;
-  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
-}
-.title-and-category {
-  display: flex;
-  justify-content: space-between;
-  padding: 8px 15px;
-}
-.attraction-title {
-  position: relative;
-
-  text-align: left;
-  font-weight: 700;
-}
-.content-type {
-  position: relative;
+.plan-attraction-item {
+  width: 97%;
+  height: 100%;
 }
 
-.attraction-address {
+.plan-attraction-item > * {
+  margin-bottom: 10px;
+}
+
+.title-and-btn {
   display: flex;
   align-items: center;
-  padding: 0 30px 5px 30px;
+  justify-content: space-between;
+  text-align: left;
 }
 
-.address-text{
-    font-size: 12px;
-    margin: 0 0 2px 5px;
+.plus-btn {
+  min-width: 45px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(
+    109.72deg,
+    #e1306c 10.05%,
+    #ff699a 52.97%,
+    rgba(252, 175, 69, 0.7) 95%
+  );
+  margin: 5px 0 0 5px;
+  border-radius: 10px;
+  border: none;
+}
+
+.plan-attraction-title {
+  font-weight: 700;
+  font-size: 25px;
+}
+
+.plan-attraction-type {
+  text-align: left;
+}
+
+.plan-attraction-image img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.info-title,
+.address-title {
+  display: flex;
+  align-items: center;
+  text-align: left;
+  font-weight: 700;
+  font-size: 20px;
+  color: #e1306c;
+}
+
+.info-title img,
+.address-title img {
+  margin: 5px;
+}
+.plan-attraction-info {
+  font-size: 15px;
+  text-align: left;
+  padding-bottom: 30px;
+  border-bottom: 2px solid #e6e6e6;
+}
+
+.address-title {
+  margin-top: 20px;
+}
+
+.plan-attraction-address {
+  text-align: left;
 }
 </style>

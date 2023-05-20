@@ -13,9 +13,11 @@ export default new Vuex.Store({
     sidoCode: [
       { code: '1', text: '서울' },
       { code: '2', text: '인천' },
+      { code: '3', text: '대전' },
       { code: '4', text: '대구' },
       { code: '5', text: '광주' },
       { code: '6', text: '부산' },
+      { code: '7', text: '울산' },
       { code: '8', text: '세종특별자치시' },
       { code: '31', text: '경기도' },
       { code: '32', text: '강원도' },
@@ -26,8 +28,6 @@ export default new Vuex.Store({
       { code: '37', text: '전라북도' },
       { code: '38', text: '전라남도' },
       { code: '39', text: '제주도' },
-      { code: '1013900', text: '대전' },
-      { code: '1013911', text: '울산' },
     ],
     contentTypeId: [
       { id: '12', text: '관광지' },
