@@ -1,7 +1,8 @@
 <template>
   <div id="app">
-    <the-header></the-header>
+    <the-header @openRightMenu='openRightMenu'></the-header>
     <router-view></router-view>
+    <right-menu v-if='isRight' @openRightMenu='openRightMenu'></right-menu>
     <the-footer></the-footer>
   </div>
 </template>
@@ -9,6 +10,7 @@
 <script>
 import TheHeader from "@/components/TheHeader";
 import TheFooter from "@/components/TheFooter";
+import RightMenu from '@/components/RightMenu.vue';
 // import AppMain from "@/views/AppMain";
 // import AppBoard from "@/views/AppBoard";
 
@@ -16,9 +18,20 @@ export default {
   components: {
     TheHeader,
     TheFooter,
+    RightMenu
     // AppMain,
     // AppBoard,
   },
+  data() {
+    return {
+      isRight: false,
+    }
+  },
+  methods: {
+    openRightMenu() {
+      this.isRight = !this.isRight;
+    }
+  }
 };
 </script>
 

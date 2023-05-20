@@ -72,11 +72,11 @@ export default {
       this.$router.push("create");
     },
     goSearch(){
-      axios.get(`http://43.201.218.74/board?pageNo=1&code=${this.activeBoardTab}&condition=${this.selectedCondition}&anonymous=&keyword=${this.searchKeyword}`)
+      axios.get(`http://localhost/board?pageNo=1&code=${this.activeBoardTab}&condition=${this.selectedCondition}&anonymous=&keyword=${this.searchKeyword}`)
       .then(response => this.boards = response.data.boards)
     },
     tabChange(code) {
-      axios.get(`http://43.201.218.74/board?pageNo=1&code=${code}&condition=${this.selectedCondition}&anonymous=&keyword=${this.searchKeyword}`)
+      axios.get(`http://localhost/board?pageNo=1&code=${code}&condition=${this.selectedCondition}&anonymous=&keyword=${this.searchKeyword}`)
       .then(response => {
         this.boards = response.data.boards
         this.activeBoardTab = code;
@@ -84,7 +84,7 @@ export default {
       )
     },
     pageChanged(clickedPage){
-      axios.get(`http://43.201.218.74/board?pageNo=${clickedPage}&code=${this.activeBoardTab}&condition=${this.selectedCondition}&anonymous=&keyword=${this.searchKeyword}`)
+      axios.get(`http://localhost/board?pageNo=${clickedPage}&code=${this.activeBoardTab}&condition=${this.selectedCondition}&anonymous=&keyword=${this.searchKeyword}`)
       .then( response => {
         this.boards = response.data.boards;
         this.pageResult = response.data.pageResult;
@@ -96,7 +96,7 @@ export default {
 
   },
   async created(){
-    await axios.get(`http://43.201.218.74/board?pageNo=${this.pageNo}&code=${this.activeBoardTab}&condition=&anonymous=&keyword=`)
+    await axios.get(`http://localhost/board?pageNo=${this.pageNo}&code=${this.activeBoardTab}&condition=&anonymous=&keyword=`)
     .then(response => {
       this.boards = response.data.boards;
       this.pageResult = response.data.pageResult;

@@ -34,7 +34,7 @@
             <div class="user-info">아이디나 비밀번호를 잊으셨나요?  
               <span class="find-user-info" @click="findUserInfo">여기</span>를 클릭하세요.  
             </div>
-            <div class="sign-up" @onclick="signUp">회원 가입</div>
+            <div class="sign-up" @click="signUp">회원 가입</div>
           </div>
 
           <div class="devider"></div>
@@ -72,7 +72,7 @@ export default {
         this.showPassword = !this.showPassword;
       },
       signUp() {
-
+        this.$router.push("/user/signup")
       },
       findUserInfo() {
 
