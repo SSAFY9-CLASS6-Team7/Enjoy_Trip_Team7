@@ -99,38 +99,34 @@ export default {
             
         },
         goToLogin() {
-            this.$store.commit('activeMenuChange', -1);
-            this.closeRightMenu();
-            if (this.$router.currentRoute.path != '/user/login'){
-                this.$router.push('/user/login');
-            }
+            this.movePage('/user/login');
         },
         logout() {
-            this.closeRightMenu();
-            if(this.$route.path !== '/') {
-                this.$router.push("/");
-                this.$store.commit('activeMenuChange', -1);
-            }
+            this.movePage('/');
         },
         moveAnnouncement() {
-
+            this.movePage("/announcement");
         },
         moveSignUp() {
-            this.closeRightMenu();
-            if(this.$route.path !== '/user/signup') {
-                this.$router.push("/");
-                this.$store.commit('activeMenuChange', -1);
-            }
+            this.movePage('/user/signup');
         },
         moveHistory() {
-
+            this.movePage('/history/list');
         },
         movePlan() {
+            this.movePage('/plan/list')
 
         },
         moveModifyUser() {
-
+            this.movePage('/user/modify');
         },
+        movePage(link){
+            this.closeRightMenu();
+            if (this.$route.path !== link){
+                this.$store.commit('activeMenuChange', -1);
+                this.$router.push(link);
+            }
+        }
     },
     mounted() {
         setTimeout(() => {
