@@ -1,6 +1,9 @@
 package com.ssafy.enjoytrip.filter;
 
+import com.ssafy.enjoytrip.util.controller.JWTUtils;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import org.springframework.util.PatternMatchUtils;
 
 import javax.servlet.*;
@@ -10,10 +13,14 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 @Slf4j
+@Component
+@RequiredArgsConstructor
 public class LoginFilter implements Filter {
     private static final String[] whiteList = {
             "/attraction*", "/user/login", "/user"
     };
+
+    private final JWTUtils jwtUtils;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {

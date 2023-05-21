@@ -39,6 +39,7 @@ public class UserController {
         if (loginUser != null) {
             String accessToken = jwtUtils.createAccessToken(loginUser.getUserId());
             String refreshToken = jwtUtils.createRefreshToken(loginUser.getUserId());
+            result.put("message", "success");
             result.put("access-token", accessToken);
             result.put("refresh-token", refreshToken);
         }
@@ -48,7 +49,7 @@ public class UserController {
     @PostMapping("/refresh")
     public Map<String, String> refreshAccessToken(HttpServletRequest request) {
         String refreshToken = request.getHeader("refresh-token");
-        if(!jwtUtils.checkToken(refreshToken)) throw new UnAuthorizedException("세션이 만료되었습니다.");
+        if (!jwtUtils.checkToken(refreshToken)) throw new UnAuthorizedException("세션이 만료되었습니다.");
 
         Map<String, String> result = new HashMap<>();
         String userId = jwtUtils.getUserId(refreshToken);
@@ -60,7 +61,7 @@ public class UserController {
     }
 
     @PostMapping
-    public void createUser(@RequestBody User user) throws SQLException{
+    public void createUser(@RequestBody User user) throws SQLException {
         userService.createUser(user);
     }
 
@@ -74,6 +75,19 @@ public class UserController {
     public void updateUser(@PathVariable String userId, @RequestPart User user, @RequestPart MultipartFile file) throws SQLException, IOException {
         user.setUserId(userId);
         userService.updateUser(user, file);
+    }
+
+    @GetMapping
+    public Map<String, Object> getUser(@PathVariable String userId) throws SQLException {
+        Map<String, Object> result = new HashMap<>();
+        User findUser = userService.getUserInfo(userId);
+        if (findUser != null) {
+            result.put("message", "success");
+            result.put("userInfo", findUser);
+        } else {
+            result.put("message", "fail");
+        }
+        return result;
     }
 }
 
