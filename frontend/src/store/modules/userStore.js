@@ -37,6 +37,7 @@ const userStore = {
           if (data.message === "success") {
             let accessToken = data["access-token"];
             let refreshToken = data["refresh-token"];
+            commit("SET_USER_INFO", data.loginUser);
             commit("SET_IS_LOGIN", true);
             commit("SET_IS_VALID_TOKEN", true);
             sessionStorage.setItem("access-token", accessToken);

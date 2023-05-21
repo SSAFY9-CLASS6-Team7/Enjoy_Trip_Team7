@@ -49,6 +49,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 export default {
   name: "TheHeader",
   data() {
@@ -57,6 +58,7 @@ export default {
     }
   },
   computed: {  
+    ...mapGetters('userStore', ['checkToken', 'checkUserInfo']),
     activeMenuItem : function() {
       return this.$store.state.activeMenuItem;
     },

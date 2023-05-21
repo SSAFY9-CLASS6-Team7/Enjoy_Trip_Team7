@@ -26,14 +26,14 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapGetters } from 'vuex';
 
 export default {
     name: 'BoardComment',
     props: ['comment'],
     components: {},
     computed: {
-        ...mapState(['loginUser']),
+        ...mapGetters('userStore', ['checkToken', 'checkUserInfo']),
     },
     data() {
         return {
@@ -57,7 +57,10 @@ export default {
             return content.replace(/\n/g, '<br>');
         },
         checkUser(userId) {
-            return this.loginUser.userId == userId;
+            if (this.checkToken){
+                return this.checkUserInfo.userId === userId;
+            }
+            return false;
         }
     },
 };
