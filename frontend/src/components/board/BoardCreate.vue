@@ -91,7 +91,6 @@ export default {
   created() {},
   methods: {
     onEditorChange(value) {
-      console.log(value);
       this.content = value.html;
     },
     boardSubmit(){
