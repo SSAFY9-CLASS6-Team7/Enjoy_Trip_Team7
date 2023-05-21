@@ -4,7 +4,6 @@
         <div class="main">
             <div class="profile-image-container">
                 <div class="image-container" @click="modifyProfileImage">
-                    
                     <img v-if="profileImage == ''" src='@/assets/header_icon/profile.svg' class="profile-image">
                     <img v-if="profileImage != ''" src='profileImage' class="profile-image">
                     <img src="@/assets/user_icons/modify_profile.svg" class="modify-icon">
@@ -50,21 +49,29 @@
                     <input type="tel" v-model='phone3' class="phone-input" pattern="[0-9]*" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" maxlength="4">
                 </div>
             </div>
-
-            <div class="inner-title">생년월일</div>
-            <input type="date" class="birth-input">
             
+            <div class="birth-container">
+                <div class="inner-title">생년월일</div>
+                <input type="date" class="birth-input">
+            </div>
+            
+            <div class="gender-container">
+                <div class="inner-title">성별</div>
+                <div class="gender-input-container">
+                    <div class="male-container">
+                        <input id="male" type="radio" class="gender-input" name="gender" value="male" v-model="gender" hidden>
+                        <label class="gender-radio" for="male" :class="{'male-selected' : gender == 'male'}">남 자</label>
+                    </div>
+                    <div class="female-container">
+                        <input id="female" type="radio" class="gender-input" name="gender" value="female" v-model="gender" hidden>
+                        <label class="gender-radio" for="female" :class="{'female-selected' : gender == 'female'}">여 자</label>
+                    </div>
+                </div>
+            </div>
 
-            <div class="inner-title">성별</div>
-            <div class="gender-input-container">
-                <div class="male-container">
-                    <input id="male" type="radio" class="gender-input" name="gender" value="male" v-model="gender" hidden>
-                    <label class="gender-radio" for="male" :class="{'male-selected' : gender == 'male'}">남 자</label>
-                </div>
-                <div class="female-container">
-                    <input id="female" type="radio" class="gender-input" name="gender" value="female" v-model="gender" hidden>
-                    <label class="gender-radio" for="female" :class="{'female-selected' : gender == 'female'}">여 자</label>
-                </div>
+            <div class="buttons">
+                <button class="cancel" @click="modifyCancel">취소</button>
+                <button class="modify-submit">수정</button>
             </div>
 
         </div>
@@ -109,6 +116,11 @@ export default {
                 this.passwordCheckResult= ''
             }
         },
+        modifyCancel(){
+            // this.$router.go(-2); 비밀번호 확인 창 만들면 -2 시켜야 함
+            this.$router.go(-1);
+
+        },
     },
 }
 </script>
@@ -119,7 +131,7 @@ export default {
     height: 82vh;
     min-height: 765px;
     display: grid;
-    grid-template-columns: 2fr 5fr 2fr;
+    grid-template-columns: 2fr 3fr 2fr;
     grid-template-areas: 'left main right';
     min-width: 1900px;
 }
@@ -132,6 +144,12 @@ export default {
     grid-area: right;
 }
 
+.status-icon {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+}
+
 .main {
     grid-area: main;
     border: 1px solid #333333;
@@ -139,17 +157,16 @@ export default {
     display: flex;
     flex-direction: column;
     padding: 10px 20px 10px 20px;
+    margin: 50px 0 50px 0;
 }
 
 .main div {
-    position: relative;
     display: flex;
     align-items: center;
     margin: 10px 0 10px 0;
 }
 
 .profile-image-container {
-    border: 1px solid #333333;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -180,7 +197,7 @@ export default {
 .user-name {
     font-size: 30px;
     font-weight: 600;
-    margin-left: 30px;
+    padding:0 0 0 30px;
 }
 
 input {
@@ -195,17 +212,41 @@ input {
 
 .password-container {
     position: relative;
-    border: 1px solid #333333;
     display: flex;
 }
 
 .password-input-container {
     position: absolute;
+    width: 80%;
     right: 0;
 }
 
-.nickname-container {
-    border: 1px solid #333333;
+.password-input-container input {
+    width: 100%;
+}
+
+.nickname-container input {
+    width: 80%;
+}
+
+.email-container input {
+    width: 80%;
+}
+
+.birth-container input {
+    width: 80%;
+    text-align: center;
+}
+
+.phone-input-container {
+    width: 80%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.phone-input-container input {
+    width: 30%;
+    text-align: center;
 }
 
 .inner-title {
@@ -214,14 +255,15 @@ input {
     font-weight: 600;
     font-size: 16px;
     color: #5F6073;
-    border:1px solid #333333;
 }
 
 .success {
+    border-radius: 4px;
     border: 1px solid #09A552 !important;
 }
 
 .fail {
+    border-radius: 4px;
     border: 1px solid #FB0808 !important;
 }
 
@@ -232,5 +274,80 @@ input {
 .result-fail {
     color: #FB0808 !important;
 }
+
+.gender-input-container {
+    width: 80%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.male-container {
+    width: 45%;
+}
+
+.female-container {
+    width: 45%;
+}
+
+.gender-radio {
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    border: 1px solid #DBDBDB;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 800;
+    font-family: 'S-CoreDream-3Light';
+}
+
+.male-selected {
+    background: #315EFB; 
+    color: #ffffff;
+    border:none;
+}
+
+.female-selected {
+    background: #E1306C; 
+    color: #ffffff;
+    border:none;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-around;
+    padding:50px 100px 0 100px;
+}
+
+.cancel {
+  border: none;
+  color: #333333;
+  font-family: 'S-CoreDream-3Light';
+  font-weight: 800;
+  font-size: 18px;
+  background: #9b9b9b;
+  border-radius: 8px;
+  padding: 10px 23px 10px 23px;
+  min-width: 100px;
+  width: 200px;
+  margin-right: 40px;
+}
+
+.modify-submit {
+  border: none;
+  color: #ffffff;
+  font-family: 'S-CoreDream-3Light';
+  font-weight: 800;
+  font-size: 18px;
+  background: linear-gradient(95.36deg, #E1306C 2.32%, #FF699A 68.42%, #FCAF45 104.98%);
+  background-blend-mode: darken;
+  border-radius: 8px;
+  padding: 10px 20px 10px 20px;
+  min-width: 100px;
+  width: 200px;
+  margin-left: 40px;
+}
+
 
 </style>

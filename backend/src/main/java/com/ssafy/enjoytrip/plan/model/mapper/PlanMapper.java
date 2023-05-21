@@ -12,11 +12,13 @@ import com.ssafy.enjoytrip.plan.model.PlanAttraction;
 @Mapper
 public interface PlanMapper {
 	List<Plan> selectPlanList(Map<String, Object> param) throws SQLException;
+	int selectPlanCount() throws SQLException;
 	Plan selectPlanById(int planId) throws SQLException;
 	void insertPlan(Plan plan) throws SQLException;
 	void updatePlan(Plan plan) throws SQLException;
 	void deletePlan(int planId) throws SQLException;
-	
+
+	List<PlanAttraction> selectPlanAttractionListByPlanId(int planId) throws SQLException;
 	PlanAttraction selectPlanAttraction(int planAttractionId) throws SQLException;
 	void insertPlanAttraction(PlanAttraction planAttraction) throws SQLException;
 	void updatePlanAttraction(PlanAttraction planAttraction) throws SQLException;
