@@ -45,6 +45,7 @@ export default {
       plans: [],
       isModalOpen: false,
       pageNo: 1,
+      pageResult: {},
     };
   },
   methods: {
@@ -61,9 +62,10 @@ export default {
     },
   },
   async created() {
-    await axios
-      .get(`http://localhost/plan?pageNo=${this.pageNo}`)
-      .then((response) => (this.plans = response.data));
+    await axios.get(`http://localhost/plan?pageNo=${this.pageNo}`).then((response) => {
+      this.plans = response.data.plans;
+      this.pageResult = response.data.pageResult;
+    });
   },
 };
 </script>
@@ -112,6 +114,10 @@ export default {
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr 1fr;
   background-color: white;
+}
+
+.main > * {
+  margin: 2%
 }
 
 .create-btn {
