@@ -12,6 +12,12 @@
            AND password = #{password}
     </select>
 
+    <select id="selectUserByUserId" parameterType="string" resultType="User">
+        SELECT *
+          FROM user
+         WHERE user_id = #{userId}
+    </select>
+
     <!-- 유저 회원 가입 -->
     <!-- TODO 프로필 사진 기능 추가 -->
     <insert id="insertUser" parameterType="User">
