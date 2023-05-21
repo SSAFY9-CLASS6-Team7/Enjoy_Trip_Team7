@@ -118,7 +118,7 @@ export default {
 
         },
         moveModifyUser() {
-            this.movePage('/user/modify');
+            this.movePage('/user/check');
         },
         movePage(link){
             this.closeRightMenu();
