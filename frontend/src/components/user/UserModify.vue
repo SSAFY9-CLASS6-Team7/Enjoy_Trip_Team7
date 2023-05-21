@@ -31,6 +31,8 @@
                 </div>
             </div>
 
+            <div class="password-check-result" :class="{ 'result-success': passwordFlag === true, 'result-fail': passwordFlag === false }"> {{passwordCheckResult}} </div>
+
             <div class="nickname-container">
                 <div class="inner-title">별 명</div>
                 <input type="text" class="nickname">
@@ -133,7 +135,7 @@ export default {
     display: grid;
     grid-template-columns: 2fr 3fr 2fr;
     grid-template-areas: 'left main right';
-    min-width: 1900px;
+    min-width: 1500px;
 }
 
 .left-aside {
@@ -152,12 +154,13 @@ export default {
 
 .main {
     grid-area: main;
-    border: 1px solid #333333;
     width: 100%;
     display: flex;
     flex-direction: column;
-    padding: 10px 20px 10px 20px;
-    margin: 50px 0 50px 0;
+    padding: 10px 80px 10px 80px;
+    margin: 20px 0 50px 0;
+    box-shadow: -1px 5px 20px rgba(0, 0, 0, 0.2);
+    border-radius: 14px;
 }
 
 .main div {
@@ -206,6 +209,7 @@ input {
     border: none;
     border: 1px solid #DBDBDB;
     border-radius: 4px;
+    padding: 0 0 0 10px;
     font-size: 14px;
     font-family: 'S-CoreDream-3Light';
 }
@@ -223,6 +227,10 @@ input {
 
 .password-input-container input {
     width: 100%;
+}
+
+.password-check-result {
+    padding: 0 0 0 20%;
 }
 
 .nickname-container input {
@@ -317,7 +325,7 @@ input {
 .buttons {
     display: flex;
     justify-content: space-around;
-    padding:50px 100px 0 100px;
+    padding:10px 100px 0 100px;
 }
 
 .cancel {
