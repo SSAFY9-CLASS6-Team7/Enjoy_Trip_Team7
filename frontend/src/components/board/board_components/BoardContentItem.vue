@@ -80,7 +80,6 @@ export default {
             .then(response => this.images = response.data.images.length);
         },
         boardView(){
-            console.log(this.board.boardId);
             this.$router.push('/board/view/'+this.board.boardId);
         },
     },

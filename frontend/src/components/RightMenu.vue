@@ -2,25 +2,27 @@
   <div class="container" @click="closeRightMenu">
     <div class="right-menu" :class="{ 'open': isOpen, 'close': !isOpen}" @click.stop>
         <div class="top">
-            <div v-if='!isLogin' class="user-info">
+            <div v-if='!checkToken' class="user-info">
                 <img src="@/assets/header_icon/profile.svg" class='profile' >
                 <div class="go-to-login" @click="goToLogin" >로그인 하세요.</div>
             </div>
-            <div v-if='isLogin' class="user-info">
+            <div v-if='checkToken' class="user-info">
                 <button class="logout" @click="logout">
                     로그아웃
                     <img src="@/assets/user_icons/logout.svg" >
                 </button>
                 <img src="@/assets/header_icon/profile.svg" class='profile'>
                 <div class="id-email-container">
-                    <div class="id">김싸피</div>
-                    <div class="email">ssafy209@ssafy.com</div>
+                    <!-- <div class="id">{{ checkUserInfo.nickname }}</div>
+                    <div class="email">{{ checkUserInfo.email }}</div> -->
+                    <div class="id"> 아니 왜이래 </div>
+                    <div class="email"> 아니 뭔데 ? </div>
                 </div>
             </div>
         </div>
         <div class="devider"></div>
 
-        <div v-if='!isLogin' class="main">
+        <div v-if='!checkToken' class="main">
             <div class="announcement" @click="moveAnnouncement">
                 <img src="@/assets/announcement.svg" style="margin:0 10px 0 0;" >
                 <span>공지사항</span>
@@ -42,7 +44,7 @@
             </div>
 
         </div>
-        <div v-if='isLogin' class="main">
+        <div v-if='checkToken' class="main">
             <div class="announcement" @click="moveAnnouncement">
                 <img src="@/assets/announcement.svg" style="margin:0 10px 0 0;" >
                 <span>공지사항</span>
@@ -75,6 +77,7 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
 export default {
     name: 'RightMenu',
     components: {
@@ -83,10 +86,13 @@ export default {
     data() {
         return {
             isOpen: false,
-            isLogin: true,
         }
     },
+    computed: {
+        ...mapGetters('userStore', ['checkToken', 'checkUserInfo']),
+    },
     methods: {
+        ...mapActions('userStore', ['userConfirm', 'userLogout']),
         menuClose(){
             this.$emit('openRightMenu');
         },
@@ -94,7 +100,6 @@ export default {
             this.isOpen = false;
             setTimeout(() => {
                 this.$emit('openRightMenu');
-                this.isLogin = false;
             }, 300);
             
         },
@@ -102,6 +107,7 @@ export default {
             this.movePage('/user/login');
         },
         logout() {
+            this.userLogout();  
             this.movePage('/');
         },
         moveAnnouncement() {
@@ -130,6 +136,8 @@ export default {
     },
     mounted() {
         setTimeout(() => {
+            console.log(this.checkUserInfo);
+            console.log(this.checkToken);
             this.isOpen = true; 
         }, 100);
     },
