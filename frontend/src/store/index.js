@@ -1,15 +1,14 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import createPersistedState from "vuex-persistedstate";
+
+import userStore from "@/store/modules/userStore";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
     activeMenuItem: localStorage.getItem('activeMenuItem') || '',
-    loginUser: {
-      // 임시 값
-      userId: 'TestUser1',
-    },
     sidoCode: [
       { code: '1', text: '서울' },
       { code: '2', text: '인천' },
@@ -48,9 +47,16 @@ export default new Vuex.Store({
   mutations: {
     activeMenuChange(state, data) {
       state.activeMenuItem = data;
-      localStorage.setItem('activeMenuItem', data); // 로컬 스토리지에 값 저장
+      sessionStorage.setItem('activeMenuItem', data); // 로컬 스토리지에 값 저장
     },
   },
   actions: {},
-  modules: {},
+  modules: {
+    userStore,
+  },
+  plugins: [
+    createPersistedState({
+      storage: sessionStorage,
+    })
+  ]
 });
