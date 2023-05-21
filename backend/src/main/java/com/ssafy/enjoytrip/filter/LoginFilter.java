@@ -29,10 +29,10 @@ public class LoginFilter implements Filter {
         String requestURI = httpRequest.getRequestURI();
 
         try {
-            log.info("Login Filter Start");
             if (isLoginCheckPath(requestURI) && !httpRequest.getMethod().equals("GET")) {
-                HttpSession session = httpRequest.getSession(false);
-                if (session == null || session.getAttribute("loginUser") == null) {
+                String accessToken = httpRequest.getHeader("Access-Token");
+                log.info("accessToken {}", accessToken);
+                if (!jwtUtils.checkToken(accessToken)) {
                     log.warn("미 인증 사용자 요청입니다. {} ", requestURI);
                     response.setContentType("application/json; charset=UTF-8");
                     httpResponse.getWriter().write("{ \n\t\"code\": 400, \n\t\"message\": \"로그인이 필요합니다.\" \n}");

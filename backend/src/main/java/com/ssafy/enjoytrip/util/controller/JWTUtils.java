@@ -103,6 +103,8 @@ public class JWTUtils {
 
     public boolean checkToken(String jwt) {
         try {
+            String userId = getUserId(jwt);
+            log.info("user ID {}", userId);
             Jws<Claims> claims = Jwts.parser().setSigningKey(this.generateKey()).parseClaimsJws(jwt);
             Date expiration = claims.getBody().getExpiration();
             return new Date(System.currentTimeMillis()).before(expiration);

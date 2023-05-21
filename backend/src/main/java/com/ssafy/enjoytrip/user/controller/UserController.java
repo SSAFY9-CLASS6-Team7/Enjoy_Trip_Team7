@@ -35,7 +35,6 @@ public class UserController {
     public Map<String, Object> login(@RequestBody User inputUser) throws SQLException {
         Map<String, Object> result = new HashMap<>();
         User loginUser = userService.login(inputUser);
-        log.info("===== Login User {}", loginUser.getUserId());
         if (loginUser != null) {
             String accessToken = jwtUtils.createAccessToken(loginUser.getUserId());
             String refreshToken = jwtUtils.createRefreshToken(loginUser.getUserId());
