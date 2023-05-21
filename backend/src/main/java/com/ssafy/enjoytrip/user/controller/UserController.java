@@ -34,12 +34,13 @@ public class UserController {
     @PostMapping("/login")
     public Map<String, Object> login(@RequestBody User inputUser) throws SQLException {
         Map<String, Object> result = new HashMap<>();
-
         User loginUser = userService.login(inputUser);
+        log.info("===== Login User {}", loginUser.getUserId());
         if (loginUser != null) {
             String accessToken = jwtUtils.createAccessToken(loginUser.getUserId());
             String refreshToken = jwtUtils.createRefreshToken(loginUser.getUserId());
             result.put("message", "success");
+            result.put("loginUser", loginUser);
             result.put("access-token", accessToken);
             result.put("refresh-token", refreshToken);
         }
