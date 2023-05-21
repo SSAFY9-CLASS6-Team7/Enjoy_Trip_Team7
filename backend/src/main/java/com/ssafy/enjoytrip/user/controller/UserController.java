@@ -1,7 +1,9 @@
 package com.ssafy.enjoytrip.user.controller;
 
+import com.ssafy.enjoytrip.exception.UnAuthorizedException;
 import com.ssafy.enjoytrip.user.model.User;
 import com.ssafy.enjoytrip.user.model.service.UserService;
+import com.ssafy.enjoytrip.util.controller.JWTUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,9 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -24,25 +29,39 @@ public class UserController {
     private String fileDir;
 
     private final UserService userService;
+    private final JWTUtils jwtUtils;
 
-    // TODO 추후 JWT 방식으로 교체 예정
     @PostMapping("/login")
-    public User login(HttpSession session, @RequestBody User inputUser) throws SQLException {
+    public Map<String, Object> login(@RequestBody User inputUser) throws SQLException {
+        Map<String, Object> result = new HashMap<>();
+
         User loginUser = userService.login(inputUser);
         if (loginUser != null) {
-            session.setAttribute("loginUser", loginUser);
+            String accessToken = jwtUtils.createAccessToken(loginUser.getUserId());
+            String refreshToken = jwtUtils.createRefreshToken(loginUser.getUserId());
+            result.put("message", "success");
+            result.put("access-token", accessToken);
+            result.put("refresh-token", refreshToken);
         }
-        return loginUser;
+        return result;
     }
 
-    // TODO 추후 JWT 방식으로 교체 예정
-    @GetMapping("/logout")
-    public void logout(HttpSession session){
-        session.invalidate();
+    @PostMapping("/refresh")
+    public Map<String, String> refreshAccessToken(HttpServletRequest request) {
+        String refreshToken = request.getHeader("refresh-token");
+        if (!jwtUtils.checkToken(refreshToken)) throw new UnAuthorizedException("세션이 만료되었습니다.");
+
+        Map<String, String> result = new HashMap<>();
+        String userId = jwtUtils.getUserId(refreshToken);
+        String newAccessToken = jwtUtils.createAccessToken(userId);
+        String newRefreshToken = jwtUtils.createRefreshToken(userId);
+        result.put("access-token", newAccessToken);
+        result.put("refresh-token", newRefreshToken);
+        return result;
     }
 
     @PostMapping
-    public void createUser(@RequestBody User user) throws SQLException{
+    public void createUser(@RequestBody User user) throws SQLException {
         userService.createUser(user);
     }
 
@@ -56,6 +75,19 @@ public class UserController {
     public void updateUser(@PathVariable String userId, @RequestPart User user, @RequestPart MultipartFile file) throws SQLException, IOException {
         user.setUserId(userId);
         userService.updateUser(user, file);
+    }
+
+    @GetMapping
+    public Map<String, Object> getUser(@PathVariable String userId) throws SQLException {
+        Map<String, Object> result = new HashMap<>();
+        User findUser = userService.getUserInfo(userId);
+        if (findUser != null) {
+            result.put("message", "success");
+            result.put("userInfo", findUser);
+        } else {
+            result.put("message", "fail");
+        }
+        return result;
     }
 }
 
