@@ -3,9 +3,10 @@
         <div class="left-aside"></div>
         <div class="main">
             <div class="profile-image-container">
-                <div class="image-container" @click="modifyProfileImage">
-                    <img v-if="profileImage == ''" src='@/assets/header_icon/profile.svg' class="profile-image">
-                    <img v-if="profileImage != ''" src='profileImage' class="profile-image">
+                <div class="image-container" @click="uploadClick">
+                    <input type="file" id="profileUpload" @change="profileUpload" hidden>
+                    <img v-if="checkUserInfo.profilePicPath != null && checkUserInfo.profilePicPath != ''" :src="'http://localhost/profilePath/' + checkUserInfo.profilePicPath" class='profile-image' >
+                <img v-if="checkUserInfo.profilePicPath == null || checkUserInfo.profilePicPath == ''" src="@/assets/header_icon/profile.svg" class='profile-image'>
                     <img src="@/assets/user_icons/modify_profile.svg" class="modify-icon">
                 </div>
                 <div class="user-name">
@@ -89,6 +90,7 @@ export default {
     data() {
         return {
             profileImage: '',
+            uploaded: '',
             passwordFlag: '',
             password: '',
             passwordSecond: '',
@@ -111,8 +113,14 @@ export default {
     },
     methods: {
         ...mapActions('userStore', ['userConfirm']),
-        modifyProfileImage() {
-            
+        uploadClick() {
+            const inputElement = document.getElementById("profileUpload");
+            inputElement.click();
+        },
+        profileUpload(event){
+            const file = event.target.files[0];
+            this.uploaded = file;
+            console.log("profile : " + this.uploaded);
         },
         passwordCheck() {
             if (this.password.length < 8 && this.password.length > 0) {
@@ -147,6 +155,10 @@ export default {
                 f.append("phone", this.totalPhone);
                 f.append("birth", this.birth);
                 f.append("gender", this.gender);
+                if (this.uploaded != '') {
+                    console.log("profile : " + this.uploaded);
+                    f.append("file", this.uploaded);
+                }
 
                 await axios.put("http://localhost/user/"+this.checkUserInfo.userId, f);
                 let user = {
@@ -175,6 +187,8 @@ export default {
         this.phone1 = phoneNumber[0];
         this.phone2 = phoneNumber[1];
         this.phone3 = phoneNumber[2];
+        console.log(this.checkUserInfo.profilePicPath);
+        // this.profileImage = 'http://localhost/imagePath/' + this.checkUserInfo.profilePicPath;
     }
 }
 </script>
@@ -238,7 +252,8 @@ export default {
 }
 
 .profile-image {
-    width: 40px;
+    width: 60px;
+    height: 60px;
     border-radius: 45%;
 }
 

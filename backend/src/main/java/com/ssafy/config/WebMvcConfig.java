@@ -15,12 +15,16 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     private String connectPath = "/imagePath/**";
     private String resourcePath = "file:///C:/enjoytrip_image/images/";
+    private String profilePath = "/profilePath/**";
+    private String profileResource = "file:///C:/enjoytrip_image/profile/";
     private final JwtInterceptor jwtInterceptor;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler(connectPath)
                 .addResourceLocations(resourcePath);
+        registry.addResourceHandler(profilePath)
+                .addResourceLocations(profileResource);
     }
 
     /*@Override
