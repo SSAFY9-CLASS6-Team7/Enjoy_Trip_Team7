@@ -81,8 +81,8 @@ export default {
       isModalOpen: false,
       //스와이프 관련 설정
       swiperOption: {
-        slidesPerView: 1,
-        spaceBetween: 20,
+        slidesPerView: 5,
+        spaceBetween: 70,
         direction: 'horizontal',
         pagination: {
           el: '.swiper-pagination',
@@ -257,6 +257,10 @@ export default {
 .swiper-container {
   width: 100%;
   height: 100%;
+  max-width: 640px;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
 }
 
 .date-swiper .swiper-wrapper {
@@ -264,8 +268,9 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: row;
+
   margin: 20px 0 20px 0;
-  overflow: auto;
+  overflow: hidden;
   white-space: nowrap;
 }
 
@@ -276,5 +281,6 @@ export default {
 
 .date-swiper-item {
   width: 30px !important;
+  padding: 0 20px;
 }
 </style>
