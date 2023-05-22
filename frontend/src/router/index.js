@@ -27,7 +27,7 @@ const routes = [
           import(/* webpackChunkName: "board" */ '../components/board/BoardCreate.vue'),
       },
       {
-        path: 'update',
+        path: 'update/:boardId',
         name: 'boardupdate',
         component: () =>
           import(/* webpackChunkName: "board" */ '../components/board/BoardUpdate.vue'),

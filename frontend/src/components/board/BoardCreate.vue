@@ -14,7 +14,7 @@
       </div>
       <div class="anonymous-container">
         <div class="inner-title">익명</div>
-        <input type="checkbox" id="anonymousFlag"/>
+        <input type="checkbox" id="anonymousFlag" v-model='anonymous'/>
         <label for="anonymousFlag" class="is-anonymous"></label>
       </div>
 
@@ -48,7 +48,6 @@
       <div class="filebox">
         <label class="upload-search-button" for="file">찾아보기...</label> 
         <div v-if="this.selectedFiles.length == 0" class="upload-name">선택된 파일 없음</div>
-        <!-- <div v-if="selectedFiles.length > 0" class="upload-name"> {{ selectedFiles.join(', ') }} </div> -->
         <div v-if="this.selectedFiles.length > 0" class="upload-name" >
           <span v-for="file in this.selectedFiles" :key="file"> {{ file.name }} </span>
         </div>
@@ -86,13 +85,15 @@ export default {
       title: '',
       content: '',
       selectedAttractionId: '',
-      userId: this.checkUserInfo.userId,
+      userId: '',
       selectedFiles: [],
       selectedAttraction: '',
+      anonymous: false,
     };
   },
   created() {
     this.selectedFiles = [];
+    this.userId = this.checkUserInfo.userId;
   },
   computed: {
       ...mapGetters('userStore', ['checkUserInfo']),
@@ -101,25 +102,22 @@ export default {
     onEditorChange(value) {
       this.content = value.html;
     },
-    boardSubmit(){
+    async boardSubmit(){
       let f = new FormData();
       f.append('code', this.selectedCode);
       f.append('title', this.title);
-      f.append('content', this.content);
+      f.append('boardContent', this.content);
       f.append('userId', this.userId);
+      f.append('anonymous', this.anonymous);
 
-      console.log(sessionStorage.getItem("access-token"));
-
-      axios.post('http://localhost/board', f, {
+      await axios.post('http://localhost/board', f, {
         headers: {
           'access-token': sessionStorage.getItem("access-token"),
           'refresh-token': sessionStorage.getItem("refresh-token"),
         }
-      }).then(
-        response => (
-          console.log(response.data)
-        )
-      );
+      });
+      this.$router.push("/board");
+      this.$router.go(0);
     },
     handleFileChange(event) {
       this.selectedFiles = Array.from(event.target.files);
@@ -127,6 +125,10 @@ export default {
     selectAttraction() {
 
     },
+    cancel(){
+      this.$router.push("/board");
+      this.$router.go(0);
+    }
   },
 };
 </script>

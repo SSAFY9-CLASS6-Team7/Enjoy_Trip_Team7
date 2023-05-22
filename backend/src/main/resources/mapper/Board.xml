@@ -85,6 +85,7 @@
             <if test="attractionId != 0">attraction_id = ${attractionId},</if>
             <if test="heart != null">heart = ${heart},</if>
             <if test="boardContent != null">board_content = #{boardContent},</if>
+            <if test="anonymous != null">anonymous = #{anonymous},</if>
         </set>
         WHERE board_id = #{boardId}
     </update>

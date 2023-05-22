@@ -77,7 +77,7 @@ public class UserController {
         userService.updateUser(user, file);
     }
 
-    @GetMapping
+    @GetMapping("/{userId}")
     public Map<String, Object> getUser(@PathVariable String userId) throws SQLException {
         Map<String, Object> result = new HashMap<>();
         User findUser = userService.getUserInfo(userId);
