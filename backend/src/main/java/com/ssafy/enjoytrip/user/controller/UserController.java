@@ -72,7 +72,7 @@ public class UserController {
 
     @Transactional
     @PutMapping("/{userId}")
-    public void updateUser(@PathVariable String userId, @RequestPart User user, @RequestPart MultipartFile file) throws SQLException, IOException {
+    public void updateUser(@PathVariable String userId, User user, MultipartFile file) throws SQLException, IOException {
         user.setUserId(userId);
         userService.updateUser(user, file);
     }
