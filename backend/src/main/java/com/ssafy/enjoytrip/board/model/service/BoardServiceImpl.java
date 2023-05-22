@@ -48,7 +48,7 @@ public class BoardServiceImpl implements BoardService {
 
         Map<String, Object> result = new HashMap<>();
 
-        int totalCount = boardMapper.selectBoardCount(String.valueOf(paramMap.get("keyword")));
+        int totalCount = boardMapper.selectBoardCount(paramMap);
         PageResult pageResult = new PageResult(pageNo, totalCount);
         result.put("boards",  boardMapper.selectBoard(paramMap));
         result.put("pageResult", pageResult);
@@ -123,6 +123,7 @@ public class BoardServiceImpl implements BoardService {
         boardMapper.insertBoard(board);
 
         int dataId = board.getBoardId();
+        log.info("files {}", files);
         if (files != null) {
             insertImages(dataId, files);
         }
@@ -145,10 +146,29 @@ public class BoardServiceImpl implements BoardService {
         boardMapper.updateBoard(board);
     }
 
+    @Override
+    public Map<String, Object> getIsImage(int boardId) throws SQLException {
+        Map<String, Integer> paramMap = new HashMap<>();
+        paramMap.put("type", TYPE);
+        paramMap.put("dataId", boardId);
+        Map<String, Object> result = new HashMap<>();
+        result.put("images", imageMapper.selectImage(paramMap));
+        return result;
+    }
+
+    @Override
+    public Map<String, Object> getHeart(String boardId, String userId) throws SQLException {
+        Map<String, Object> result = new HashMap<>();
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("boardId", boardId);
+        paramMap.put("userId", userId);
+        result.put("isHeart", boardMapper.selectHeartFlag(paramMap));
+        return result;
+    }
+
     public void insertImages(int boardId, List<MultipartFile> files) throws IOException, SQLException {
         for (int i = 0; i < files.size(); i++) {
             String imagePath = saveFile(files.get(i), fileDir);
-
             Image image = new Image();
             image.setDataId(boardId);
             image.setImagePath(imagePath);

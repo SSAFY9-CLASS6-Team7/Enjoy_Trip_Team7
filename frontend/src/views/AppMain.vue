@@ -288,8 +288,7 @@ export default {
   border-radius: 10px;
   display: inline-block;
   margin: 0 10px 0 0;
-  overflow: visible;
-  
+  overflow: visible; 
 }
 
 .attraction-swiper .swiper-wrapper{

@@ -47,11 +47,11 @@
       <div class="inner-title">사진 업로드</div>
       <div class="filebox">
         <label class="upload-search-button" for="file">찾아보기...</label> 
-        <div v-if="this.selectedFiles.length == 0" class="upload-name">선택된 파일 없음</div>
-        <div v-if="this.selectedFiles.length > 0" class="upload-name" >
-          <span v-for="file in this.selectedFiles" :key="file"> {{ file.name }} </span>
+        <div v-if="this.files.length == 0" class="upload-name">선택된 파일 없음</div>
+        <div v-if="this.files.length > 0" class="upload-name" >
+          <span v-for="file in this.files" :key="file"> {{ file.name }} </span>
         </div>
-        <input type="file" id="file" @change="handleFileChange" multiple >
+        <input type="file" id="file" ref="files" @change="handleFileChange" multiple >
       </div>
     </div>
 
@@ -87,13 +87,13 @@ export default {
       content: '',
       selectedAttractionId: '',
       userId: '',
-      selectedFiles: [],
+      files: '',
       selectedAttraction: '',
       anonymous: false,
     };
   },
   created() {
-    this.selectedFiles = [];
+    this.files = [];
     this.userId = this.checkUserInfo.userId;
     
     this.boardId = this.$route.params.boardId;
@@ -123,11 +123,16 @@ export default {
       console.log(this.anonymous);
       f.append('anonymous', this.anonymous);
       
+      let uploadFiles = this.$refs.files.files;
+      for (let i = 0; i < uploadFiles.length; i++){
+        f.append('files', uploadFiles[i]);
+      }
+
       await axios.put('http://localhost/board/'+this.boardId, f);
       this.$router.push("/board");
     },
     handleFileChange(event) {
-      this.selectedFiles = Array.from(event.target.files);
+      this.files = Array.from(event.target.files);
     },
     selectAttraction() {
 
