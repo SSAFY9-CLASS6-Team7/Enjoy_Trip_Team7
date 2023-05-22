@@ -19,48 +19,36 @@
       <div class="main">
         <div class="map-area">Map</div>
         <div class="sequence-area">
-          <div class="date-slide">날짜슬라이드</div>
+          <div class="date-slide">
+            <div class="date-swiper" v-if="this.planDates.length !== 0">
+              <swiper :options="swiperOption">
+                <div class="swiper-button-prev img-prev" slot="button-prev">
+                  <img src="@/assets/left.svg" width="40px" height="40px" />
+                </div>
+                <swiper-slide class="date-swiper-item" v-for="(date, i) in planDates" :key="i">
+                  day{{ i + 1 }}
+                </swiper-slide>
+                <div class="swiper-button-next img-next" slot="button-next">
+                  <img src="@/assets/right.svg" width="40px" height="40px" style="right: 30px" />
+                </div>
+              </swiper>
+            </div>
+          </div>
           <div class="attraction-slide-area">
-            <!-- <draggable :attractions="attractions" :group="{ name: 'attractions', pull: 'clone', put: false }">
-              <div v-for="(date, i) in planDates" :key="i">
-                <plan-attractions-by-date
-                  :dateInfo="groupedAttractions[date]"
-                  :date="date"
-                  :orderOfDate="i"
-                ></plan-attractions-by-date>
-              </div>
-            </draggable> -->
-            <!-- <div class="attraction-slide" v-for="(date, i) in planDates" :key="i">
-              <plan-attractions-by-date
-                :dateInfo="groupedAttractions[date]"
-                :date="date"
-                :orderOfDate="i"
-                @attractionDragged="handleAttractionDragged"
-              ></plan-attractions-by-date>
-            </div> -->
             <div class="attraction-slide" v-for="(date, i) in planDates" :key="i">
               <div class="plan-attractions-by-date-container">
                 <div class="day-info">
-                  <h4>day{{ i + 1 }}</h4>
-                  | {{ formatDate(date) }}
+                  <h4>day{{ i + 1 }} &nbsp;</h4>
+                  | &nbsp; {{ formatDate(date) }}
                 </div>
-                <div class="attractions-area" v-if="groupedAttractions[date].length > 0">
-                  <draggable
-                    v-model="attractions"
-                    @end="handleAttractionDragged"
-                    :group="{ name: 'attractions', pull: 'clone', put: false }"
+                <div class="attractions-area" v-if="groupedAttractions[date]">
+                  <div
+                    class="attractions"
+                    v-for="(attraction, index) in groupedAttractions[date]"
+                    :key="attraction.planAttractionId"
                   >
-                    <div
-                      class="attractions"
-                      v-for="(attraction, index) in groupedAttractions[date]"
-                      :key="index"
-                    >
-                      <plan-attraction
-                        :planAttraction="attraction"
-                        :sequence="attraction.sequence"
-                      ></plan-attraction>
-                    </div>
-                  </draggable>
+                    <plan-attraction :planAttraction="attraction" :index="index"></plan-attraction>
+                  </div>
                 </div>
               </div>
             </div>
@@ -74,35 +62,58 @@
 <script>
 import AttractionSearchModal from '../AttractionSearchModal.vue';
 import PlanAttraction from './plan_components/PlanAttraction.vue';
-import draggable from 'vuedraggable';
-// import PlanAttractionsByDate from './plan_components/PlanAttractionsByDate.vue';
 import axios from 'axios';
+import { Swiper, SwiperSlide } from 'vue-awesome-swiper';
+import 'swiper/css/swiper.css';
 
 export default {
   name: 'PlanView',
   components: {
     AttractionSearchModal,
     PlanAttraction,
-    draggable,
-    // PlanAttractionsByDate,
+    Swiper,
+    SwiperSlide,
   },
   data() {
     return {
       plan: Object,
-      attractions: [],
-      groupedAttractions: [],
-      groupedAttractionsArray: {},
+      groupedAttractions: Object, //key로 접근 가능
       isModalOpen: false,
+      //스와이프 관련 설정
+      swiperOption: {
+        slidesPerView: 1,
+        spaceBetween: 20,
+        direction: 'horizontal',
+        pagination: {
+          el: '.swiper-pagination',
+          clickable: true,
+        },
+        navigation: {
+          nextEl: '.img-next',
+          prevEl: '.img-prev',
+        },
+      },
     };
   },
   computed: {
+    //여행 기간 안의 날짜들 배열
     planDates() {
-      return Object.keys(this.groupedAttractions); // groupedAttractions 객체의 키들을 반환
+      const dateArray = [];
+      const start = new Date(this.plan.startDay);
+      const end = new Date(this.plan.endDay);
+
+      // 날짜를 하루씩 증가시면서 추가
+      for (let date = start; date <= end; date.setDate(date.getDate() + 1)) {
+        const dateString = date.toISOString().split('T')[0];
+        dateArray.push(dateString);
+      }
+      console.log(dateArray);
+      return dateArray;
     },
   },
   methods: {
     gotoUpdate() {
-      this.$router.push('/plan/update/' + this.planId);
+      this.$router.push('/plan/update/' + this.plan.planId);
     },
     //날짜 출력 형식을 변경하기
     formatDate(selectDate) {
@@ -112,19 +123,8 @@ export default {
       const day = dateParts[2];
       return `${year}.${month}.${day}`;
     },
-    handleAttractionDragged(evt) {
-      // 드래그 앤 드롭 이벤트 핸들러
-      console.log(evt);
-      this.setGroupedAttractions();
-    },
-    //TODO: 드래그 시 시퀀스 변경(자동으로 해주면 업데이트 시 그대로 db에 저장하면 될듯)
-    //TODO: 드래그를 두 그룹 사이를 넘나들도록(예제 찾아보기)
     setGroupedAttractions() {
-      //   const sortedAttractions = [...this.attractions].sort((a, b) => {
-      //     return a.sequence - b.sequence;
-      //   });
-      //   const groupedAttractions = sortedAttractions.reduce((groups, attraction) => {
-      const groupedAttractions = this.attractions.reduce((groups, attraction) => {
+      this.groupedAttractions = this.plan.planAttractions.reduce((groups, attraction) => {
         const { planDate } = attraction;
 
         if (!groups[planDate]) {
@@ -134,9 +134,6 @@ export default {
         groups[planDate].push(attraction);
         return groups;
       }, {});
-      console.dir(groupedAttractions);
-      this.groupedAttractions = groupedAttractions;
-      this.groupedAttractionsArray = Object.values(this.groupedAttractions);
     },
   },
   async created() {
@@ -144,8 +141,6 @@ export default {
     await axios.get('http://localhost/plan/' + this.plan.planId).then((response) => {
       this.plan = response.data;
     });
-    console.dir(this.attractions);
-    this.attractions = this.plan.planAttractions;
     this.setGroupedAttractions();
   },
 };
@@ -210,7 +205,7 @@ export default {
 
 .main {
   margin-top: 10px;
-  height: 630px;
+  height: 90%;
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-items: stretch;
@@ -219,7 +214,7 @@ export default {
 
 .map-area {
   padding: 0 10px;
-  max-height: 630px;
+  max-height: 730px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -228,7 +223,7 @@ export default {
 
 .sequence-area {
   padding: 0 10px;
-  max-height: 630px;
+  max-height: 730px;
 }
 
 .date-slide {
@@ -255,5 +250,31 @@ export default {
 }
 .day-info {
   display: flex;
+}
+
+/* swiper */
+.date-swiper,
+.swiper-container {
+  width: 100%;
+  height: 100%;
+}
+
+.date-swiper .swiper-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  margin: 20px 0 20px 0;
+  overflow: auto;
+  white-space: nowrap;
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  display: none;
+}
+
+.date-swiper-item {
+  width: 30px !important;
 }
 </style>

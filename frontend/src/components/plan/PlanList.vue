@@ -1,10 +1,19 @@
 <template>
   <div class="plan-container">
     <div class="plan-modal" v-if="isModalOpen">
-      <attraction-search-modal
+      <plan-create-modal
+        @setModal="setModal"
+        v-if="openedModal === 'create' && isModalOpen === true"
+      ></plan-create-modal>
+      <plan-update-modal
+        @setModal="setModal"
+        :planId="focusedPlanId"
+        v-if="openedModal === 'update' && isModalOpen === true"
+      ></plan-update-modal>
+      <!-- <attraction-search-modal
         @setModal="setModal"
         @addAttraction="addAttraction"
-      ></attraction-search-modal>
+      ></attraction-search-modal> -->
     </div>
     <div class="left-aside"></div>
     <div>
@@ -21,6 +30,7 @@
           v-for="plan in plans"
           :key="plan.planId"
           :planId="plan.planId"
+          @updateModalOpen="updateModalOpen"
         ></plan-list-item>
       </div>
       <div class="pagination"></div>
@@ -31,19 +41,23 @@
 
 <script>
 import PlanListItem from './plan_components/PlanListItem.vue';
-import AttractionSearchModal from '../AttractionSearchModal.vue';
+import PlanCreateModal from './plan_components/PlanCreateModal.vue';
+import PlanUpdateModal from './plan_components/PlanUpdateModal.vue';
 import axios from 'axios';
 
 export default {
   name: 'PlanList',
   components: {
     PlanListItem,
-    AttractionSearchModal,
+    PlanCreateModal,
+    PlanUpdateModal,
   },
   data() {
     return {
       plans: [],
       isModalOpen: false,
+      openedModal: '',
+      focusedPlanId: '',
       pageNo: 1,
       pageResult: {},
     };
@@ -52,9 +66,18 @@ export default {
     //모달 창 오픈 여부 변경
     setModal(value) {
       this.isModalOpen = value;
+      if (value === false) {
+        this.openedModal = '';
+        this.focusedPlanId = '';
+      }
     },
-    //TODO: (변경필요)모달열기
     createModalOpen() {
+      this.openedModal = 'create';
+      this.setModal(true);
+    },
+    updateModalOpen(planId) {
+      this.focusedPlanId = planId;
+      this.openedModal = 'update';
       this.setModal(true);
     },
     addAttraction(attraction) {
@@ -117,7 +140,7 @@ export default {
 }
 
 .main > * {
-  margin: 2%
+  margin: 2%;
 }
 
 .create-btn {

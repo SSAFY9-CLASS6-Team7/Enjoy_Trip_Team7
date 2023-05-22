@@ -73,25 +73,32 @@ public class PlanServiceImpl implements PlanService {
 		planMapper.insertPlanAttraction(planAttraction);
 	}
 	
+//	@Override
+//	public void updatePlanAttraction(PlanAttraction planAttraction) throws SQLException {
+//		int beforeSequence = planMapper.selectPlanAttraction(planAttraction.getPlanAttractionId()).getSequence();
+//		int afterSequence = planAttraction.getSequence();
+//		planMapper.updatePlanAttraction(planAttraction);
+//
+//		if(beforeSequence != afterSequence) {
+//			int planId = planAttraction.getPlanId();
+//			List<PlanAttraction> list = getPlan(planId).getPlanAttractions();
+//			for(int i=afterSequence; i<list.size(); i++) {
+//				PlanAttraction tempAttraction = list.get(i);
+//				if(planAttraction.equals(tempAttraction)) continue;
+//				else if(tempAttraction.getSequence() == afterSequence) {
+//					tempAttraction.setSequence(i+1);
+//				} else {
+//					tempAttraction.setSequence(i);
+//				}
+//				planMapper.updatePlanAttraction(tempAttraction);
+//			}
+//		}
+//	}
+
 	@Override
-	public void updatePlanAttraction(PlanAttraction planAttraction) throws SQLException {
-		int beforeSequence = planMapper.selectPlanAttraction(planAttraction.getPlanAttractionId()).getSequence();
-		int afterSequence = planAttraction.getSequence();
-		planMapper.updatePlanAttraction(planAttraction);
-		
-		if(beforeSequence != afterSequence) {
-			int planId = planAttraction.getPlanId();
-			List<PlanAttraction> list = getPlan(planId).getPlanAttractions();
-			for(int i=afterSequence; i<list.size(); i++) {
-				PlanAttraction tempAttraction = list.get(i);
-				if(planAttraction.equals(tempAttraction)) continue;
-				else if(tempAttraction.getSequence() == afterSequence) {
-					tempAttraction.setSequence(i+1);
-				} else {
-					tempAttraction.setSequence(i);
-				}
-				planMapper.updatePlanAttraction(tempAttraction);
-			}
+	public void updatePlanAttraction(List<PlanAttraction> planAttractions) throws SQLException {
+		for(PlanAttraction planAttraction : planAttractions) {
+			planMapper.updatePlanAttraction(planAttraction);
 		}
 	}
 

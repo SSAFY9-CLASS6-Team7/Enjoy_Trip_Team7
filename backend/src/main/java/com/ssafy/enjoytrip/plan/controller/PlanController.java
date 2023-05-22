@@ -78,11 +78,19 @@ public class PlanController {
 		planService.createPlanAttraction(planAttraction);
 	}
 	
-	@PostMapping("{planId}/attraction/{planAttractionId}")
-	public void updatePlanAttraction(@RequestBody PlanAttraction planAttraction, @PathVariable int planId, @PathVariable int planAttractionId) throws SQLException {
-		planAttraction.setPlanId(planId);
-		planAttraction.setPlanAttractionId(planAttractionId);
-		planService.updatePlanAttraction(planAttraction);
+//	@PostMapping("{planId}/attraction/{planAttractionId}")
+//	public void updatePlanAttraction(@RequestBody PlanAttraction planAttraction, @PathVariable int planId, @PathVariable int planAttractionId) throws SQLException {
+//		planAttraction.setPlanId(planId);
+//		planAttraction.setPlanAttractionId(planAttractionId);
+//		planService.updatePlanAttraction(planAttraction);
+//	}
+
+	@PutMapping("{planId}/attraction")
+	public void updatePlanAttraction(@RequestBody List<PlanAttraction> planAttractions, @PathVariable int planId) throws SQLException {
+		for(PlanAttraction planAttraction : planAttractions){
+			planAttraction.setPlanId(planId);
+		}
+		planService.updatePlanAttraction(planAttractions);
 	}
 	
 	@DeleteMapping("{planId}/attraction/{planAttractionId}")

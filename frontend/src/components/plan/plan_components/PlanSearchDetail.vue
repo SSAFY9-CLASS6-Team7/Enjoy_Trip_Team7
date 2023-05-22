@@ -1,5 +1,5 @@
 <template>
-<!-- 계획 관광지 검색 후 클릭하면 나오는 상세 정보 -->
+  <!-- 계획 관광지 검색 후 클릭하면 나오는 상세 정보 -->
   <div class="plan-search-item">
     <div class="title-and-btn">
       <div class="plan-attraction-title">{{ attraction.title }}</div>

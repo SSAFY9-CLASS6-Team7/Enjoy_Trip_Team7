@@ -1,8 +1,8 @@
 <template>
   <!-- 계획 세부 조회 각각의 관광지들 -->
-  <div class="plan-attraction-container">
+  <div class="plan-attraction-container" v-if="attractionId">
     <div class="number" v-bind:style="{ backgroundColor: categoryColorSet }">
-      {{ planAttraction.sequence }}
+      {{ index + 1 }}
     </div>
     <div class="att-info-area">
       <div class="attraction-title">{{ attraction.title }}</div>
@@ -17,7 +17,7 @@ import axios from 'axios';
 
 export default {
   name: 'PlanAttraction',
-  props: ['planAttraction'],
+  props: ['planAttraction', 'index'],
   data() {
     return {
       attraction: Object,
@@ -58,12 +58,14 @@ export default {
     },
     async loadData() {
       await axios
-        .get('http://localhost/attraction/' + this.attractionId)
+        .get('http://localhost/attraction/' + this.planAttraction.attractionId)
         .then((res) => (this.attraction = res.data));
     },
   },
   async created() {
-    await this.loadData();
+    if (typeof this.planAttraction.attractionId !== 'undefined') {
+      await this.loadData();
+    }
     this.setContentTypeSrc();
   },
 };
