@@ -6,7 +6,7 @@
 
     <!-- 로그인 유저 정보 확인 -->
     <select id="login" parameterType="User" resultType="User">
-        SELECT user_id userId, password, name, nickname, phone, email, gender, birth, profile_pic_path
+        SELECT user_id userId, password, name, nickname, phone, email, gender, birth, profile_pic_path profilePicPath
           FROM user
          WHERE user_id = #{userId}
            AND password = #{password}

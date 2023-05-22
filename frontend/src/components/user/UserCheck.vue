@@ -8,9 +8,9 @@
                 <div class="check-message" v-html="message"></div>
                 <div class="password-input-container">
                     <div class="inner-title">비밀번호 확인</div>
-                    <input type="password" class="password-input">
+                    <input type="password" class="password-input" v-model="password" @keyup.enter="findUserInfo">
                 </div>
-                <button class="submit">확인</button>
+                <button class="submit" @click="findUserInfo" >확인</button>
             </div>
       </div>
       <div class="right-aside"></div>
@@ -19,6 +19,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 export default {
     name: 'UserCheck',
     components: {},
@@ -26,7 +27,11 @@ export default {
         return {
             message: '회원정보 수정을 위해서 인증이 필요합니다. <br>비밀번호를 한번 더 입력해주세요.',
             showPassword: 'password',
+            password: '',
         };
+    },
+    computed: {
+      ...mapGetters('userStore', ['checkUserInfo']),
     },
     created() {},
     methods: {
@@ -37,7 +42,11 @@ export default {
         this.$router.push("/user/signup")
       },
       findUserInfo() {
-
+          if (this.password === this.checkUserInfo.password) {
+            this.$router.push("/user/modify");
+          }else {
+            alert("비밀번호가 맞지 않습니다.");
+          }
       }
     },
 };
