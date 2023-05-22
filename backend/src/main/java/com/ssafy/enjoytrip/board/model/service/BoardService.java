@@ -20,4 +20,6 @@ public interface BoardService {
     void deleteBoard(int boardId) throws SQLException;
 
     void updateHeart(Map<String, Object> paramMap) throws SQLException;
+
+    Map<String, Object> getIsImage(int boardId) throws SQLException;
 }

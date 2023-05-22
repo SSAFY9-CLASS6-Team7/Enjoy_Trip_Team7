@@ -145,6 +145,16 @@ public class BoardServiceImpl implements BoardService {
         boardMapper.updateBoard(board);
     }
 
+    @Override
+    public Map<String, Object> getIsImage(int boardId) throws SQLException {
+        Map<String, Integer> paramMap = new HashMap<>();
+        paramMap.put("type", TYPE);
+        paramMap.put("dataId", boardId);
+        Map<String, Object> result = new HashMap<>();
+        result.put("images", imageMapper.selectImage(paramMap).size() > 0);
+        return result;
+    }
+
     public void insertImages(int boardId, List<MultipartFile> files) throws IOException, SQLException {
         for (int i = 0; i < files.size(); i++) {
             String imagePath = saveFile(files.get(i), fileDir);

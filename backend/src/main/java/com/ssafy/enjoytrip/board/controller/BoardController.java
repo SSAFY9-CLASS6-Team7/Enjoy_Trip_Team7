@@ -33,6 +33,11 @@ public class BoardController {
         return boardService.getBoard(boardId);
     }
 
+    @GetMapping("/{boardId}/image")
+    public Map<String, Object> getIsImage(@PathVariable int boardId) throws SQLException{
+        return boardService.getIsImage(boardId);
+    }
+
     @PutMapping("/{boardId}")
     public void updateBoard(Board board, @PathVariable int boardId, List<MultipartFile> files) throws SQLException, IOException {
         board.setBoardId(boardId);

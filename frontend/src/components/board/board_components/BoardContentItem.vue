@@ -35,7 +35,7 @@ export default {
         return {
             message: '',
             comments: '',
-            images: '',
+            images: false,
             nickname: '',
         };
     },
@@ -84,8 +84,8 @@ export default {
             .then(response => this.comments = response.data.length);
         },
         fetchImages() {
-            axios.get(`http://localhost/board/${this.board.boardId}`)
-            .then(response => this.images = response.data.images.length);
+            axios.get(`http://localhost/board/${this.board.boardId}/image`)
+            .then(response => this.images = response.data.images);
         },
         boardView(){
             this.$router.push('/board/view/'+this.board.boardId);

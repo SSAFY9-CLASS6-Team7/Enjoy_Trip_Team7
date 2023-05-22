@@ -40,7 +40,6 @@
         <div class="heart">좋아요</div>
       </div>
 
-      <!-- child Component 영역 -->
       <board-content :boards='boards'></board-content>
 
       <board-pagination class="pagination" @pageChange="pageChanged" :pageResult="pageResult"></board-pagination>
