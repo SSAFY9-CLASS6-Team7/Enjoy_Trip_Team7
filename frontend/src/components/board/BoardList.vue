@@ -53,6 +53,7 @@
 import BoardContent from '@/components/board/board_components/BoardContent.vue'
 import BoardPagination from '@/components/board/board_components/BoardPagination.vue'
 import axios from 'axios'
+import { mapGetters } from 'vuex';
 
 export default {
   name : 'BoardList',
@@ -67,10 +68,10 @@ export default {
       pageResult: {},
     }
   },
+  computed: {
+      ...mapGetters('userStore', ['checkToken', 'checkUserInfo']),
+  },
   methods: {
-    writePage() {
-      this.$router.push("create");
-    },
     goSearch(){
       axios.get(`http://localhost/board?pageNo=1&code=${this.activeBoardTab}&condition=${this.selectedCondition}&anonymous=&keyword=${this.searchKeyword}`)
       .then(response => this.boards = response.data.boards)
@@ -91,7 +92,12 @@ export default {
       })
     },
     createBoard(){
-      this.$router.push("/board/create");
+      if (this.checkToken) {
+        this.$router.push("/board/create");
+      }else {
+        alert("로그인이 필요합니다!");
+        this.$router.push("/user/login");
+      }
     }
 
   },

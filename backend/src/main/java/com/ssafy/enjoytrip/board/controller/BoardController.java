@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
@@ -48,11 +49,6 @@ public class BoardController {
     public void createBoard(Board board, List<MultipartFile> files) throws SQLException, IOException {
         boardService.createBoard(board, files);
     }
-
-//    @PostMapping
-//    public void createBoard(@RequestBody Board board) throws SQLException, IOException {
-//        boardService.createBoard(board, null);
-//    }
 
     @PutMapping("/{boardId}/heart")
     public void updateHeart(@RequestBody Map<String, Object> paramMap) throws SQLException {

@@ -13,9 +13,10 @@
                 {{ board.title }}
                 <div v-if="comments > 0" class="comment-length">
                    [{{ comments }}]
-                </div>
             </div>
-            <div class="writer">{{ board.userId }} </div>
+            </div>
+            <div v-if="!board.anonymous" class="writer">{{ nickname }} </div>
+            <div v-if="board.anonymous" class="writer"> 익 명 </div>
             <div class="create-time">{{ formatCreateTime(board.createTime) }}</div>
             <div class="hits">{{ board.hits }}</div>
             <div class="heart">{{ board.heart }}</div>
@@ -35,6 +36,7 @@ export default {
             message: '',
             comments: '',
             images: '',
+            nickname: '',
         };
     },
     methods: {
@@ -71,6 +73,12 @@ export default {
             }
             return path;
         },
+        fetchUserInfo() {
+            axios.get(`http://localhost/user/${this.board.userId}`)
+            .then(response => {
+                this.nickname = response.data.userInfo.nickname;
+            });
+        },
         fetchComments() {
             axios.get(`http://localhost/board/${this.board.boardId}/comment`)
             .then(response => this.comments = response.data.length);
@@ -86,6 +94,7 @@ export default {
     created() {
         this.fetchComments();
         this.fetchImages();
+        this.fetchUserInfo();
     },
     watch: {
         board(){
@@ -150,6 +159,10 @@ export default {
     color: #1B1C37;
     font-family: 'S-CoreDream-3Light';
     font-weight: 600;
+}
+
+.board-title:hover {
+    cursor: pointer;
 }
 
 .writer {

@@ -11,7 +11,7 @@ public class Board {
     private String boardContent;
     private int heart;
     private int hits;
-    private String anonymous;
+    private boolean anonymous;
 
     private int boardId;
     private String userId;

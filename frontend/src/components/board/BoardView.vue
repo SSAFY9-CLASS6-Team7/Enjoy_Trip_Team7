@@ -1,5 +1,6 @@
 <template>
 <div class="container">
+    <delete-modal v-if="modal" @no="no" @modalOff="modalOff" @yes="yes" :link='this.deleteLink'></delete-modal>
     <div class="left-aside"></div>
         
     <div class="content-container">
@@ -12,14 +13,16 @@
         </div>
         <div class="header">
             <div class="header-left">
-                <img v-if="this.profile == ''" src="@/assets/header_icon/profile.svg" class="profile-image">
-                <img v-if="this.profile != ''" :src="this.profile" class="profile-image">
-                <div class="user-name">{{ board.userId }}</div>
+                <img v-if="this.profile == '' || this.board.anonymous" src="@/assets/header_icon/profile.svg" class="profile-image">
+                <img v-if="this.profile != '' && !this.board.anonymous" :src="this.profile" class="profile-image">
+                <div v-if="this.board.anonymous" class="user-name"> 익 명 </div>
+                <div v-if="!this.board.anonymous" class="user-name">{{ board.userId }}</div>
             </div>
             <div class="header-right">
                 <div class="buttons">
-                    <button class="modify-button"><img src="@/assets/common/modify_icon.svg" style="height: 20px"></button>
-                    <button class="delete-button"><img src="@/assets/common/x_icon.svg" style="width:14px"></button>
+                    <button class="list-button" @click="moveList">목록</button>
+                    <button v-if="this.checkToken && this.checkUserInfo.userId === this.board.userId" class="modify-button" @click='boardModify'><img src="@/assets/common/modify_icon.svg" style="height: 20px"></button>
+                    <button v-if="this.checkToken && this.checkUserInfo.userId === this.board.userId" class="delete-button" @click='boardDelete'><img src="@/assets/common/x_icon.svg" style="width:14px"></button>
                 </div>
                 <div class="board-createtime">
                     {{ formattedCreateTime }}
@@ -52,13 +55,13 @@
         <div class="devider"/>
 
         <div class="comment-input-container">
-            <textarea type="text" class="comment-input" :placeholder="this.commentPlaceholder" @keyup.enter="commentSubmit" v-model="commentInputValue"/>
+            <textarea type="text" class="comment-input" :placeholder="this.commentPlaceholder" @keyup.enter="commentSubmit" v-model="commentInputValue" />
             <button class="comment-submit" @click="commentSubmit">
                 <img class="comment-submit-button" src="@/assets/board_icons/comment-submit.svg">
             </button>
         </div>
         <div class="comments">
-            <board-comment v-for="comment in comments" :key='comment' :comment="comment"></board-comment>
+            <board-comment v-for="comment in comments" :key='comment' :comment="comment" :anonymous='commentAnonymous' :boardId='boardId' @commentDelete='commentDelete'></board-comment>
         </div>
     </div>
 
@@ -68,11 +71,13 @@
 </template>
 
 <script>
+import DeleteModal from './board_components/DeleteModal.vue';
 import BoardComment from '@/components/board/board_components/BoardComment.vue'
+import { mapGetters } from 'vuex';
 import axios from "axios";
 export default {
     name : 'BoardView',
-    components: { BoardComment },
+    components: { BoardComment, DeleteModal },
     data(){
         return {
             comments: [],
@@ -83,6 +88,10 @@ export default {
             commentPlaceholder: 
             `😁댓글은 자신을 나타내는 얼굴입니다. \n상처나 피해를 줄 수 있는 내용 또는 욕설/인격 모독성 내용이 포함된 경우에는 사전 고지 없이 댓글 삭제 및 제재 조치가 가해질 수 있습니다.`,
             commentInputValue: '',
+            commentAnonymous: '',
+            boardId: '',
+            modal: false,
+            deleteLink: '',
         }
     },
     computed:{
@@ -95,7 +104,8 @@ export default {
             const minutes = ('0' + date.getMinutes()).slice(-2);
 
             return `${year}/${month}/${day} ${hours}:${minutes}`;
-        }
+        },
+      ...mapGetters('userStore', ['checkToken', 'checkUserInfo']),
     },
     methods: {
         formatCategoryIcon(code){
@@ -117,22 +127,60 @@ export default {
         heartClick(){
             this.isHeart = !this.isHeart;
         },
-        commentSubmit(){
-            if (this.commentInputValue != ''){
-                console.log('댓글 전송!!!');
-                this.commentInputValue = '';
+        async commentSubmit(){
+            if (!this.checkToken) {
+                alert("로그인이 필요합니다.");
+                this.$router.push("/user/login");
+            }else {
+                if (this.commentInputValue != ''){
+                    let comment = {
+                        boardId: this.board.boardId,
+                        userId: this.checkUserInfo.userId,
+                        commentContent: this.commentInputValue,
+                        anonymous: this.board.anonymous
+                    }
+                    await axios.post(`http://localhost/board/${this.board.boardId}/comment`, comment);
+                    this.$router.go(0);
+                }
+            }
+        },
+        async commentDelete(link) {
+            this.deleteLink = link;
+            this.modal = true;
+        },
+        async boardDelete(){
+            this.deleteLink = 'http://localhost/board/'+this.board.boardId;
+            this.modal = true;
+        },
+        boardModify() {
+            this.$router.push('/board/update/'+this.board.boardId);
+        },
+        moveList() {
+            this.$router.push("/board");
+        },
+        modalOff() {
+            this.modal = false;
+        },
+        async yes(myLink) {
+            if (myLink.includes("comment")) {
+                await axios.delete(myLink);
+                this.$router.go(0);
+            } else {
+                await axios.delete(myLink);
+                this.$router.push("/board");
             }
         }
     },
-    created(){
-        this.board.boardId = this.$route.params.boardId;
-        axios.get("http://localhost/board/"+ this.board.boardId)
+    async created(){
+        await axios.get("http://localhost/board/"+ this.$route.params.boardId)
         .then(response =>{
-            this.board = response.data.board        
+            this.board = response.data.board;
+            this.commentAnonymous = this.board.anonymous;
+            this.boardId = response.data.board.boardId;
         } );
-        axios.get("http://localhost/board/"+ this.board.boardId +"/comment")
+
+        await axios.get("http://localhost/board/"+ this.board.boardId +"/comment")
         .then(response =>{
-            console.log(response.data);
             this.comments = response.data;
         } );
     }
@@ -218,6 +266,17 @@ export default {
     display: flex;
     align-items: center;
     margin: 5px 0 7px 0;    
+}
+
+.list-button {
+    border: none;
+    border-radius: 5px;
+    margin: 0px 20px 0px 0;
+    padding: 2px 7px 2px 7px;
+    background: #d6d6d6;
+    font-size: 16px;
+    font-family: 'S-CoreDream-3Light';
+    font-weight: 600;
 }
 
 .modify-button {
@@ -342,5 +401,8 @@ export default {
     margin: 1px 5px 0 5px;
 }
 
+.comments {
+    position: relative;
+}
 
 </style>

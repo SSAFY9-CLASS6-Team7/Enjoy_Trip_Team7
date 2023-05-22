@@ -8,7 +8,8 @@
             </div>
             <div class="comment-content"> 
                 <div class="comment-user">
-                    <div class="comment-user-id">{{ comment.userId }}</div>
+                    <div v-if="this.anonymous" class="comment-user-id">익 명</div>
+                    <div v-if="!this.anonymous" class="comment-user-id">{{ comment.userId }}</div>
                     <div class="comment-createtime">{{ formattedCreateTime(comment.createTime) }}</div>
                 </div>
                 <div class="comment-value" v-html="formatCommentContent(comment.commentContent)"> </div>
@@ -18,7 +19,7 @@
                     <img src="@/assets/board_icons/report.svg" class="report-image">
                     신고
                 </button>
-                <button v-if="checkUser(comment.userId)" class="comment-delete"><img src="@/assets/common/x_icon.svg" style="width: 8px"></button>
+                <button v-if="checkUser(comment.userId)" class="comment-delete" @click="commentDelete"><img src="@/assets/common/x_icon.svg" style="width: 8px"></button>
             </div>
         </div>
     </div>
@@ -30,7 +31,7 @@ import { mapGetters } from 'vuex';
 
 export default {
     name: 'BoardComment',
-    props: ['comment'],
+    props: ['comment', 'anonymous', 'boardId'],
     components: {},
     computed: {
         ...mapGetters('userStore', ['checkToken', 'checkUserInfo']),
@@ -61,7 +62,10 @@ export default {
                 return this.checkUserInfo.userId === userId;
             }
             return false;
-        }
+        },
+        commentDelete(){
+            this.$emit('commentDelete', "http://localhost/board/"+ this.boardId +"/comment/" + this.comment.commentId);    
+        },
     },
 };
 </script>

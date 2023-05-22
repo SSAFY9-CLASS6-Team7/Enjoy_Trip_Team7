@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 public class JWTUtils {
 
     private final UserServiceImpl userService;
-    private static final String SALT = "team7secretKey";
+    private static final String SALT = "teamsecretKey";
 
     public String createAccessToken(String userId) {
         LocalDateTime currentTime = LocalDateTime.now();
@@ -56,19 +56,9 @@ public class JWTUtils {
                 .setSubject(subject) // 구분자 설정 : access-token || refresh-token
                 .setExpiration(date) // 만료일 설정 (유효기간)
                 .claim("userId", userId)
-                .signWith(SignatureAlgorithm.HS256, this.generateKey()) // Signature 설정 : secret key를 활용한 암호화.
+                .signWith(SignatureAlgorithm.HS256, SALT) // Signature 설정 : secret key를 활용한 암호화.
                 .compact(); // 직렬화
         return jwt;
-    }
-    // Signature 설정에 들어갈 key 생성.
-    private byte[] generateKey() {
-        byte[] key = null;
-        try {
-            key = SALT.getBytes("UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return key;
     }
 
     public Map<String, Object> get(String jwt) {
@@ -76,6 +66,7 @@ public class JWTUtils {
         try {
             claims = Jwts.parser().setSigningKey(SALT).parseClaimsJws(jwt);
         } catch (Exception e) {
+            e.printStackTrace();
             log.error(e.getMessage());
             throw new UnAuthorizedException("회원 ID 획득에 실패하였습니다.");
         }
@@ -103,7 +94,10 @@ public class JWTUtils {
 
     public boolean checkToken(String jwt) {
         try {
-            Jws<Claims> claims = Jwts.parser().setSigningKey(this.generateKey()).parseClaimsJws(jwt);
+            log.info("access token {}", jwt);
+            String userId = getUserId(jwt);
+            log.info("user ID {}", userId);
+            Jws<Claims> claims = Jwts.parser().setSigningKey(SALT).parseClaimsJws(jwt);
             Date expiration = claims.getBody().getExpiration();
             return new Date(System.currentTimeMillis()).before(expiration);
         } catch (Exception e) {
