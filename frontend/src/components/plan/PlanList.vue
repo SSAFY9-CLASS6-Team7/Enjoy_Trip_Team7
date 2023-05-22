@@ -37,7 +37,11 @@
           @setNeedToUpdate="setNeedToUpdate"
         ></plan-list-item>
       </div>
-      <div class="pagination"></div>
+      <plan-pagination
+        class="pagination"
+        :pageResult="pageResult"
+        @pageChange="pageChange"
+      ></plan-pagination>
     </div>
     <div class="right-aside"></div>
   </div>
@@ -47,6 +51,7 @@
 import PlanListItem from './plan_components/PlanListItem.vue';
 import PlanCreateModal from './plan_components/PlanCreateModal.vue';
 import PlanUpdateModal from './plan_components/PlanUpdateModal.vue';
+import PlanPagination from './plan_components/PlanPagination.vue';
 import axios from 'axios';
 
 export default {
@@ -55,6 +60,7 @@ export default {
     PlanListItem,
     PlanCreateModal,
     PlanUpdateModal,
+    PlanPagination,
   },
   data() {
     return {
@@ -99,6 +105,10 @@ export default {
     },
     addAttraction(attraction) {
       console.log('---관광지 정보 넘어옴 : ' + attraction.title);
+    },
+    async pageChange(clickedPage) {
+      this.pageNo = clickedPage;
+      await this.loadPlans();
     },
     loadPlans() {
       axios.get(`http://localhost/plan?pageNo=${this.pageNo}`).then((response) => {
@@ -184,7 +194,6 @@ export default {
 .pagination {
   grid-area: page;
   min-height: 60px;
-  border: #fcaf45 1px solid;
 }
 
 button {

@@ -1,11 +1,5 @@
 <template>
   <div class="plan-view-container">
-    <div class="plan-modal" v-if="isModalOpen">
-      <attraction-search-modal
-        @setModal="setModal"
-        @addAttraction="addAttraction"
-      ></attraction-search-modal>
-    </div>
     <div class="left-aside"></div>
     <div class="main-area">
       <div class="inner-header">
@@ -21,12 +15,17 @@
         <div class="sequence-area">
           <div class="date-slide">
             <div class="date-swiper" v-if="this.planDates.length !== 0">
-              <swiper :options="swiperOption">
+              <swiper :options="swiperOption" @transitionEnd="updateFocusInfo">
                 <div class="swiper-button-prev img-prev" slot="button-prev">
                   <img src="@/assets/left.svg" width="40px" height="40px" />
                 </div>
-                <swiper-slide class="date-swiper-item" v-for="(date, i) in planDates" :key="i">
-                  day{{ i + 1 }}
+                <swiper-slide
+                  class="date-swiper-item"
+                  v-for="(date, i) in planDates"
+                  :class="{ 'swiper-slide-active': focused === i - 1 }"
+                  :key="i"
+                >
+                  <div class="date">day{{ i + 1 }}</div>
                 </swiper-slide>
                 <div class="swiper-button-next img-next" slot="button-next">
                   <img src="@/assets/right.svg" width="40px" height="40px" style="right: 30px" />
@@ -36,7 +35,7 @@
           </div>
           <div class="attraction-slide-area">
             <div class="attraction-slide" v-for="(date, i) in planDates" :key="i">
-              <div class="plan-attractions-by-date-container">
+              <div class="plan-attractions-by-date-container" ref="attractionsPerDate">
                 <div class="day-info">
                   <h4>day{{ i + 1 }} &nbsp;</h4>
                   | &nbsp; {{ formatDate(date) }}
@@ -60,7 +59,6 @@
   </div>
 </template>
 <script>
-import AttractionSearchModal from '../AttractionSearchModal.vue';
 import PlanAttraction from './plan_components/PlanAttraction.vue';
 import axios from 'axios';
 import { Swiper, SwiperSlide } from 'vue-awesome-swiper';
@@ -69,7 +67,6 @@ import 'swiper/css/swiper.css';
 export default {
   name: 'PlanView',
   components: {
-    AttractionSearchModal,
     PlanAttraction,
     Swiper,
     SwiperSlide,
@@ -78,11 +75,11 @@ export default {
     return {
       plan: Object,
       groupedAttractions: Object, //key로 접근 가능
-      isModalOpen: false,
+      focused: 1,
       //스와이프 관련 설정
       swiperOption: {
-        slidesPerView: 5,
-        spaceBetween: 70,
+        slidesPerView: 8,
+        spaceBetween: 30,
         direction: 'horizontal',
         pagination: {
           el: '.swiper-pagination',
@@ -92,6 +89,9 @@ export default {
           nextEl: '.img-next',
           prevEl: '.img-prev',
         },
+        slideToClickedSlide: true,
+        slidesOffsetBefore: 10,
+        slidesOffsetAfter: 700,
       },
     };
   },
@@ -102,13 +102,19 @@ export default {
       const start = new Date(this.plan.startDay);
       const end = new Date(this.plan.endDay);
 
-      // 날짜를 하루씩 증가시면서 추가
+      // 날짜를 하루씩 증가시키면서 추가
       for (let date = start; date <= end; date.setDate(date.getDate() + 1)) {
         const dateString = date.toISOString().split('T')[0];
         dateArray.push(dateString);
       }
-      console.log(dateArray);
       return dateArray;
+    },
+  },
+  watch: {
+    focused() {
+      this.$nextTick(() => {
+        this.scrollToFocused();
+      });
     },
   },
   methods: {
@@ -134,6 +140,16 @@ export default {
         groups[planDate].push(attraction);
         return groups;
       }, {});
+    },
+    updateFocusInfo() {
+      this.$nextTick(() => {
+        const activeElement = document.querySelector('.swiper-slide-active');
+        const date = parseInt(activeElement.childNodes[0].innerText.replace('day', ''));
+        this.focused = date;
+      });
+    },
+    scrollToFocused() {
+      this.$refs.attractionsPerDate[this.focused - 1].scrollIntoView({ behavior: 'smooth' });
     },
   },
   async created() {
@@ -229,8 +245,9 @@ export default {
 .date-slide {
   width: 100%;
   height: 5%;
-  margin-bottom: 10px;
-  background-color: #fcaf45;
+  display: flex;
+  justify-content: center;
+  margin: 15px 0;
 }
 .attraction-slide-area {
   height: 90%;
@@ -258,17 +275,15 @@ export default {
   width: 100%;
   height: 100%;
   max-width: 640px;
-  display: flex;
-  align-items: center;
-  padding: 0 10px;
 }
 
 .date-swiper .swiper-wrapper {
   width: 100%;
-  height: 100%;
+  height: 0% !important;
   display: flex;
+  align-items: center;
+  justify-content: flex-start;
   flex-direction: row;
-
   margin: 20px 0 20px 0;
   overflow: hidden;
   white-space: nowrap;
@@ -279,8 +294,29 @@ export default {
   display: none;
 }
 
+.swiper-button-prev {
+  left: 0;
+}
+
+.swiper-button-next {
+  right: 0;
+}
+
 .date-swiper-item {
   width: 30px !important;
-  padding: 0 20px;
+  height: auto;
+  padding: 0 33px;
+  margin: 0;
+  color: #b7b7b7;
+  font-size: 18px;
+}
+
+.swiper-slide-active {
+  font-weight: 700;
+  color: black;
+}
+
+.date {
+  cursor: pointer;
 }
 </style>
