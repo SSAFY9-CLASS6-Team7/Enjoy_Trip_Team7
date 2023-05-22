@@ -36,9 +36,14 @@
           <router-link to="/board">게시판</router-link>
         </div>
       </div>
-      <div class="user-area" @click="setActiveMenuItem('-1')">
+      <div v-if="!checkToken" class="user-area" @click="setActiveMenuItem('-1')">
         <img class="profile-img" src="../assets/header_icon/profile.svg" />
         <router-link to="/user/login">로그인</router-link>
+      </div>
+
+      <div v-if="checkToken" class="user-area" @click="profileClick" >
+        <img class="profile-img" src="../assets/header_icon/profile.svg" />
+        <div>{{ checkUserInfo.nickname }}</div>
       </div>
 
       <button class="menu-open" @click="openRightMenu">
@@ -76,6 +81,10 @@ export default {
     openRightMenu() {
       this.$emit('openRightMenu')
     },
+    profileClick() {
+      this.setActiveMenuItem('-1');
+      this.openRightMenu();
+  },
   },
 };
 </script>
@@ -156,9 +165,14 @@ export default {
   align-items: center;
 }
 
+.user-area:hover {
+  cursor: pointer;
+}
+
 .profile-img {
   background-color: #e8e8e8;
   border-radius: 22px;
+  margin:0 10px 0 0;
 }
 
 a {

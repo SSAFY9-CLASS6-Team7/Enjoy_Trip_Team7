@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-// import createPersistedState from "vuex-persistedstate";
+import createPersistedState from "vuex-persistedstate";
 
 import userStore from "@/store/modules/userStore";
 
@@ -8,7 +8,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    activeMenuItem: localStorage.getItem('activeMenuItem') || '',
+    activeMenuItem: sessionStorage.getItem('activeMenuItem') || '',
     sidoCode: [
       { code: '1', text: '서울' },
       { code: '2', text: '인천' },
@@ -54,9 +54,9 @@ export default new Vuex.Store({
   modules: {
     userStore,
   },
-  // plugins: [
-  //   createPersistedState({
-  //     storage: sessionStorage,
-  //   })
-  // ]
+  plugins: [
+    createPersistedState({
+      storage: sessionStorage,
+    })
+  ]
 });

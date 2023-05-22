@@ -13,10 +13,8 @@
                 </button>
                 <img src="@/assets/header_icon/profile.svg" class='profile'>
                 <div class="id-email-container">
-                    <!-- <div class="id">{{ checkUserInfo.nickname }}</div>
-                    <div class="email">{{ checkUserInfo.email }}</div> -->
-                    <div class="id"> 아니 왜이래 </div>
-                    <div class="email"> 아니 뭔데 ? </div>
+                    <div class="id">{{ checkUserInfo.nickname }}</div>
+                    <div class="email">{{ checkUserInfo.email }}</div>
                 </div>
             </div>
         </div>

@@ -25,7 +25,6 @@ const userStore = {
       state.isValidToken = isValidToken;
     },
     SET_USER_INFO: (state, userInfo) => {
-      state.isLogin = true;
       state.userInfo = userInfo;
     },
   },
@@ -37,8 +36,8 @@ const userStore = {
           if (data.message === "success") {
             let accessToken = data["access-token"];
             let refreshToken = data["refresh-token"];
-            commit("SET_USER_INFO", data.loginUser);
             commit("SET_IS_LOGIN", true);
+            commit("SET_USER_INFO", data.loginUser);
             commit("SET_IS_VALID_TOKEN", true);
             sessionStorage.setItem("access-token", accessToken);
             sessionStorage.setItem("refresh-token", refreshToken);
@@ -87,9 +86,12 @@ const userStore = {
       );
     },
     userLogout({ commit }) {
-      commit("SET_IS_LOGIN", false);
+      sessionStorage.removeItem("access-token");
+      sessionStorage.removeItem("refresh-token");
       commit("SET_USER_INFO", null);
+      commit("SET_IS_LOGIN", false);
       commit("SET_IS_VALID_TOKEN", false);
+
     },
   },
 };

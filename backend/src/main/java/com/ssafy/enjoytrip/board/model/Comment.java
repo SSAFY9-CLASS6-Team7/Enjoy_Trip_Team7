@@ -10,5 +10,5 @@ public class Comment {
     private String commentContent;
     private String createTime;
     private int heart;
-    private String anonymous;
+    private boolean anonymous;
 }
