@@ -122,7 +122,8 @@ export default {
       f.append('boardContent', this.content);
       console.log(this.anonymous);
       f.append('anonymous', this.anonymous);
-      
+      f.append('files', this.selectedFiles);
+
       await axios.put('http://localhost/board/'+this.boardId, f);
       this.$router.push("/board");
     },

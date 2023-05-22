@@ -123,6 +123,7 @@ public class BoardServiceImpl implements BoardService {
         boardMapper.insertBoard(board);
 
         int dataId = board.getBoardId();
+        log.info("files {}", files);
         if (files != null) {
             insertImages(dataId, files);
         }
@@ -151,14 +152,13 @@ public class BoardServiceImpl implements BoardService {
         paramMap.put("type", TYPE);
         paramMap.put("dataId", boardId);
         Map<String, Object> result = new HashMap<>();
-        result.put("images", imageMapper.selectImage(paramMap).size() > 0);
+        result.put("images", imageMapper.selectImage(paramMap));
         return result;
     }
 
     public void insertImages(int boardId, List<MultipartFile> files) throws IOException, SQLException {
         for (int i = 0; i < files.size(); i++) {
             String imagePath = saveFile(files.get(i), fileDir);
-
             Image image = new Image();
             image.setDataId(boardId);
             image.setImagePath(imagePath);

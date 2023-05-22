@@ -18,7 +18,7 @@ public class ImageUtils {
 
     public static void deleteImageFile(List<Image> imagesForDelete) {
         for (Image image : imagesForDelete) {
-            File file = new File(image.getImagePath());
+            File file = new File("C:/enjoytrip_image/images/" + image.getImagePath());
 
             if (file.exists()) file.delete();
         }
