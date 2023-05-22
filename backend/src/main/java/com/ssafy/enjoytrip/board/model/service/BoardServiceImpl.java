@@ -48,7 +48,7 @@ public class BoardServiceImpl implements BoardService {
 
         Map<String, Object> result = new HashMap<>();
 
-        int totalCount = boardMapper.selectBoardCount(String.valueOf(paramMap.get("keyword")));
+        int totalCount = boardMapper.selectBoardCount(paramMap);
         PageResult pageResult = new PageResult(pageNo, totalCount);
         result.put("boards",  boardMapper.selectBoard(paramMap));
         result.put("pageResult", pageResult);
@@ -153,6 +153,16 @@ public class BoardServiceImpl implements BoardService {
         paramMap.put("dataId", boardId);
         Map<String, Object> result = new HashMap<>();
         result.put("images", imageMapper.selectImage(paramMap));
+        return result;
+    }
+
+    @Override
+    public Map<String, Object> getHeart(String boardId, String userId) throws SQLException {
+        Map<String, Object> result = new HashMap<>();
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("boardId", boardId);
+        paramMap.put("userId", userId);
+        result.put("isHeart", boardMapper.selectHeartFlag(paramMap));
         return result;
     }
 

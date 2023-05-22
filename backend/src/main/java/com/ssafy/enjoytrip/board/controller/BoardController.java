@@ -59,4 +59,9 @@ public class BoardController {
     public void updateHeart(@RequestBody Map<String, Object> paramMap) throws SQLException {
         boardService.updateHeart(paramMap);
     }
+
+    @GetMapping("/{boardId}/heart/{userId}")
+    public Map<String, Object> getHeart(@PathVariable String boardId, @PathVariable String userId) throws SQLException {
+        return boardService.getHeart(boardId, userId);
+    }
 }

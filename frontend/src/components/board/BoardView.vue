@@ -1,6 +1,7 @@
 <template>
 <div class="container">
     <delete-modal v-if="modal" @no="no" @modalOff="modalOff" @yes="yes" :link='this.deleteLink'></delete-modal>
+    <image-modal v-if="imageDetail != ''" @imageOff="imageOff" :imagePath="this.imageDetail"></image-modal>
     <div class="left-aside"></div>
         
     <div class="content-container">
@@ -35,8 +36,15 @@
             <div class="board-content-value" v-html="formatBoardContent(board.boardContent)">
             </div>
             <div v-if="images.length > 0" class="board-images">
-                <h3>사진 스와이퍼 영역</h3>
+                <swiper :options="swiperOption3">
+                    <swiper-slide class="image-swiper-item" v-for="image in images" :key="image">
+                        <div class="card">
+                            <img :src="`http://localhost/imagePath/${image.imagePath}`" style="border-radius: 10px; height: 150px;" @click="detail(image)"/>
+                        </div>
+                    </swiper-slide>
+                </swiper>
             </div>
+
             <div v-if="board.attracionId > 0" class="attraction-embedded"> 
                 <h3>관광지 임베딩 영역</h3>
             </div>
@@ -72,12 +80,16 @@
 
 <script>
 import DeleteModal from './board_components/DeleteModal.vue';
+import ImageModal from './board_components/ImageModal.vue';
 import BoardComment from '@/components/board/board_components/BoardComment.vue'
 import { mapGetters } from 'vuex';
 import axios from "axios";
+import { Swiper, SwiperSlide } from "vue-awesome-swiper";
+import "swiper/css/swiper.css"; // swiper CSS 파일 import
+
 export default {
     name : 'BoardView',
-    components: { BoardComment, DeleteModal },
+    components: { BoardComment, DeleteModal, Swiper, SwiperSlide, ImageModal },
     data(){
         return {
             comments: [],
@@ -91,7 +103,17 @@ export default {
             commentAnonymous: '',
             boardId: '',
             modal: false,
+            imageDetail: '',
             deleteLink: '',
+            swiperOption3: {
+                slidesPerView: 8,
+                spaceBetween: 2,
+                direction: 'horizontal',
+                pagination: {
+                    el: ".swiper-pagination",
+                    clickable: true
+                },
+            },
         }
     },
     computed:{
@@ -124,8 +146,16 @@ export default {
         formatBoardContent(content) {
             return content.replace(/\n/g, '<br>');
         },
-        heartClick(){
+        async heartClick(){
+            let f = {
+                boardId: this.board.boardId,
+                userId: this.checkUserInfo.userId,
+                heart: this.board.heart
+            }
+
+            await axios.put(`http://localhost/board/${this.board.boardId}/heart`, f);
             this.isHeart = !this.isHeart;
+            this.$router.go(0);
         },
         async commentSubmit(){
             if (!this.checkToken) {
@@ -169,20 +199,35 @@ export default {
                 await axios.delete(myLink);
                 this.$router.push("/board");
             }
+        },
+        detail(image){
+            this.imageDetail = image.imagePath;
+        },
+        imageOff(){
+            this.imageDetail = '';
         }
     },
     async created(){
         await axios.get("http://localhost/board/"+ this.$route.params.boardId)
         .then(response =>{
             this.board = response.data.board;
+            this.images = response.data.images;
             this.commentAnonymous = this.board.anonymous;
             this.boardId = response.data.board.boardId;
+            
         } );
 
         await axios.get("http://localhost/board/"+ this.board.boardId +"/comment")
         .then(response =>{
             this.comments = response.data;
         } );
+
+        if (this.checkToken) {
+            await axios.get(`http://localhost/board/${this.board.boardId}/heart/${this.checkUserInfo.userId}`)
+            .then(response => {
+                this.isHeart = response.data.isHeart;
+            })
+        }
     }
 }
 </script>
@@ -321,6 +366,53 @@ export default {
     min-height: 250px;
     display: flex;
     flex-direction: column;
+    position: relative;
+}
+
+.board-images {
+    position: absolute;
+    width: 80%;
+    margin: 0 10% 0 10%;
+    height: 150px;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+}
+
+.card {
+  height: 150px;
+  border-radius: 10px;
+  display: inline-block;
+  margin: 0 10px 0 0;
+  overflow: visible; 
+}
+
+.card:hover {
+    cursor: pointer;
+}
+
+.swiper-wrapper{
+    
+    width: 100%;
+}
+
+.swiper-container {
+    margin: 0 0 0 0;
+    padding: 10px 0 10px 0;
+    width: 100%;
+    height: 170px;
+}
+
+.image-swiper-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 20px 0 20px;
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  display: none;
 }
 
 .heart-container {

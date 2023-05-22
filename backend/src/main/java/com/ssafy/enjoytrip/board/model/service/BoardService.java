@@ -22,4 +22,6 @@ public interface BoardService {
     void updateHeart(Map<String, Object> paramMap) throws SQLException;
 
     Map<String, Object> getIsImage(int boardId) throws SQLException;
+
+    Map<String, Object> getHeart(String boardId, String userId) throws SQLException;
 }
