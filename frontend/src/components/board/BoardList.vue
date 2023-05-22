@@ -77,6 +77,7 @@ export default {
       axios.get(`http://localhost/board?pageNo=1&code=${this.activeBoardTab}&condition=${this.selectedCondition}&anonymous=&keyword=${this.searchKeyword}`)
       .then(response => {
         this.boards = response.data.boards
+        this.pageResult = response.data.pageResult;
         this.pageResult.pageNo = 1;
         this.pageNo = 1;
         this.pageNoChange(1);
@@ -86,6 +87,7 @@ export default {
       axios.get(`http://localhost/board?pageNo=1&code=${code}&condition=${this.selectedCondition}&anonymous=&keyword=${this.searchKeyword}`)
       .then(response => {
         this.boards = response.data.boards
+        this.pageResult = response.data.pageResult;
         this.activeBoardTab = code;
         this.pageResult.pageNo = 1;
         this.pageNo = 1;
@@ -122,6 +124,11 @@ export default {
     .then(response => {
       this.boards = response.data.boards;
       this.pageResult = response.data.pageResult;
+      if (this.pageResult.pageNo > this.pageResult.lastPage) {
+        this.pageResult.pageNo = this.pageResult.lastPage;
+        this.pageNoChange(this.pageResult.pageNo);
+        this.pageChanged(this.pageResult.lastPage);
+        }
       }
     );
   }

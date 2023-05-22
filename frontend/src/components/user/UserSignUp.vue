@@ -29,11 +29,11 @@
             <div class="password-check-result" :class="{ 'result-success': passwordFlag === true, 'result-fail': passwordFlag === false }"> {{passwordCheckResult}} </div>
 
             <div class="inner-title">이름</div>
-            <input type="text" class="name-input">
+            <input type="text" class="name-input" v-model="username">
             
 
             <div class="inner-title">별명</div>
-            <input type="text" class="nickname-input">
+            <input type="text" class="nickname-input" v-model="nickname">
             
             <div class="inner-title">휴대폰 번호</div>
             <div class="phone-input-container">
@@ -43,23 +43,23 @@
             </div>
 
             <div class="inner-title">생년월일</div>
-            <input type="date" class="birth-input">
+            <input type="date" class="birth-input" v-model="birth">
             
 
             <div class="inner-title">성별</div>
             <div class="gender-input-container">
                 <div class="male-container">
-                    <input id="male" type="radio" class="gender-input" name="gender" value="male" v-model="gender" hidden>
-                    <label class="gender-radio" for="male" :class="{'male-selected' : gender == 'male'}">남 자</label>
+                    <input id="male" type="radio" class="gender-input" name="gender" value="M" v-model="gender" hidden>
+                    <label class="gender-radio" for="male" :class="{'male-selected' : gender == 'M'}">남 자</label>
                 </div>
                 <div class="female-container">
-                    <input id="female" type="radio" class="gender-input" name="gender" value="female" v-model="gender" hidden>
-                    <label class="gender-radio" for="female" :class="{'female-selected' : gender == 'female'}">여 자</label>
+                    <input id="female" type="radio" class="gender-input" name="gender" value="F" v-model="gender" hidden>
+                    <label class="gender-radio" for="female" :class="{'female-selected' : gender == 'F'}">여 자</label>
                 </div>
             </div>
 
             <div class="inner-title">이메일</div>
-            <input type="email" class="email-input">
+            <input type="email" class="email-input" v-model="email">
             
             <div class="sign-up-container">
                 <button class="sign-up" @click="signUp">회원가입</button>
@@ -71,6 +71,8 @@
 
 <script>
 import SignUpModal from './user_components/SignUpModal.vue';
+import axios from 'axios';
+
 export default {
     name: 'UserSignUp',
     components: {SignUpModal },
@@ -87,6 +89,10 @@ export default {
             phone1: '',
             phone2: '',
             phone3: '',
+            email: '',
+            birth: '',
+            username: '',
+            nickname: '',
             modal: false,
         };
     },
@@ -111,18 +117,18 @@ export default {
                 if (!alphanumericRegex.test(this.id)) {
                     this.idFlag = false;
                     this.idCheckResult = '아이디는 영어와 숫자의 조합이어야 합니다.';
-                }
-                else {
+                } else {
                     // 중복 체크 로직
-                    // this.idFlag = false;
-                    // this.idCheckResult = '중복된 아이디가 있습니다.';
-                    this.idFlag = true;
-                    this.idCheckResult = '사용할 수 있는 아이디입니다.';
-                    
-                    // else {
-                    //     this.idFlag = true;
-                    //     this.idCheckResult = '사용할 수 있는 아이디입니다.';
-                    // }
+                    axios.get('http://localhost/user/'+this.id)
+                    .then(response => {
+                        if (response.data.message == 'success') {
+                            this.idFlag = false;
+                            this.idCheckResult = '중복된 아이디가 있습니다';
+                        } else {
+                            this.idFlag = true;
+                            this.idCheckResult = '사용할 수 있는 아이디입니다.';
+                        }
+                    });
                 }
             }
         },
@@ -154,7 +160,24 @@ export default {
             this.$router.push('/user/login');
         },
         signUp() {
-            this.modal = true;
+            if (this.idFlag && this.passwordFlag && this.username != '' && this.nickname != '' && this.email != '' && this.totalPhone.length >= 11 && this.birth != '' && this.gender != '') {
+                let user =  {
+                    userId: this.id,
+                    password: this.password,
+                    name: this.username,
+                    nickname: this.nickname,
+                    phone: this.totalPhone,
+                    email: this.email,
+                    gender: this.gender,
+                    birth: this.birth,
+                }
+
+                axios.post("http://localhost/user", user);
+                this.modal = true;
+
+            }else {
+                alert("입력되지 않은 항목이 있습니다");
+            }
         },
     },
 }
@@ -365,6 +388,10 @@ input {
     font-size: 14px;
     font-weight: 800;
     font-family: 'S-CoreDream-3Light';
+}
+
+.gender-radio:hover {
+    cursor: pointer;
 }
 
 .male-selected {
