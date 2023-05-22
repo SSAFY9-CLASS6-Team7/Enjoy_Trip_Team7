@@ -3,13 +3,14 @@
         <div class="left-aside"></div>
         <div class="main">
             <div class="profile-image-container">
-                <div class="image-container" @click="modifyProfileImage">
-                    <img v-if="profileImage == ''" src='@/assets/header_icon/profile.svg' class="profile-image">
-                    <img v-if="profileImage != ''" src='profileImage' class="profile-image">
+                <div class="image-container" @click="uploadClick">
+                    <input type="file" id="profileUpload" @change="profileUpload" hidden>
+                    <img v-if="checkUserInfo.profilePicPath != null && checkUserInfo.profilePicPath != ''" :src="'http://localhost/profilePath/' + checkUserInfo.profilePicPath" class='profile-image' >
+                <img v-if="checkUserInfo.profilePicPath == null || checkUserInfo.profilePicPath == ''" src="@/assets/header_icon/profile.svg" class='profile-image'>
                     <img src="@/assets/user_icons/modify_profile.svg" class="modify-icon">
                 </div>
                 <div class="user-name">
-                    전 준 영 님
+                    {{  this.checkUserInfo.name }} 님
                 </div>
             </div>
 
@@ -35,12 +36,12 @@
 
             <div class="nickname-container">
                 <div class="inner-title">별 명</div>
-                <input type="text" class="nickname">
+                <input type="text" class="nickname" v-model="nickname">
             </div>
 
              <div class="email-container">
                 <div class="inner-title">이메일</div>
-                <input type="email" class="email">
+                <input type="email" class="email" v-model="email">
             </div>
 
             <div class="phone-container">
@@ -54,26 +55,26 @@
             
             <div class="birth-container">
                 <div class="inner-title">생년월일</div>
-                <input type="date" class="birth-input">
+                <input type="date" class="birth-input" v-model="birth">
             </div>
             
             <div class="gender-container">
                 <div class="inner-title">성별</div>
                 <div class="gender-input-container">
                     <div class="male-container">
-                        <input id="male" type="radio" class="gender-input" name="gender" value="male" v-model="gender" hidden>
-                        <label class="gender-radio" for="male" :class="{'male-selected' : gender == 'male'}">남 자</label>
+                        <input id="M" type="radio" class="gender-input" name="gender" value="M" v-model="gender" hidden>
+                        <label class="gender-radio" for="M" :class="{'male-selected' : gender == 'M'}">남 자</label>
                     </div>
                     <div class="female-container">
-                        <input id="female" type="radio" class="gender-input" name="gender" value="female" v-model="gender" hidden>
-                        <label class="gender-radio" for="female" :class="{'female-selected' : gender == 'female'}">여 자</label>
+                        <input id="F" type="radio" class="gender-input" name="gender" value="F" v-model="gender" hidden>
+                        <label class="gender-radio" for="F" :class="{'female-selected' : gender == 'F'}">여 자</label>
                     </div>
                 </div>
             </div>
 
             <div class="buttons">
                 <button class="cancel" @click="modifyCancel">취소</button>
-                <button class="modify-submit">수정</button>
+                <button class="modify-submit" @click="modifyUser">수정</button>
             </div>
 
         </div>
@@ -82,11 +83,14 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
+import axios from 'axios';
 export default {
     name: 'UserModify',
     data() {
         return {
             profileImage: '',
+            uploaded: '',
             passwordFlag: '',
             password: '',
             passwordSecond: '',
@@ -95,11 +99,28 @@ export default {
             phone1: '',
             phone2: '',
             phone3: '',
+            email: '',
+            birth: '',
+            username: '',
+            nickname: '',
+        }
+    },
+    computed: {
+      ...mapGetters('userStore', ['checkUserInfo']),
+      totalPhone() {
+            return this.phone1 + '-' + this.phone2 + '-' + this.phone3;
         }
     },
     methods: {
-        modifyProfileImage() {
-            
+        ...mapActions('userStore', ['userConfirm']),
+        uploadClick() {
+            const inputElement = document.getElementById("profileUpload");
+            inputElement.click();
+        },
+        profileUpload(event){
+            const file = event.target.files[0];
+            this.uploaded = file;
+            console.log("profile : " + this.uploaded);
         },
         passwordCheck() {
             if (this.password.length < 8 && this.password.length > 0) {
@@ -119,11 +140,56 @@ export default {
             }
         },
         modifyCancel(){
-            // this.$router.go(-2); 비밀번호 확인 창 만들면 -2 시켜야 함
-            this.$router.go(-1);
-
+            this.$router.push("/");
         },
+        async modifyUser(){
+            if (!this.passwordFlag && this.passwordFlag != '') {
+                alert("새 비밀번호가 올바르게 입력되지 않았습니다!");
+            }else {
+                let f = new FormData();
+                if (this.password != ''){
+                    f.append("password", this.password);
+                }
+                f.append("nickname", this.nickname);
+                f.append("email", this.email);
+                f.append("phone", this.totalPhone);
+                f.append("birth", this.birth);
+                f.append("gender", this.gender);
+                if (this.uploaded != '') {
+                    console.log("profile : " + this.uploaded);
+                    f.append("file", this.uploaded);
+                }
+
+                await axios.put("http://localhost/user/"+this.checkUserInfo.userId, f);
+                let user = {
+                    userId: this.checkUserInfo.userId,
+                    password: ''
+                }
+                if (this.password != '') {
+                    user.password = this.password;
+                }else {
+                    user.password = this.checkUserInfo.password;
+                }
+                await this.userConfirm(user);
+                this.$router.push("/");
+            }
+        }
     },
+    created() {
+        let userInfo = this.checkUserInfo;
+        console.log(userInfo);
+        this.gender = userInfo.gender;
+        this.email = userInfo.email;
+        this.birth = userInfo.birth;
+        this.nickname = userInfo.nickname;
+
+        let phoneNumber = userInfo.phone.split("-");
+        this.phone1 = phoneNumber[0];
+        this.phone2 = phoneNumber[1];
+        this.phone3 = phoneNumber[2];
+        console.log(this.checkUserInfo.profilePicPath);
+        // this.profileImage = 'http://localhost/imagePath/' + this.checkUserInfo.profilePicPath;
+    }
 }
 </script>
 
@@ -186,7 +252,8 @@ export default {
 }
 
 .profile-image {
-    width: 40px;
+    width: 60px;
+    height: 60px;
     border-radius: 45%;
 }
 
