@@ -44,10 +44,13 @@
     </select>
 
     <!-- 게시글 전체 개수 조회 -->
-    <select id="selectBoardCount" resultType="int" parameterType="string">
+    <select id="selectBoardCount" resultType="int" parameterType="hashMap">
         SELECT COUNT(*)
           FROM board
-        <if test="keyword != ''">WHERE title LIKE CONCAT('%', #{keyword}, '%')</if>
+        <where>
+            <if test="code != ''">AND code = ${code}</if>
+            <if test="keyword != ''">AND title LIKE CONCAT('%', #{keyword}, '%')</if>
+        </where>
     </select>
 
     <!-- 게시글 상세 내용 조회 -->

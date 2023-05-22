@@ -7,7 +7,7 @@
                 <!-- <img src='@/assets/board_icons/board_category/자유.svg'/> -->
             </div>
             <div class="is-image">
-                <img v-if="images > 0" src="@/assets/board_icons/isImage.svg"/>
+                <img v-if="images.length > 0" src="@/assets/board_icons/isImage.svg"/>
             </div>
             <div class="board-title" @click="boardView">
                 {{ board.title }}
@@ -35,7 +35,7 @@ export default {
         return {
             message: '',
             comments: '',
-            images: '',
+            images: [],
             nickname: '',
         };
     },
@@ -83,9 +83,11 @@ export default {
             axios.get(`http://localhost/board/${this.board.boardId}/comment`)
             .then(response => this.comments = response.data.length);
         },
-        fetchImages() {
-            axios.get(`http://localhost/board/${this.board.boardId}`)
-            .then(response => this.images = response.data.images.length);
+        async fetchImages() {
+            await axios.get(`http://localhost/board/${this.board.boardId}/image`)
+            .then(response =>{
+                this.images = response.data.images
+            } );
         },
         boardView(){
             this.$router.push('/board/view/'+this.board.boardId);

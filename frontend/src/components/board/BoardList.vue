@@ -40,7 +40,6 @@
         <div class="heart">좋아요</div>
       </div>
 
-      <!-- child Component 영역 -->
       <board-content :boards='boards'></board-content>
 
       <board-pagination class="pagination" @pageChange="pageChanged" :pageResult="pageResult"></board-pagination>
@@ -50,10 +49,10 @@
 </template>
 
 <script >
+import { mapActions, mapGetters } from 'vuex';
 import BoardContent from '@/components/board/board_components/BoardContent.vue'
 import BoardPagination from '@/components/board/board_components/BoardPagination.vue'
 import axios from 'axios'
-import { mapGetters } from 'vuex';
 
 export default {
   name : 'BoardList',
@@ -70,17 +69,27 @@ export default {
   },
   computed: {
       ...mapGetters('userStore', ['checkToken', 'checkUserInfo']),
+      ...mapGetters(['getPage']),
   },
   methods: {
+    ...mapActions(['pageNoChange']),
     goSearch(){
       axios.get(`http://localhost/board?pageNo=1&code=${this.activeBoardTab}&condition=${this.selectedCondition}&anonymous=&keyword=${this.searchKeyword}`)
-      .then(response => this.boards = response.data.boards)
+      .then(response => {
+        this.boards = response.data.boards
+        this.pageResult.pageNo = 1;
+        this.pageNo = 1;
+        this.pageNoChange(1);
+        })
     },
     tabChange(code) {
       axios.get(`http://localhost/board?pageNo=1&code=${code}&condition=${this.selectedCondition}&anonymous=&keyword=${this.searchKeyword}`)
       .then(response => {
         this.boards = response.data.boards
         this.activeBoardTab = code;
+        this.pageResult.pageNo = 1;
+        this.pageNo = 1;
+        this.pageNoChange(1);
         }
       )
     },
@@ -88,7 +97,9 @@ export default {
       axios.get(`http://localhost/board?pageNo=${clickedPage}&code=${this.activeBoardTab}&condition=${this.selectedCondition}&anonymous=&keyword=${this.searchKeyword}`)
       .then( response => {
         this.boards = response.data.boards;
+        this.pageNo = clickedPage;
         this.pageResult = response.data.pageResult;
+        this.pageNoChange(clickedPage);
       })
     },
     createBoard(){
@@ -102,6 +113,11 @@ export default {
 
   },
   async created(){
+    console.log("현재 페이지는 " + this.getPage);
+    if (this.getPage == null) {
+      this.pageNoChange(1);
+    }
+    this.pageNo = this.getPage;
     await axios.get(`http://localhost/board?pageNo=${this.pageNo}&code=${this.activeBoardTab}&condition=&anonymous=&keyword=`)
     .then(response => {
       this.boards = response.data.boards;
