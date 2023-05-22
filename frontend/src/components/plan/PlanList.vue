@@ -3,10 +3,12 @@
     <div class="plan-modal" v-if="isModalOpen">
       <plan-create-modal
         @setModal="setModal"
+        @setNeedToUpdate="setNeedToUpdate"
         v-if="openedModal === 'create' && isModalOpen === true"
       ></plan-create-modal>
       <plan-update-modal
         @setModal="setModal"
+        @setNeedToUpdate="setNeedToUpdate"
         :planId="focusedPlanId"
         v-if="openedModal === 'update' && isModalOpen === true"
       ></plan-update-modal>
@@ -30,7 +32,9 @@
           v-for="plan in plans"
           :key="plan.planId"
           :planId="plan.planId"
+          :needToUpdate="needToUpdate"
           @updateModalOpen="updateModalOpen"
+          @setNeedToUpdate="setNeedToUpdate"
         ></plan-list-item>
       </div>
       <div class="pagination"></div>
@@ -60,7 +64,17 @@ export default {
       focusedPlanId: '',
       pageNo: 1,
       pageResult: {},
+      needToUpdate: false,
     };
+  },
+  watch: {
+    // 목록 내용이 변경 시 다시 로딩
+    needToUpdate: async function () {
+      if (this.needToUpdate === true) {
+        await this.loadPlans();
+        this.setNeedToUpdate(false);
+      }
+    },
   },
   methods: {
     //모달 창 오픈 여부 변경
@@ -80,15 +94,21 @@ export default {
       this.openedModal = 'update';
       this.setModal(true);
     },
+    setNeedToUpdate(value) {
+      this.needToUpdate = value;
+    },
     addAttraction(attraction) {
       console.log('---관광지 정보 넘어옴 : ' + attraction.title);
     },
+    loadPlans() {
+      axios.get(`http://localhost/plan?pageNo=${this.pageNo}`).then((response) => {
+        this.plans = response.data.plans;
+        this.pageResult = response.data.pageResult;
+      });
+    },
   },
-  async created() {
-    await axios.get(`http://localhost/plan?pageNo=${this.pageNo}`).then((response) => {
-      this.plans = response.data.plans;
-      this.pageResult = response.data.pageResult;
-    });
+  created() {
+    this.loadPlans();
   },
 };
 </script>

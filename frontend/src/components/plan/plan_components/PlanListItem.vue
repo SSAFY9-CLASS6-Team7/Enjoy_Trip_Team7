@@ -35,7 +35,7 @@
 import axios from 'axios';
 export default {
   name: 'PlanListItem',
-  props: ['planId'],
+  props: ['planId', 'needToUpdate'],
   data() {
     return {
       plan: Object,
@@ -51,6 +51,14 @@ export default {
         const sido = this.sidoCode.find((item) => item.code === String(code));
         return sido ? sido.text : '';
       };
+    },
+  },
+  watch: {
+    // 목록 내용이 변경 시 다시 로딩
+    needToUpdate: function () {
+      if (this.needToUpdate === true) {
+        this.loadPlan();
+      }
     },
   },
   methods: {
@@ -80,7 +88,14 @@ export default {
     //삭제 진행하기
     async deletePlan() {
       await axios.delete(`http://localhost/plan/` + this.planId);
+      this.$emit('setNeedToUpdate', true);
       // this.$router.push('/plan/');
+    },
+    async loadPlan() {
+      await axios
+        .get(`http://localhost/plan/` + this.planId)
+        .then((response) => (this.plan = response.data));
+      this.setTravelAreaImgSrc();
     },
     setTravelAreaImgSrc() {
       if (this.plan.travelArea === 1) {
@@ -137,11 +152,8 @@ export default {
       }
     },
   },
-  async mounted() {
-    await axios
-      .get(`http://localhost/plan/` + this.planId)
-      .then((response) => (this.plan = response.data));
-    this.setTravelAreaImgSrc();
+  mounted() {
+    this.loadPlan();
   },
 };
 </script>
@@ -202,8 +214,7 @@ export default {
 }
 
 .address,
-.date,
-.content {
+.date {
   text-align: left;
   margin: 0 3% 0 10%;
 }
@@ -226,8 +237,14 @@ export default {
 }
 
 .content {
-  margin-top: 5%;
-  overflow: auto;
+  max-height: 160px;
+  text-align: left;
+  margin: 5% 10% 0 10%;
+  overflow: hidden;
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 7;
+  -webkit-box-orient: vertical;
 }
 
 .btn-area {

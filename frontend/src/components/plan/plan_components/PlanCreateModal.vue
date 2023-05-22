@@ -36,7 +36,7 @@
           <div class="memo-input-area">
             <textarea
               class="memo-input"
-              placeholder="내용을 입력해주세요."
+              placeholder="내용은 최대 100자 입니다."
               v-model="memo"
             ></textarea>
           </div>
@@ -78,6 +78,7 @@ export default {
       if (this.title && this.startDay && this.endDay && this.memo) isAllValid = true;
       if (this.title.length > 10) isAllValid = false;
       if (this.endDay < this.startDay) isAllValid = false;
+      if (this.memo.length > 100) isAllValid = false;
 
       if (isAllValid) {
         this.createPlan();
@@ -86,7 +87,14 @@ export default {
       }
     },
     async createPlan() {
-      await axios.post('http://localhost/plan');
+      let newPlan = {};
+      newPlan.title = this.title;
+      newPlan.startDay = this.startDay;
+      newPlan.endDay = this.endDay;
+      newPlan.travelArea = this.travelArea;
+      newPlan.content = this.memo;
+      await axios.post('http://localhost/plan', newPlan);
+      this.$emit('setNeedToUpdate', true);
       this.emitModalOff();
     },
   },
