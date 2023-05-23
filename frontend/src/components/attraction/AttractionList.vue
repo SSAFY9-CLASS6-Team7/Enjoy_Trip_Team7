@@ -85,6 +85,7 @@ export default {
       this.goSearch();
     },
     async goSearch(){
+      this.pageNoChange(1);
       await axios({
         url: `http://192.168.212.72/attraction`,
         method: 'GET',

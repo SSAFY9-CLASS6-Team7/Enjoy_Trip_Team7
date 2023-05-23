@@ -44,7 +44,7 @@ public class AttractionServiceImpl implements AttractionService{
         }map.put("keyword", paramMap.get("keyword"));
 
         Map<String, Object> result = new HashMap<>();
-        int totalCount = attractionMapper.selectAttractionCount();
+        int totalCount = attractionMapper.selectAttractionCount(map);
         PageResult pageResult = new PageResult(pageNo, totalCount, LIST_SIZE, 5);
         result.put("attractions", attractionMapper.selectAttraction(map));
         result.put("pageResult", pageResult);

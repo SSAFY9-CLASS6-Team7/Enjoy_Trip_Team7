@@ -18,10 +18,10 @@
 
     <!-- 관광지 리스트 조회 -->
     <select id="selectAttraction" resultMap="attractionMap" parameterType="hashMap">
-        SELECT des.attraction_id, des.overview, i.title, i.content_type_id code,
-               i.addr1 address, i.first_image thumbnail, i.sido_code sido, i.latitude lat, i.longitude lng
-          FROM attraction_description des
-          JOIN attraction_info i USING (attraction_id)
+        SELECT des.attraction_id, des.overview, i.title, i.content_type_id,
+               i.addr1, i.first_image, i.sido_code, i.latitude, i.longitude
+          FROM attraction_info i
+          LEFT JOIN attraction_description des USING (attraction_id)
         <where>
             <if test="codes.size != 0">
                 AND i.content_type_id IN
@@ -40,9 +40,24 @@
          LIMIT #{page.beginPage}, #{page.listSize}
     </select>
 
-    <select id="selectAttractionCount" resultType="int">
+    <select id="selectAttractionCount" resultType="int" parameterType="hashMap">
         select count(*)
         from attraction_info
+        <where>
+            <if test="codes.size != 0">
+                AND content_type_id IN
+                <foreach collection="codes" index="index" item="code" open="(" close=")" separator=",">
+                    #{code}
+                </foreach>
+            </if>
+            <if test="sidos.size != 0">
+                AND sido_code IN
+                <foreach collection="sidos" index="index" item="sido" open="(" close=")" separator=",">
+                    #{sido}
+                </foreach>
+            </if>
+            <if test="keyword != ''">AND title LIKE CONCAT('%', #{keyword}, '%')</if>
+        </where>
     </select>
     
     <!-- 관광지 상세 조회 -->
