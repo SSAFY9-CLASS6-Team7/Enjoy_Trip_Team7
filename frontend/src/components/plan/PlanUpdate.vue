@@ -166,17 +166,13 @@ export default {
         groups[planDate].push(attraction);
         return groups;
       }, {});
-      console.dir(this.planDates);
       for (var index in this.planDates) {
-        console.log(this.planDates[index]);
         if (!this.groupedAttractions[this.planDates[index]]) {
-          console.dir(this.groupedAttractions[this.planDates[index]]);
           this.groupedAttractions[this.planDates[index]] = [];
         }
       }
 
       this.groupedAttractionsArray = Object.values(this.groupedAttractions);
-      console.dir(this.groupedAttractionsArray);
     },
     updateFocusInfo() {
       this.$nextTick(() => {
@@ -219,7 +215,6 @@ export default {
     },
     //날짜와 순서를 받아서 요소 삭제
     deletePlanAttraction(date, index) {
-      console.log(date, '+', index);
       var dateIndex = this.planDates.findIndex((element) => element === date);
       this.groupedAttractionsArray[dateIndex].splice(index);
     },
