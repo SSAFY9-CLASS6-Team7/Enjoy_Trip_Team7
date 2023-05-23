@@ -87,7 +87,7 @@ export default {
     async goSearch(){
       this.pageNoChange(1);
       await axios({
-        url: `http://192.168.212.72/attraction`,
+        url: process.env.VUE_APP_MY_BASE_URL+`/attraction`,
         method: 'GET',
         params: {
           pageNo: this.pageNo,

@@ -5,7 +5,7 @@
             <div class="profile-image-container">
                 <div class="image-container" @click="uploadClick">
                     <input type="file" id="profileUpload" @change="profileUpload" hidden>
-                    <img v-if="checkUserInfo.profilePicPath != null && checkUserInfo.profilePicPath != ''" :src="'http://192.168.212.72/profilePath/' + checkUserInfo.profilePicPath" class='profile-image' >
+                    <img v-if="checkUserInfo.profilePicPath != null && checkUserInfo.profilePicPath != ''" :src="'http://localhost/profilePath/' + checkUserInfo.profilePicPath" class='profile-image' >
                 <img v-if="checkUserInfo.profilePicPath == null || checkUserInfo.profilePicPath == ''" src="@/assets/header_icon/profile.svg" class='profile-image'>
                     <img src="@/assets/user_icons/modify_profile.svg" class="modify-icon">
                 </div>
@@ -160,7 +160,7 @@ export default {
                     f.append("file", this.uploaded);
                 }
 
-                await axios.put("http://192.168.212.72/user/"+this.checkUserInfo.userId, f);
+                await axios.put(process.env.MY_BASE_URL+"/user/"+this.checkUserInfo.userId, f);
                 let user = {
                     userId: this.checkUserInfo.userId,
                     password: ''

@@ -74,7 +74,7 @@ export default {
   methods: {
     ...mapActions(['pageNoChange']),
     goSearch(){
-      axios.get(`http://192.168.212.72/board?pageNo=1&code=${this.activeBoardTab}&condition=${this.selectedCondition}&anonymous=&keyword=${this.searchKeyword}`)
+      axios.get(process.env.VUE_APP_MY_BASE_URL+`/board?pageNo=1&code=${this.activeBoardTab}&condition=${this.selectedCondition}&anonymous=&keyword=${this.searchKeyword}`)
       .then(response => {
         this.boards = response.data.boards
         this.pageResult = response.data.pageResult;
@@ -84,7 +84,7 @@ export default {
         })
     },
     tabChange(code) {
-      axios.get(`http://192.168.212.72/board?pageNo=1&code=${code}&condition=${this.selectedCondition}&anonymous=&keyword=${this.searchKeyword}`)
+      axios.get(process.env.VUE_APP_MY_BASE_URL+`/board?pageNo=1&code=${code}&condition=${this.selectedCondition}&anonymous=&keyword=${this.searchKeyword}`)
       .then(response => {
         this.boards = response.data.boards
         this.pageResult = response.data.pageResult;
@@ -96,7 +96,7 @@ export default {
       )
     },
     pageChanged(clickedPage){
-      axios.get(`http://192.168.212.72/board?pageNo=${clickedPage}&code=${this.activeBoardTab}&condition=${this.selectedCondition}&anonymous=&keyword=${this.searchKeyword}`)
+      axios.get(process.env.VUE_APP_MY_BASE_URL+`/board?pageNo=${clickedPage}&code=${this.activeBoardTab}&condition=${this.selectedCondition}&anonymous=&keyword=${this.searchKeyword}`)
       .then( response => {
         this.boards = response.data.boards;
         this.pageNo = clickedPage;
@@ -119,7 +119,7 @@ export default {
       this.pageNoChange(1);
     }
     this.pageNo = this.getPage;
-    await axios.get(`http://192.168.212.72/board?pageNo=${this.pageNo}&code=${this.activeBoardTab}&condition=&anonymous=&keyword=`)
+    await axios.get(process.env.VUE_APP_MY_BASE_URL+`/board?pageNo=${this.pageNo}&code=${this.activeBoardTab}&condition=&anonymous=&keyword=`)
     .then(response => {
       this.boards = response.data.boards;
       this.pageResult = response.data.pageResult;

@@ -158,7 +158,7 @@ export default {
   },
   async created() {
     this.plan.planId = this.$route.params.planId;
-    await axios.get('http://192.168.212.72/plan/' + this.plan.planId).then((response) => {
+    await axios.get(process.env.VUE_APP_MY_BASE_URL+'/plan/' + this.plan.planId).then((response) => {
       this.plan = response.data;
     });
     this.setGroupedAttractions();

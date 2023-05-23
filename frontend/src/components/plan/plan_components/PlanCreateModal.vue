@@ -97,7 +97,7 @@ export default {
       newPlan.travelArea = this.travelArea;
       newPlan.content = this.memo;
       newPlan.userId = this.userId;
-      await axios.post('http://192.168.212.72/plan', newPlan);
+      await axios.post(process.env.VUE_APP_MY_BASE_URL+'/plan', newPlan);
       this.$emit('setNeedToUpdate', true);
       this.emitModalOff();
     },

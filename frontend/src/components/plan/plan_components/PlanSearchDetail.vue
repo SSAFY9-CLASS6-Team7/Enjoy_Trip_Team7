@@ -39,7 +39,7 @@ export default {
   methods: {
     async loadData(attractionId) {
       await axios
-        .get(`http://192.168.212.72/attraction/${attractionId}`)
+        .get(process.env.VUE_APP_MY_BASE_URL + `/attraction/${attractionId}`)
         .then((response) => (this.attraction = response.data));
       this.setContentTypeSrc();
     },

@@ -115,8 +115,8 @@ export default {
       for (let i = 0; i < uploadFiles.length; i++){
         f.append('files', uploadFiles[i]);
       }
-
-      await axios.post('http://192.168.212.72/board', f);
+      
+      await axios.post(process.env.VUE_APP_MY_BASE_URL+'/board', f);
       this.pageNoChange(1);
       this.$router.push("/board");
       this.$router.go(0);

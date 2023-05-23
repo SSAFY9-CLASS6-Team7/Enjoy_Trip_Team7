@@ -11,7 +11,7 @@
                     로그아웃
                     <img src="@/assets/user_icons/logout.svg" >
                 </button>
-                <img v-if="checkUserInfo.profilePicPath != null && checkUserInfo.profilePicPath != ''" :src="'http://192.168.212.72/profilePath/' + checkUserInfo.profilePicPath" class='profile' >
+                <img v-if="checkUserInfo.profilePicPath != null && checkUserInfo.profilePicPath != ''" :src="'http://localhost/profilePath/' + checkUserInfo.profilePicPath" class='profile' >
                 <img v-if="checkUserInfo.profilePicPath == null || checkUserInfo.profilePicPath == ''" src="@/assets/header_icon/profile.svg" class='profile'>
                 <div class="id-email-container">
                     <div class="id">{{ checkUserInfo.nickname }}</div>

@@ -39,7 +39,7 @@
                 <swiper :options="swiperOption3">
                     <swiper-slide class="image-swiper-item" v-for="image in images" :key="image">
                         <div class="card">
-                            <img :src="`http://192.168.212.72/imagePath/${image.imagePath}`" style="border-radius: 10px; height: 150px;" @click="detail(image)"/>
+                            <img :src="process.env.VUE_APP_MY_BASE_URL+`/imagePath/${image.imagePath}`" style="border-radius: 10px; height: 150px;" @click="detail(image)"/>
                         </div>
                     </swiper-slide>
                 </swiper>
@@ -153,7 +153,7 @@ export default {
                 heart: this.board.heart
             }
 
-            await axios.put(`http://192.168.212.72/board/${this.board.boardId}/heart`, f);
+            await axios.put(process.env.VUE_APP_MY_BASE_URL+`/board/${this.board.boardId}/heart`, f);
             this.isHeart = !this.isHeart;
             this.$router.go(0);
         },
@@ -169,7 +169,7 @@ export default {
                         commentContent: this.commentInputValue,
                         anonymous: this.board.anonymous
                     }
-                    await axios.post(`http://192.168.212.72/board/${this.board.boardId}/comment`, comment);
+                    await axios.post(process.env.VUE_APP_MY_BASE_URL+`/board/${this.board.boardId}/comment`, comment);
                     this.$router.go(0);
                 }
             }
@@ -179,7 +179,7 @@ export default {
             this.modal = true;
         },
         async boardDelete(){
-            this.deleteLink = 'http://192.168.212.72/board/'+this.board.boardId;
+            this.deleteLink = process.env.VUE_APP_MY_BASE_URL+'/board/'+this.board.boardId;
             this.modal = true;
         },
         boardModify() {
@@ -208,7 +208,7 @@ export default {
         }
     },
     async created(){
-        await axios.get("http://192.168.212.72/board/"+ this.$route.params.boardId)
+        await axios.get(process.env.VUE_APP_MY_BASE_URL+"/board/"+ this.$route.params.boardId)
         .then(response =>{
             this.board = response.data.board;
             this.images = response.data.images;
@@ -217,13 +217,13 @@ export default {
             
         } );
 
-        await axios.get("http://192.168.212.72/board/"+ this.board.boardId +"/comment")
+        await axios.get(process.env.VUE_APP_MY_BASE_URL+"/board/"+ this.board.boardId +"/comment")
         .then(response =>{
             this.comments = response.data;
         } );
 
         if (this.checkToken) {
-            await axios.get(`http://192.168.212.72/board/${this.board.boardId}/heart/${this.checkUserInfo.userId}`)
+            await axios.get(process.env.VUE_APP_MY_BASE_URL+`/board/${this.board.boardId}/heart/${this.checkUserInfo.userId}`)
             .then(response => {
                 this.isHeart = response.data.isHeart;
             })

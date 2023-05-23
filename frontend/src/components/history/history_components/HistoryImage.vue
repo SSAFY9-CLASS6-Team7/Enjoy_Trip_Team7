@@ -42,7 +42,7 @@ export default {
     },
     async loadHistory() {
       await axios
-        .get('http://192.168.212.72/history/' + this.historyId)
+        .get(process.env.VUE_APP_MY_BASE_URL+'/history/' + this.historyId)
         .then((response) => (this.history = response.data));
       this.imageList = this.history.images;
       // this.setThumbnailSrc();
@@ -50,7 +50,7 @@ export default {
     //이미지 소스 가져오기
     setThumbnailSrc() {
       if (this.imageList.length > 0) {
-        return 'http://192.168.212.72/imagePath/' + this.imageList[0].imagePath;
+        return process.env.VUE_APP_MY_BASE_URL+'/imagePath/' + this.imageList[0].imagePath;
       } else {
         let sampleSrc = (this.historyId % 5) + 1;
         return require(`@/assets/sample/sample${sampleSrc}.jpg`);
