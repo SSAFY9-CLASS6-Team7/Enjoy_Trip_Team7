@@ -100,8 +100,13 @@ export default {
       }
     },
     createModalOpen() {
-      this.openedModal = 'create';
-      this.setModal(true);
+      if (this.checkToken) {
+        this.openedModal = 'create';
+        this.setModal(true);
+      } else {
+        alert('로그인이 필요합니다!');
+        this.$router.push('/user/login');
+      }
     },
     updateModalOpen(planId) {
       this.focusedPlanId = planId;

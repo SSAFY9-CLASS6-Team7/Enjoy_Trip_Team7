@@ -13,13 +13,7 @@
     <div>
       <div class="inner-header">
         <h2>기록</h2>
-        <button
-          class="create-btn"
-          @click="
-            setType('create');
-            setModal(true);
-          "
-        >
+        <button class="create-btn" @click="setCreateModal">
           <img class="create-btn-vector" src="../../assets/common/plus_icon_white.svg" />
           기록 추가
         </button>
@@ -78,7 +72,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('userStore', ['checkUserInfo']),
+    ...mapGetters('userStore', ['checkToken', 'checkUserInfo']),
   },
   methods: {
     //열리는 모달 창의 타입(생성/조회/수정) 변경
@@ -105,8 +99,13 @@ export default {
     },
     //기록 생성 모달 열기
     setCreateModal() {
-      this.setType('create');
-      this.setModal(true);
+      if (this.checkToken) {
+        this.setType('create');
+        this.setModal(true);
+      } else {
+        alert('로그인이 필요합니다!');
+        this.$router.push('/user/login');
+      }
     },
     async pageChange(clickedPage) {
       this.pageNo = clickedPage;
