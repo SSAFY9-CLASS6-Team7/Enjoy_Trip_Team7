@@ -11,7 +11,13 @@
       </div>
       <div class="line"></div>
       <div class="main">
-        <div class="map-area">Map</div>
+        <div class="map-area" id="map">
+          <the-kakao-map
+            v-if="groupedAttractionsArray.length !== 0"
+            :groupedAttractionsArray="groupedAttractionsArray"
+            :focused="focused"
+          ></the-kakao-map>
+        </div>
         <div class="sequence-area">
           <div class="date-slide">
             <div class="date-swiper" v-if="this.planDates.length !== 0">
@@ -43,10 +49,14 @@
                 <div class="attractions-area" v-if="groupedAttractions[date]">
                   <div
                     class="attractions"
-                    v-for="(attraction, index) in groupedAttractions[date]"
+                    v-for="(attraction, index) in groupedAttractionsArray[i]"
                     :key="attraction.planAttractionId"
                   >
-                    <plan-attraction :planAttraction="attraction" :index="index"></plan-attraction>
+                    <plan-attraction
+                      :planAttraction="attraction"
+                      :index="index"
+                      :type="'view'"
+                    ></plan-attraction>
                   </div>
                 </div>
               </div>
@@ -63,6 +73,7 @@ import PlanAttraction from './plan_components/PlanAttraction.vue';
 import axios from 'axios';
 import { Swiper, SwiperSlide } from 'vue-awesome-swiper';
 import 'swiper/css/swiper.css';
+import TheKakaoMap from '@/components/TheKakaoMap.vue';
 
 export default {
   name: 'PlanView',
@@ -70,11 +81,13 @@ export default {
     PlanAttraction,
     Swiper,
     SwiperSlide,
+    TheKakaoMap,
   },
   data() {
     return {
       plan: Object,
       groupedAttractions: Object, //key로 접근 가능
+      groupedAttractionsArray: [], //interable하게 배열로 변환
       focused: 1,
       //스와이프 관련 설정
       swiperOption: {
@@ -129,7 +142,7 @@ export default {
       const day = dateParts[2];
       return `${year}.${month}.${day}`;
     },
-    setGroupedAttractions() {
+    setGroupedAttractionsArray() {
       this.groupedAttractions = this.plan.planAttractions.reduce((groups, attraction) => {
         const { planDate } = attraction;
 
@@ -140,6 +153,14 @@ export default {
         groups[planDate].push(attraction);
         return groups;
       }, {});
+
+      for (var index in this.planDates) {
+        if (!this.groupedAttractions[this.planDates[index]]) {
+          this.groupedAttractions[this.planDates[index]] = [];
+        }
+      }
+
+      this.groupedAttractionsArray = Object.values(this.groupedAttractions);
     },
     updateFocusInfo() {
       this.$nextTick(() => {
@@ -157,7 +178,7 @@ export default {
     await axios.get('http://localhost/plan/' + this.plan.planId).then((response) => {
       this.plan = response.data;
     });
-    this.setGroupedAttractions();
+    this.setGroupedAttractionsArray();
   },
 };
 </script>
@@ -165,12 +186,15 @@ export default {
 .plan-view-container {
   position: relative;
   width: 100%;
-  height: 81.5vh;
+  /* height: 81.5vh; */
   display: grid;
   grid-template-columns: 1fr 5fr 1fr;
   grid-template-areas: 'left  main  right';
   align-items: stretch;
   justify-items: stretch;
+  overflow: hidden;
+  margin-bottom: 30px;
+  border: 1px solid black;
 }
 
 .left-aside {
@@ -183,6 +207,9 @@ export default {
 
 .main-area {
   grid-area: main;
+  height: 80%;
+  margin-bottom: 10px;
+  border: 1px solid black;
 }
 
 .inner-header {
@@ -221,16 +248,17 @@ export default {
 
 .main {
   margin-top: 10px;
-  height: 90%;
+  /* height: 50%; */
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-items: stretch;
   justify-items: stretch;
+  border: 1px solid black;
 }
 
 .map-area {
   padding: 0 10px;
-  max-height: 730px;
+  /* max-height: 730px; */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -239,7 +267,9 @@ export default {
 
 .sequence-area {
   padding: 0 10px;
-  max-height: 730px;
+  /* max-height: 730px; */
+  /* height: 100%; */
+  border: 1px solid black;
 }
 
 .date-slide {
@@ -250,7 +280,7 @@ export default {
   margin: 15px 0;
 }
 .attraction-slide-area {
-  height: 90%;
+  /* height: 90%; */
   background-color: #f6f6f6;
   border-radius: 10px;
   overflow: auto;

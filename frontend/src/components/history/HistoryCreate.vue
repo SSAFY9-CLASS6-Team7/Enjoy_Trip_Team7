@@ -60,6 +60,7 @@
 
 <script>
 import axios from 'axios';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'HistoryCreate',
@@ -70,9 +71,13 @@ export default {
       endDay: '',
       content: '',
       files: [],
+      userId: '',
     };
   },
   props: {},
+  computed: {
+    ...mapGetters('userStore', ['checkUserInfo']),
+  },
   methods: {
     //모달창을 닫기
     emitModalOff() {
@@ -129,6 +134,7 @@ export default {
       f.append('content', this.content);
       f.append('startDay', this.startDay);
       f.append('endDay', this.endDay);
+      f.append('userId', this.userId);
       let tempFiles = this.files;
 
       for (let c = 0; c < tempFiles.length; c++) {
@@ -139,6 +145,9 @@ export default {
       this.$emit('emitNeedToUpdate');
       this.emitModalOff();
     },
+  },
+  created() {
+    this.userId = this.checkUserInfo.userId;
   },
 };
 </script>

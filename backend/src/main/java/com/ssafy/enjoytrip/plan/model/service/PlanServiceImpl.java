@@ -7,12 +7,14 @@ import java.util.Map;
 
 import com.ssafy.enjoytrip.util.model.Page;
 import com.ssafy.enjoytrip.util.model.PageResult;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.enjoytrip.plan.model.Plan;
 import com.ssafy.enjoytrip.plan.model.PlanAttraction;
 import com.ssafy.enjoytrip.plan.model.mapper.PlanMapper;
 
+@Slf4j
 @Service
 public class PlanServiceImpl implements PlanService {
 	
@@ -28,7 +30,7 @@ public class PlanServiceImpl implements PlanService {
 	@Override
 	public Map<String, Object> getPlanList(Map<String, Object> map) throws SQLException {
 		Page page = new Page();
-		int pageNo = Integer.parseInt(String.valueOf(map.get("pgno")));
+		int pageNo = Integer.parseInt(String.valueOf(map.get("pageNo")));
 		page.setPageNo(pageNo);
 		page.setListSize(LIST_SIZE);
 		map.put("page", page);
@@ -68,10 +70,10 @@ public class PlanServiceImpl implements PlanService {
 		return planMapper.selectPlanAttractionListByPlanId(planId);
 	}
 
-	@Override
-	public void createPlanAttraction(PlanAttraction planAttraction) throws SQLException {
-		planMapper.insertPlanAttraction(planAttraction);
-	}
+//	@Override
+//	public void createPlanAttraction(PlanAttraction planAttraction) throws SQLException {
+//		planMapper.insertPlanAttraction(planAttraction);
+//	}
 	
 //	@Override
 //	public void updatePlanAttraction(PlanAttraction planAttraction) throws SQLException {
@@ -96,23 +98,25 @@ public class PlanServiceImpl implements PlanService {
 //	}
 
 	@Override
-	public void updatePlanAttraction(List<PlanAttraction> planAttractions) throws SQLException {
+	public void modifyPlanAttraction(List<PlanAttraction> planAttractions) throws SQLException {
+		int planId = planAttractions.get(0).getPlanId();
+		planMapper.cascadeDeletePlanAttraction(planId);
 		for(PlanAttraction planAttraction : planAttractions) {
-			planMapper.updatePlanAttraction(planAttraction);
+			planMapper.insertPlanAttraction(planAttraction);
 		}
 	}
 
-	@Override
-	public void deletePlanAttraction(int planAttractionId) throws SQLException {
-		PlanAttraction planAttraction = planMapper.selectPlanAttraction(planAttractionId);
-		int sequence = planAttraction.getSequence();
-		int planId = planAttraction.getPlanId();
-		List<PlanAttraction> list = getPlan(planId).getPlanAttractions();
-		for(int i=sequence+1; i<list.size(); i++) {
-			PlanAttraction tempAttraction = list.get(i);
-			tempAttraction.setSequence(i-1);
-			planMapper.updatePlanAttraction(tempAttraction);
-		}
-		planMapper.deletePlanAttraction(planAttractionId);
-	}
+//	@Override
+//	public void deletePlanAttraction(int planAttractionId) throws SQLException {
+//		PlanAttraction planAttraction = planMapper.selectPlanAttraction(planAttractionId);
+//		int sequence = planAttraction.getSequence();
+//		int planId = planAttraction.getPlanId();
+//		List<PlanAttraction> list = getPlan(planId).getPlanAttractions();
+//		for(int i=sequence+1; i<list.size(); i++) {
+//			PlanAttraction tempAttraction = list.get(i);
+//			tempAttraction.setSequence(i-1);
+//			planMapper.updatePlanAttraction(tempAttraction);
+//		}
+//		planMapper.deletePlanAttraction(planAttractionId);
+//	}
 }

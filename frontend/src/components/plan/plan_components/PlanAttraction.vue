@@ -6,9 +6,12 @@
     </div>
     <div class="att-info-area">
       <div class="attraction-title">{{ attraction.title }}</div>
-      <div class="plan-attraction-type" v-if="contentTypeSrc">
+      <Div class="type-and-btn" v-if="contentTypeSrc">
         <img :src="contentTypeSrc" />
-      </div>
+        <button class="delete-btn" v-if="type === 'update'" @click="emitDeletePlanAttraction">
+          <img src="@/assets/plan_icon/cross_gray.svg" alt="" class="cross-vector" />
+        </button>
+      </Div>
     </div>
   </div>
 </template>
@@ -17,7 +20,7 @@ import axios from 'axios';
 
 export default {
   name: 'PlanAttraction',
-  props: ['planAttraction', 'index'],
+  props: ['planAttraction', 'date', 'index', 'type'],
   data() {
     return {
       attraction: Object,
@@ -55,6 +58,9 @@ export default {
         this.categoryColorSet = '#999999';
         this.contentTypeSrc = require('@/assets/content_type_icon/etc.svg');
       }
+    },
+    emitDeletePlanAttraction() {
+      this.$emit('deletePlanAttraction', this.date, this.index);
     },
     async loadData() {
       await axios
@@ -101,5 +107,16 @@ export default {
   background-color: white;
   font-weight: 700;
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.type-and-btn > * {
+  margin-left: 3px;
+}
+
+.delete-btn {
+  background: none;
+  border: none;
+  position: relative;
+  bottom: 20px;
 }
 </style>

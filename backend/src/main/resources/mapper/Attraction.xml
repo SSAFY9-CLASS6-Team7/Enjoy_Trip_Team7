@@ -18,8 +18,8 @@
 
     <!-- 관광지 리스트 조회 -->
     <select id="selectAttraction" resultMap="attractionMap" parameterType="hashMap">
-        SELECT des.attraction_id, des.overview, i.title, i.content_type_id,
-               i.addr1, i.first_image, i.sido_code, i.latitude, i.longitude
+        SELECT des.attraction_id, des.overview, i.title, i.content_type_id code,
+               i.addr1 address, i.first_image thumbnail, i.sido_code sido, i.latitude lat, i.longitude lng
           FROM attraction_description des
           JOIN attraction_info i USING (attraction_id)
         <where>
