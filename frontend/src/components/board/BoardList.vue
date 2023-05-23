@@ -69,10 +69,10 @@ export default {
   },
   computed: {
       ...mapGetters('userStore', ['checkToken', 'checkUserInfo']),
-      ...mapGetters(['getPage']),
+      ...mapGetters(['getPage', 'getBoardTab', 'getSearchKeyword', 'getCondition']),
   },
   methods: {
-    ...mapActions(['pageNoChange']),
+    ...mapActions(['pageNoChange', 'boardTabChange', 'conditionChange', 'searchKeywordChange']),
     goSearch(){
       axios.get(process.env.VUE_APP_MY_BASE_URL+`/board?pageNo=1&code=${this.activeBoardTab}&condition=${this.selectedCondition}&anonymous=&keyword=${this.searchKeyword}`)
       .then(response => {
@@ -81,10 +81,12 @@ export default {
         this.pageResult.pageNo = 1;
         this.pageNo = 1;
         this.pageNoChange(1);
+        this.conditionChange(this.selectedCondition);
+        this.searchKeywordChange(this.searchKeyword);
         })
     },
     tabChange(code) {
-      axios.get(process.env.VUE_APP_MY_BASE_URL+`/board?pageNo=1&code=${code}&condition=${this.selectedCondition}&anonymous=&keyword=${this.searchKeyword}`)
+      axios.get(process.env.VUE_APP_MY_BASE_URL+`/board?pageNo=1&code=${code}&condition=&anonymous=&keyword=`)
       .then(response => {
         this.boards = response.data.boards
         this.pageResult = response.data.pageResult;
@@ -92,6 +94,9 @@ export default {
         this.pageResult.pageNo = 1;
         this.pageNo = 1;
         this.pageNoChange(1);
+        this.boardTabChange(code);
+        this.conditionChange('');
+        this.searchKeywordChange('');
         }
       )
     },
@@ -115,11 +120,12 @@ export default {
 
   },
   async created(){
-    if (this.getPage == null) {
-      this.pageNoChange(1);
-    }
     this.pageNo = this.getPage;
-    await axios.get(process.env.VUE_APP_MY_BASE_URL+`/board?pageNo=${this.pageNo}&code=${this.activeBoardTab}&condition=&anonymous=&keyword=`)
+    this.searchKeyword = this.getSearchKeyword;
+    this.activeBoardTab = this.getBoardTab;
+    this.selectedCondition = this.getCondition;
+  
+    await axios.get(process.env.VUE_APP_MY_BASE_URL+`/board?pageNo=${this.pageNo}&code=${this.activeBoardTab}&condition=${this.selectedCondition}&anonymous=&keyword=${this.searchKeyword}`)
     .then(response => {
       this.boards = response.data.boards;
       this.pageResult = response.data.pageResult;
