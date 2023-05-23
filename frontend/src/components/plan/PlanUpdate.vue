@@ -232,7 +232,8 @@ export default {
 .plan-update-container {
   position: relative;
   width: 100%;
-  height: 81.5vh;
+  /* height: 81.5vh; */
+  padding-bottom: 30px;
   display: grid;
   grid-template-columns: 1fr 5fr 1fr;
   grid-template-areas: 'left  main  right';
@@ -311,7 +312,7 @@ export default {
 
 .date-slide {
   width: 100%;
-  height: 5%;
+  height: 35px;
   display: flex;
   justify-content: center;
   margin: 15px 0;

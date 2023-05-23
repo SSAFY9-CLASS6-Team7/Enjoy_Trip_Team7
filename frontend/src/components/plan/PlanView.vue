@@ -16,6 +16,7 @@
             v-if="groupedAttractionsArray.length !== 0"
             :groupedAttractionsArray="groupedAttractionsArray"
             :focused="focused"
+            :plan="plan"
           ></the-kakao-map>
         </div>
         <div class="sequence-area">
@@ -65,6 +66,7 @@
         </div>
       </div>
     </div>
+    <!-- <div class="main-area"></div> -->
     <div class="right-aside"></div>
   </div>
 </template>
@@ -187,14 +189,12 @@ export default {
   position: relative;
   width: 100%;
   /* height: 81.5vh; */
+  padding-bottom: 30px;
   display: grid;
   grid-template-columns: 1fr 5fr 1fr;
   grid-template-areas: 'left  main  right';
   align-items: stretch;
   justify-items: stretch;
-  overflow: hidden;
-  margin-bottom: 30px;
-  border: 1px solid black;
 }
 
 .left-aside {
@@ -207,9 +207,6 @@ export default {
 
 .main-area {
   grid-area: main;
-  height: 80%;
-  margin-bottom: 10px;
-  border: 1px solid black;
 }
 
 .inner-header {
@@ -248,17 +245,16 @@ export default {
 
 .main {
   margin-top: 10px;
-  /* height: 50%; */
+  height: 90%;
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-items: stretch;
   justify-items: stretch;
-  border: 1px solid black;
 }
 
 .map-area {
   padding: 0 10px;
-  /* max-height: 730px; */
+  max-height: 730px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -267,20 +263,18 @@ export default {
 
 .sequence-area {
   padding: 0 10px;
-  /* max-height: 730px; */
-  /* height: 100%; */
-  border: 1px solid black;
+  max-height: 730px;
 }
 
 .date-slide {
   width: 100%;
-  height: 5%;
+  height: 35px;
   display: flex;
   justify-content: center;
   margin: 15px 0;
 }
 .attraction-slide-area {
-  /* height: 90%; */
+  height: 90%;
   background-color: #f6f6f6;
   border-radius: 10px;
   overflow: auto;
