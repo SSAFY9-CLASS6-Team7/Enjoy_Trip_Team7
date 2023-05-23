@@ -96,14 +96,14 @@ export default {
       newPlan.travelArea = this.travelArea;
       newPlan.content = this.memo;
 
-      await axios.post('http://localhost/plan/' + this.planId, newPlan);
+      await axios.post('http://192.168.212.72/plan/' + this.planId, newPlan);
       this.$emit('setNeedToUpdate', true);
       console.log("업데이트해!!");
       this.emitModalOff();
     },
   },
   async created() {
-    await axios.get('http://localhost/plan/' + this.planId).then((res) => (this.plan = res.data));
+    await axios.get('http://192.168.212.72/plan/' + this.planId).then((res) => (this.plan = res.data));
     this.title = this.plan.title;
     this.startDay = this.plan.startDay;
     this.endDay = this.plan.endDay;

@@ -160,7 +160,7 @@ export default {
                     f.append("file", this.uploaded);
                 }
 
-                await axios.put("http://localhost/user/"+this.checkUserInfo.userId, f);
+                await axios.put("http://192.168.212.72/user/"+this.checkUserInfo.userId, f);
                 let user = {
                     userId: this.checkUserInfo.userId,
                     password: ''

@@ -64,7 +64,7 @@ export default {
             return false;
         },
         commentDelete(){
-            this.$emit('commentDelete', "http://localhost/board/"+ this.boardId +"/comment/" + this.comment.commentId);    
+            this.$emit('commentDelete', "http://192.168.212.72/board/"+ this.boardId +"/comment/" + this.comment.commentId);    
         },
     },
 };

@@ -118,13 +118,13 @@ export default {
     },
     //삭제 진행하기
     async deleteHistory() {
-      await axios.delete(`http://localhost/history/` + this.historyId);
+      await axios.delete(`http://192.168.212.72/history/` + this.historyId);
       this.$emit('emitNeedToUpdate');
       this.$emit('emitModalOff');
     },
     //이미지 소스를 세팅하기
     setImageSrc(image) {
-      return 'http://localhost/imagePath/' + image.imagePath;
+      return 'http://192.168.212.72/imagePath/' + image.imagePath;
     },
     //샘플 이미지 소스를 세팅하기
     setSampleImageSrc() {
@@ -134,7 +134,7 @@ export default {
   },
   async mounted() {
     await axios
-      .get('http://localhost/history/' + this.historyId)
+      .get('http://192.168.212.72/history/' + this.historyId)
       .then((response) => (this.history = response.data));
     this.imageList = this.history.images;
   },

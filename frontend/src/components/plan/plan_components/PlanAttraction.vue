@@ -64,7 +64,7 @@ export default {
     },
     async loadData() {
       await axios
-        .get('http://localhost/attraction/' + this.planAttraction.attractionId)
+        .get('http://192.168.212.72/attraction/' + this.planAttraction.attractionId)
         .then((res) => (this.attraction = res.data));
     },
   },

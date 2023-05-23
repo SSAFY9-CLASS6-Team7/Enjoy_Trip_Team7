@@ -53,119 +53,70 @@
 <script>
 import AttractionPagination from '@/components/attraction/attraction_components/AttractionPagination.vue'
 import AttractionListItem from '@/components/attraction/attraction_components/AttractionListItem.vue'
-import { mapGetters } from 'vuex'
-// import axios from 'axios'
+import { mapActions, mapGetters } from 'vuex'
+import qs from "qs"
+import axios from 'axios'
 
 export default {
   name : 'AttractionList',
   components: { AttractionPagination, AttractionListItem },
   data(){
     return {
-      attractions: [
-        {
-          attractionId: 1,
-          title: "제주 민박",
-          code: 39,
-          thumbnail: 'http://tong.visitkorea.or.kr/cms/resource/29/2482729_image2_1.jpg',
-          address: '제주특별자치도 서귀포시 대정읍 마라로101번길 46'
-        },
-        {
-          attractionId: 1,
-          title: "제주 민박",
-          code: 39,
-          thumbnail: 'http://tong.visitkorea.or.kr/cms/resource/29/2482729_image2_1.jpg',
-          address: '제주특별자치도 서귀포시 대정읍 마라로101번길 46'
-        },
-        {
-          attractionId: 1,
-          title: "제주 민박",
-          code: 39,
-          thumbnail: 'http://tong.visitkorea.or.kr/cms/resource/29/2482729_image2_1.jpg',
-          address: '제주특별자치도 서귀포시 대정읍 마라로101번길 46'
-        },
-        {
-          attractionId: 1,
-          title: "제주 민박",
-          code: 39,
-          thumbnail: 'http://tong.visitkorea.or.kr/cms/resource/29/2482729_image2_1.jpg',
-          address: '제주특별자치도 서귀포시 대정읍 마라로101번길 46'
-        },
-        {
-          attractionId: 1,
-          title: "제주 민박",
-          code: 39,
-          thumbnail: 'http://tong.visitkorea.or.kr/cms/resource/29/2482729_image2_1.jpg',
-          address: '제주특별자치도 서귀포시 대정읍 마라로101번길 46'
-        },
-        {
-          attractionId: 1,
-          title: "제주 민박",
-          code: 39,
-          thumbnail: 'http://tong.visitkorea.or.kr/cms/resource/29/2482729_image2_1.jpg',
-          address: '제주특별자치도 서귀포시 대정읍 마라로101번길 46'
-        },
-        {
-          attractionId: 1,
-          title: "제주 민박",
-          code: 39,
-          thumbnail: 'http://tong.visitkorea.or.kr/cms/resource/29/2482729_image2_1.jpg',
-          address: '제주특별자치도 서귀포시 대정읍 마라로101번길 46'
-        },
-        {
-          attractionId: 1,
-          title: "제주 민박",
-          code: 39,
-          thumbnail: 'http://tong.visitkorea.or.kr/cms/resource/29/2482729_image2_1.jpg',
-          address: '제주특별자치도 서귀포시 대정읍 마라로101번길 46'
-        },
-        {
-          attractionId: 1,
-          title: "제주 민박",
-          code: 39,
-          thumbnail: 'http://tong.visitkorea.or.kr/cms/resource/29/2482729_image2_1.jpg',
-          address: '제주특별자치도 서귀포시 대정읍 마라로101번길 46'
-        },
-        {
-          attractionId: 1,
-          title: "제주 민박",
-          code: 39,
-          thumbnail: 'http://tong.visitkorea.or.kr/cms/resource/29/2482729_image2_1.jpg',
-          address: '제주특별자치도 서귀포시 대정읍 마라로101번길 46'
-        },
-
-      ],
+      attractions: [],
       pageResult: '',
       sido: [],
       selectedSido: [],
       category: [],
       keyword: '',
       sidoDropdownOpen: false,
+      pageNo: 1,
     }
   },
   computed: {
-      ...mapGetters(['getSidoCode']),
+      ...mapGetters(['getSidoCode', 'getPage']),
     },
   methods: {
+    ...mapActions(['pageNoChange']),
     toggleDropdown() {
       this.sidoDropdownOpen = !this.sidoDropdownOpen;
     },
-    pageChanged(){
-
+    pageChanged(clickedPage){
+      this.pageNo = clickedPage;
+      this.goSearch();
     },
-    goSearch(){
+    async goSearch(){
+      await axios({
+        url: `http://192.168.212.72/attraction`,
+        method: 'GET',
+        params: {
+          pageNo: this.pageNo,
+          code: this.category,
+          sido: this.selectedSido,
+          keyword: this.keyword,
+        },
+        paramsSerializer: (params) => {
+          const code = Array.isArray(params.code) ? params.code : [params.code];
+          const sido = Array.isArray(params.sido) ? params.sido : [params.sido];
 
+          return qs.stringify(
+            {
+              ...params,
+              code: code.join(','), 
+              sido: sido.join(','), 
+            },
+            { arrayFormat: 'comma' }
+          );
+        },
+      }).then((response) => {
+        this.attractions = response.data.attractions;
+        this.pageResult = response.data.pageResult;
+        this.pageNoChange(this.pageNo);
+      });
     },
-
   },
-  created() {
-    // const selectedSidoParams = this.selectedSido.map(sido => `sido=${encodeURIComponent(sido)}`).join('&');
-    // const categoryParams = this.category.map(category => `code=${encodeURIComponent(category)}`).join('&');
-    // const queryParams = `${selectedSidoParams}&${categoryParams}`;
-
-    // await axios.get(`http://localhost/attraction?${queryParams}&keyword=${this.keyword}`)
-    // .then(response => {
-    //   console.log(response.data);
-    // })
+  async created() {
+    this.pageNo = this.getPage;
+    await this.goSearch();
   }
 }
 
@@ -202,7 +153,6 @@ export default {
 }
 
 .header {
-  border: 1px solid #333333;
   display: flex;
   min-height: 100px;
   align-items: center;
@@ -327,7 +277,7 @@ export default {
 .content {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: start;
   padding:10px 20px 10px 20px;
 }
 

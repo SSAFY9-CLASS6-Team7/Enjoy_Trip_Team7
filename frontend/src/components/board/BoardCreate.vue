@@ -116,7 +116,7 @@ export default {
         f.append('files', uploadFiles[i]);
       }
 
-      await axios.post('http://localhost/board', f);
+      await axios.post('http://192.168.212.72/board', f);
       this.pageNoChange(1);
       this.$router.push("/board");
       this.$router.go(0);

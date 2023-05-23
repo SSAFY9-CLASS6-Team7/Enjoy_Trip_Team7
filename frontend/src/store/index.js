@@ -9,7 +9,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     activeMenuItem: sessionStorage.getItem('activeMenuItem') || '',
-    pageNo: sessionStorage.getItem('pageNo'),
+    pageNo: sessionStorage.getItem('pageNo') || 1,
     sidoCode: [
       { code: '1', text: '서울' },
       { code: '2', text: '인천' },
@@ -36,6 +36,9 @@ export default new Vuex.Store({
       { id: '39', text: '음식점' },
       { id: '0', text: '기타' }, //위 4개에 해당하지 않는 모든 타입
     ],
+    selectedSido: sessionStorage.getItem("sido") || [],
+    selctedCategory: sessionStorage.getItem("category") || [],
+    selectedKeyword: sessionStorage.getItem("keyword") || ''
   },
   getters: {
     getSidoCode: (state) => {
@@ -46,12 +49,16 @@ export default new Vuex.Store({
     },
     getPage: (state) => {
       return state.pageNo;
+    },
+    getSelectedSido: (state) => {
+      return state.selectedSido;
     }
   },
   mutations: {
     activeMenuChange(state, data) {
       state.activeMenuItem = data;
       sessionStorage.setItem('activeMenuItem', data); // 로컬 스토리지에 값 저장
+      sessionStorage.setItem('pageNo', 1);
     },
     pageNoChange(state, page) {
       state.pageNo = page;

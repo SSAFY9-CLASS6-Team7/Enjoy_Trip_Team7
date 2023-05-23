@@ -39,7 +39,7 @@ export default {
   methods: {
     async loadData(attractionId) {
       await axios
-        .get(`http://localhost/attraction/${attractionId}`)
+        .get(`http://192.168.212.72/attraction/${attractionId}`)
         .then((response) => (this.attraction = response.data));
       this.setContentTypeSrc();
     },

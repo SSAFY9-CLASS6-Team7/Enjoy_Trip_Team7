@@ -1,6 +1,6 @@
 <template>
     <div class="background-blur" @click="no">
-        <img :src="`http://localhost/imagePath/${this.imagePath}`" class="image">
+        <img :src="`http://192.168.212.72/imagePath/${this.imagePath}`" class="image">
     </div>
 </template>
 <script>

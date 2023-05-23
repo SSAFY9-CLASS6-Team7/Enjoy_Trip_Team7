@@ -98,7 +98,7 @@ export default {
     
     this.boardId = this.$route.params.boardId;
     console.log("board Id : " + this.boardId);
-    axios.get("http://localhost/board/" + this.boardId)
+    axios.get("http://192.168.212.72/board/" + this.boardId)
         .then(response => {
         console.log(response.data);
         this.selectedCode = response.data.board.code;
@@ -128,7 +128,7 @@ export default {
         f.append('files', uploadFiles[i]);
       }
 
-      await axios.put('http://localhost/board/'+this.boardId, f);
+      await axios.put('http://192.168.212.72/board/'+this.boardId, f);
       this.$router.push("/board");
     },
     handleFileChange(event) {

@@ -125,7 +125,7 @@ export default {
     },
     loadPlans() {
       axios
-        .get(`http://localhost/plan?pageNo=${this.pageNo}&userId=${this.userId}`)
+        .get(`http://192.168.212.72/plan?pageNo=${this.pageNo}&userId=${this.userId}`)
         .then((response) => {
           this.plans = response.data.plans;
           this.pageResult = response.data.pageResult;

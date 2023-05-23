@@ -1,7 +1,9 @@
 <template>
     <div class='card'>
         <div class="image-area">
-            <img :src="attraction.thumbnail" class="thumbnail">
+            <img v-if="attraction.thumbnail != ''" :src="attraction.thumbnail" class="thumbnail">
+            <img v-else src="@/assets/attraction_icon/no-image.png" class="thumbnail">
+
             <img :src="getCategoryIcon(attraction.code)" class ="category">
         </div>
         <div class="detail">
