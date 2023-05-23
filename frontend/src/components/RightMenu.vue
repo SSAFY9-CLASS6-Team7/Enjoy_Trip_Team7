@@ -135,7 +135,6 @@ export default {
     },
     mounted() {
         setTimeout(() => {
-            console.log(this.checkUserInfo.profilePicPath);
             this.isOpen = true; 
         }, 100);
     },

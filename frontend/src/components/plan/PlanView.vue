@@ -177,7 +177,7 @@ export default {
   },
   async created() {
     this.plan.planId = this.$route.params.planId;
-    await axios.get('http://localhost/plan/' + this.plan.planId).then((response) => {
+    await axios.get(process.env.VUE_APP_MY_BASE_URL+'/plan/' + this.plan.planId).then((response) => {
       this.plan = response.data;
     });
     this.setGroupedAttractionsArray();

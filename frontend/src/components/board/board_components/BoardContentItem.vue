@@ -21,7 +21,7 @@
             <div class="hits">{{ board.hits }}</div>
             <div class="heart">{{ board.heart }}</div>
         </div>
-        <div class="divider"/>
+        <div class="devider"/>
     </div>
 </template>
 
@@ -74,17 +74,17 @@ export default {
             return path;
         },
         fetchUserInfo() {
-            axios.get(`http://localhost/user/${this.board.userId}`)
+            axios.get(process.env.VUE_APP_MY_BASE_URL+`/user/${this.board.userId}`)
             .then(response => {
                 this.nickname = response.data.userInfo.nickname;
             });
         },
         fetchComments() {
-            axios.get(`http://localhost/board/${this.board.boardId}/comment`)
+            axios.get(process.env.VUE_APP_MY_BASE_URL+`/board/${this.board.boardId}/comment`)
             .then(response => this.comments = response.data.length);
         },
         async fetchImages() {
-            await axios.get(`http://localhost/board/${this.board.boardId}/image`)
+            await axios.get(process.env.VUE_APP_MY_BASE_URL+`/board/${this.board.boardId}/image`)
             .then(response =>{
                 this.images = response.data.images
             } );
@@ -127,7 +127,7 @@ export default {
     align-items: center;
 }
 
-.divider {
+.devider {
     height: 1px;
     background-color: #e7e7e7;
     

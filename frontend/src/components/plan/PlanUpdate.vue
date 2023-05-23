@@ -208,7 +208,7 @@ export default {
       }
 
       await axios.post(
-        'http://localhost/plan/' + this.plan.planId + '/attraction',
+        process.env.VUE_APP_MY_BASE_URL+'/plan/' + this.plan.planId + '/attraction',
         newAttractionList
       );
       this.$router.push('/plan/view/' + this.plan.planId);
@@ -221,7 +221,7 @@ export default {
   },
   async created() {
     this.plan.planId = this.$route.params.planId;
-    await axios.get('http://localhost/plan/' + this.plan.planId).then((response) => {
+    await axios.get(process.env.VUE_APP_MY_BASE_URL+'/plan/' + this.plan.planId).then((response) => {
       this.plan = response.data;
     });
     this.setGroupedAttractionsArray();

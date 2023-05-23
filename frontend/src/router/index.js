@@ -1,5 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import store from '../store/index';
+
 
 Vue.use(VueRouter);
 
@@ -159,7 +161,7 @@ const routes = [
           import(/* webpackChunkName: "user" */ '@/components/attraction/AttractionList.vue'),
       },
       {
-        path: 'view',
+        path: 'view/:attractionId',
         name: 'attractionview',
         component: () =>
           import(/* webpackChunkName: "user" */ '@/components/attraction/AttractionView.vue'),
@@ -172,6 +174,14 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  if (!to.path.includes('/board')) {
+    console.log("초기화!!");
+    store.commit('resetBoardState'); 
+  }
+  next();
 });
 
 export default router;

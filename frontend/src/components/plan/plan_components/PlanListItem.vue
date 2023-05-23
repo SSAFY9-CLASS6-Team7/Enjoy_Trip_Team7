@@ -87,13 +87,13 @@ export default {
     },
     //삭제 진행하기
     async deletePlan() {
-      await axios.delete(`http://localhost/plan/` + this.planId);
+      await axios.delete(process.env.VUE_APP_MY_BASE_URL+`/plan/` + this.planId);
       this.$emit('setNeedToUpdate', true);
       // this.$router.push('/plan/');
     },
     async loadPlan() {
       await axios
-        .get(`http://localhost/plan/` + this.planId)
+        .get(process.env.VUE_APP_MY_BASE_URL + `/plan/` + this.planId)
         .then((response) => (this.plan = response.data));
       this.setTravelAreaImgSrc();
     },

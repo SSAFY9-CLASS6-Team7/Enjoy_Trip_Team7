@@ -119,7 +119,7 @@ export default {
                     this.idCheckResult = '아이디는 영어와 숫자의 조합이어야 합니다.';
                 } else {
                     // 중복 체크 로직
-                    axios.get('http://localhost/user/'+this.id)
+                    axios.get(process.env.VUE_APP_MY_BASE_URL + '/user/'+this.id)
                     .then(response => {
                         if (response.data.message == 'success') {
                             this.idFlag = false;
@@ -172,7 +172,7 @@ export default {
                     birth: this.birth,
                 }
 
-                axios.post("http://localhost/user", user);
+                axios.post(process.env.VUE_APP_MY_BASE_URL + "/user", user);
                 this.modal = true;
 
             }else {

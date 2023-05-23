@@ -64,7 +64,7 @@ export default {
     },
     async loadData() {
       await axios
-        .get('http://localhost/attraction/' + this.planAttraction.attractionId)
+        .get(process.env.VUE_APP_MY_BASE_URL+'/attraction/' + this.planAttraction.attractionId)
         .then((res) => (this.attraction = res.data));
     },
   },

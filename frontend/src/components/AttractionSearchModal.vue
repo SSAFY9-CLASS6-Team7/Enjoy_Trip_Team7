@@ -179,7 +179,7 @@ export default {
     async infiniteHandler($state) {
       this.infiniteState = $state;
       await axios({
-        url: `http://localhost/attraction`,
+        url: process.env.VUE_APP_MY_BASE_URL+`/attraction`,
         method: 'GET',
         params: {
           pageNo: this.pageNo,

@@ -141,7 +141,7 @@ export default {
         f.append('files', tempFiles[c]);
       }
 
-      await axios.post(`http://localhost/history`, f);
+      await axios.post(process.env.VUE_APP_MY_BASE_URL+`/history`, f);
       this.$emit('emitNeedToUpdate');
       this.emitModalOff();
     },

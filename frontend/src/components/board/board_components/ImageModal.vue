@@ -1,6 +1,6 @@
 <template>
     <div class="background-blur" @click="no">
-        <img :src="`http://localhost/imagePath/${this.imagePath}`" class="image">
+        <img :src="`process.env.VUE_APP_MY_BASE_URL/imagePath/${this.imagePath}`" class="image">
     </div>
 </template>
 <script>

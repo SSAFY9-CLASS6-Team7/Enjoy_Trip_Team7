@@ -64,7 +64,7 @@ export default {
             return false;
         },
         commentDelete(){
-            this.$emit('commentDelete', "http://localhost/board/"+ this.boardId +"/comment/" + this.comment.commentId);    
+            this.$emit('commentDelete', process.env.VUE_APP_MY_BASE_URL+"/board/"+ this.boardId +"/comment/" + this.comment.commentId);    
         },
     },
 };
