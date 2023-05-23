@@ -55,6 +55,7 @@ import HistoryModal from './history_components/HistoryModal.vue';
 import HistoryPagination from './history_components/HistoryPagination.vue';
 import HistoryEmpty from './HistoryEmpty.vue';
 import axios from 'axios';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'HistoryList',
@@ -73,7 +74,11 @@ export default {
       needToUpate: false,
       pageNo: 1,
       pageResult: {},
+      userId: '',
     };
+  },
+  computed: {
+    ...mapGetters('userStore', ['checkUserInfo']),
   },
   methods: {
     //열리는 모달 창의 타입(생성/조회/수정) 변경
@@ -109,11 +114,13 @@ export default {
     },
     // 기록 리스트 로딩
     async loadHistories() {
-      await axios.get(`http://localhost/history?pageNo=${this.pageNo}`).then((response) => {
-        // await axios.get(`http://43.201.218.74/history?pageNo=${this.pageNo}`).then((response) => {
-        this.histories = response.data.histories;
-        this.pageResult = response.data.pageResult;
-      });
+      await axios
+        .get(`http://localhost/history?pageNo=${this.pageNo}&userId=${this.userId}`)
+        .then((response) => {
+          // await axios.get(`http://43.201.218.74/history?pageNo=${this.pageNo}`).then((response) => {
+          this.histories = response.data.histories;
+          this.pageResult = response.data.pageResult;
+        });
     },
   },
   watch: {
@@ -126,6 +133,7 @@ export default {
     },
   },
   created() {
+    this.userId = this.checkUserInfo.userId;
     this.loadHistories();
   },
 };
