@@ -51,6 +51,7 @@
 </template>
 <script>
 import axios from 'axios';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'PlanCreateModal',
@@ -61,9 +62,11 @@ export default {
       endDay: '',
       travelArea: '',
       memo: '',
+      userId: '',
     };
   },
   computed: {
+    ...mapGetters('userStore', ['checkUserInfo']),
     sidoCode() {
       return this.$store.getters.getSidoCode;
     },
@@ -93,10 +96,14 @@ export default {
       newPlan.endDay = this.endDay;
       newPlan.travelArea = this.travelArea;
       newPlan.content = this.memo;
+      newPlan.userId = this.userId;
       await axios.post('http://localhost/plan', newPlan);
       this.$emit('setNeedToUpdate', true);
       this.emitModalOff();
     },
+  },
+  created() {
+    this.userId = this.checkUserInfo.userId;
   },
 };
 </script>
