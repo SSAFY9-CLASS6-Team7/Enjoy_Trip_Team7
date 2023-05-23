@@ -46,7 +46,11 @@
                     v-for="(attraction, index) in groupedAttractions[date]"
                     :key="attraction.planAttractionId"
                   >
-                    <plan-attraction :planAttraction="attraction" :index="index"></plan-attraction>
+                    <plan-attraction
+                      :planAttraction="attraction"
+                      :index="index"
+                      :type="'view'"
+                    ></plan-attraction>
                   </div>
                 </div>
               </div>

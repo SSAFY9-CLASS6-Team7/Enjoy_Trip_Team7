@@ -42,7 +42,6 @@ public class AttractionServiceImpl implements AttractionService{
         } else {
             map.put("sidos", Collections.emptyList());
         }map.put("keyword", paramMap.get("keyword"));
-        log.info("map: {}", map);
 
         Map<String, Object> result = new HashMap<>();
         int totalCount = attractionMapper.selectAttractionCount();

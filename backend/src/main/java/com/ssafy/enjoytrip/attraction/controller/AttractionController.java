@@ -21,7 +21,6 @@ public class AttractionController {
 
     @GetMapping
     public Map<String, Object> getAttractionList(@RequestParam Map<String, Object> paramMap) throws SQLException {
-        log.info("paramMap: {}", paramMap);
         return attractionService.getAttractionList(paramMap);
     }
 

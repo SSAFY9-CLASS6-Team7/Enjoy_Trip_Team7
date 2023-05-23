@@ -58,7 +58,10 @@
                     >
                       <plan-attraction
                         :planAttraction="attraction"
+                        :date="date"
                         :index="index"
+                        :type="'update'"
+                        @deletePlanAttraction="deletePlanAttraction"
                       ></plan-attraction>
                     </div>
                   </draggable>
@@ -188,7 +191,6 @@ export default {
     addAttraction(attraction) {
       this.groupedAttractionsArray[this.focused - 1].push(attraction);
     },
-    //TODO: url도 request도 제대로 찍히는데 DB에 남지 않는다?!
     async updatePlanAttractions() {
       let newAttractionList = [];
       var dayOrder = 0;
@@ -198,6 +200,7 @@ export default {
         var date = this.planDates[dayOrder];
         for (var attraction of dateAttractions) {
           var newAttraction = {};
+          newAttraction.planAttractionId = attraction.planAttractionId;
           newAttraction.attractionId = attraction.attractionId;
           newAttraction.sequence = sequence;
           newAttraction.planDate = date;
@@ -208,11 +211,17 @@ export default {
         dayOrder += 1;
       }
 
-      await axios.put(
+      await axios.post(
         'http://localhost/plan/' + this.plan.planId + '/attraction',
         newAttractionList
       );
       this.$router.push('/plan/view/' + this.plan.planId);
+    },
+    //날짜와 순서를 받아서 요소 삭제
+    deletePlanAttraction(date, index) {
+      console.log(date, '+', index);
+      var dateIndex = this.planDates.findIndex((element) => element === date);
+      this.groupedAttractionsArray[dateIndex].splice(index);
     },
   },
   async created() {

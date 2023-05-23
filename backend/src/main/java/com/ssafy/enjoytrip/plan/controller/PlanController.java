@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import com.ssafy.enjoytrip.plan.model.Plan;
@@ -14,6 +15,7 @@ import com.ssafy.enjoytrip.plan.model.PlanAttraction;
 import com.ssafy.enjoytrip.plan.model.service.PlanService;
 import com.ssafy.enjoytrip.user.model.User;
 
+@Slf4j
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/plan")
@@ -70,13 +72,13 @@ public class PlanController {
 	}
 
 
-	@PostMapping("{planId}/attraction")
-	public void createPlanAttraction(@RequestBody PlanAttraction planAttraction, @PathVariable int planId) throws SQLException {
-		planAttraction.setPlanId(planId);
-		int sequence = getPlan(planId).getPlanAttractions().size();
-		planAttraction.setSequence(sequence);
-		planService.createPlanAttraction(planAttraction);
-	}
+//	@PostMapping("{planId}/attraction")
+//	public void createPlanAttraction(@RequestBody PlanAttraction planAttraction, @PathVariable int planId) throws SQLException {
+//		planAttraction.setPlanId(planId);
+//		int sequence = getPlan(planId).getPlanAttractions().size();
+//		planAttraction.setSequence(sequence);
+//		planService.createPlanAttraction(planAttraction);
+//	}
 	
 //	@PostMapping("{planId}/attraction/{planAttractionId}")
 //	public void updatePlanAttraction(@RequestBody PlanAttraction planAttraction, @PathVariable int planId, @PathVariable int planAttractionId) throws SQLException {
@@ -85,16 +87,16 @@ public class PlanController {
 //		planService.updatePlanAttraction(planAttraction);
 //	}
 
-	@PutMapping("{planId}/attraction")
-	public void updatePlanAttraction(@RequestBody List<PlanAttraction> planAttractions, @PathVariable int planId) throws SQLException {
+	@PostMapping("{planId}/attraction")
+	public void modifyPlanAttraction(@RequestBody List<PlanAttraction> planAttractions, @PathVariable int planId) throws SQLException {
 		for(PlanAttraction planAttraction : planAttractions){
 			planAttraction.setPlanId(planId);
 		}
-		planService.updatePlanAttraction(planAttractions);
+		planService.modifyPlanAttraction(planAttractions);
 	}
 	
-	@DeleteMapping("{planId}/attraction/{planAttractionId}")
-	public void deletePlanAttraction(@PathVariable int planId, @PathVariable int planAttractionId) throws SQLException {
-		planService.deletePlanAttraction(planAttractionId);
-	}
+//	@DeleteMapping("{planId}/attraction/{planAttractionId}")
+//	public void deletePlanAttraction(@PathVariable int planId, @PathVariable int planAttractionId) throws SQLException {
+//		planService.deletePlanAttraction(planAttractionId);
+//	}
 }
