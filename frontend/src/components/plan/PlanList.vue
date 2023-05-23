@@ -1,10 +1,21 @@
 <template>
   <div class="plan-container">
     <div class="plan-modal" v-if="isModalOpen">
-      <attraction-search-modal
+      <plan-create-modal
+        @setModal="setModal"
+        @setNeedToUpdate="setNeedToUpdate"
+        v-if="openedModal === 'create' && isModalOpen === true"
+      ></plan-create-modal>
+      <plan-update-modal
+        @setModal="setModal"
+        @setNeedToUpdate="setNeedToUpdate"
+        :planId="focusedPlanId"
+        v-if="openedModal === 'update' && isModalOpen === true"
+      ></plan-update-modal>
+      <!-- <attraction-search-modal
         @setModal="setModal"
         @addAttraction="addAttraction"
-      ></attraction-search-modal>
+      ></attraction-search-modal> -->
     </div>
     <div class="left-aside"></div>
     <div>
@@ -21,9 +32,16 @@
           v-for="plan in plans"
           :key="plan.planId"
           :planId="plan.planId"
+          :needToUpdate="needToUpdate"
+          @updateModalOpen="updateModalOpen"
+          @setNeedToUpdate="setNeedToUpdate"
         ></plan-list-item>
       </div>
-      <div class="pagination"></div>
+      <plan-pagination
+        class="pagination"
+        :pageResult="pageResult"
+        @pageChange="pageChange"
+      ></plan-pagination>
     </div>
     <div class="right-aside"></div>
   </div>
@@ -31,39 +49,76 @@
 
 <script>
 import PlanListItem from './plan_components/PlanListItem.vue';
-import AttractionSearchModal from '../AttractionSearchModal.vue';
+import PlanCreateModal from './plan_components/PlanCreateModal.vue';
+import PlanUpdateModal from './plan_components/PlanUpdateModal.vue';
+import PlanPagination from './plan_components/PlanPagination.vue';
 import axios from 'axios';
 
 export default {
   name: 'PlanList',
   components: {
     PlanListItem,
-    AttractionSearchModal,
+    PlanCreateModal,
+    PlanUpdateModal,
+    PlanPagination,
   },
   data() {
     return {
       plans: [],
       isModalOpen: false,
+      openedModal: '',
+      focusedPlanId: '',
       pageNo: 1,
+      pageResult: {},
+      needToUpdate: false,
     };
+  },
+  watch: {
+    // 목록 내용이 변경 시 다시 로딩
+    needToUpdate: async function () {
+      if (this.needToUpdate === true) {
+        await this.loadPlans();
+        this.setNeedToUpdate(false);
+      }
+    },
   },
   methods: {
     //모달 창 오픈 여부 변경
     setModal(value) {
       this.isModalOpen = value;
+      if (value === false) {
+        this.openedModal = '';
+        this.focusedPlanId = '';
+      }
     },
-    //TODO: (변경필요)모달열기
     createModalOpen() {
+      this.openedModal = 'create';
       this.setModal(true);
+    },
+    updateModalOpen(planId) {
+      this.focusedPlanId = planId;
+      this.openedModal = 'update';
+      this.setModal(true);
+    },
+    setNeedToUpdate(value) {
+      this.needToUpdate = value;
     },
     addAttraction(attraction) {
       console.log('---관광지 정보 넘어옴 : ' + attraction.title);
     },
+    async pageChange(clickedPage) {
+      this.pageNo = clickedPage;
+      await this.loadPlans();
+    },
+    loadPlans() {
+      axios.get(`http://localhost/plan?pageNo=${this.pageNo}`).then((response) => {
+        this.plans = response.data.plans;
+        this.pageResult = response.data.pageResult;
+      });
+    },
   },
-  async created() {
-    await axios
-      .get(`http://localhost/plan?pageNo=${this.pageNo}`)
-      .then((response) => (this.plans = response.data));
+  created() {
+    this.loadPlans();
   },
 };
 </script>
@@ -114,6 +169,10 @@ export default {
   background-color: white;
 }
 
+.main > * {
+  margin: 2%;
+}
+
 .create-btn {
   padding: 7px 10px;
   margin-top: 20px;
@@ -135,7 +194,6 @@ export default {
 .pagination {
   grid-area: page;
   min-height: 60px;
-  border: #fcaf45 1px solid;
 }
 
 button {

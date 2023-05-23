@@ -108,12 +108,12 @@ const routes = [
       //   component: () => import(/* webpackChunkName: "plan" */ '@/components/plan/PlanSearch.vue'),
       // },
       {
-        path: 'update',
+        path: 'update/:planId',
         name: 'planupdate',
         component: () => import(/* webpackChunkName: "plan" */ '@/components/plan/PlanUpdate.vue'),
       },
       {
-        path: 'view',
+        path: 'view/:planId',
         name: 'planview',
         component: () => import(/* webpackChunkName: "plan" */ '@/components/plan/PlanView.vue'),
       },

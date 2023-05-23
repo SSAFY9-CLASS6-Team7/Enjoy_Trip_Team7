@@ -1,4 +1,5 @@
 <template>
+  <!-- 계획에서 관광지 추가할 때 검색 결과들 -->
   <div class="plan-search-item-container" @click="emitFocusedId">
     <div class="title-and-category">
       <div class="attraction-title">{{ attraction.title }}</div>

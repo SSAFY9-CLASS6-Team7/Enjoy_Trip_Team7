@@ -77,10 +77,10 @@
           <div class="att-detail-area">
             <div class="att-detail">
               <div class="att-detail-view" v-if="focusedAttId !== 0">
-                <plan-attraction-item
+                <plan-search-detail
                   :attractionId="focusedAttId"
                   @emitAddAttraction="emitAddAttraction"
-                ></plan-attraction-item>
+                ></plan-search-detail>
               </div>
             </div>
           </div>
@@ -91,7 +91,7 @@
 </template>
 <script>
 import PlanSearchItem from './plan/plan_components/PlanSearchItem.vue';
-import PlanAttractionItem from './plan/plan_components/PlanAttractionItem.vue';
+import PlanSearchDetail from './plan/plan_components/PlanSearchDetail.vue';
 import InfiniteLoading from 'vue-infinite-loading';
 import axios from 'axios';
 import qs from 'qs';
@@ -100,7 +100,7 @@ export default {
   name: 'AttractionSearchModal',
   components: {
     PlanSearchItem,
-    PlanAttractionItem,
+    PlanSearchDetail,
     InfiniteLoading,
   },
   data() {
