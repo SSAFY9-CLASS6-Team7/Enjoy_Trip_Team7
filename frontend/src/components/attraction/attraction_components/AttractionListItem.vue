@@ -1,5 +1,5 @@
 <template>
-    <div class='card'>
+    <div class='card' @click="attractionDetail">
         <div class="image-area">
             <img v-if="attraction.thumbnail != ''" :src="attraction.thumbnail" class="thumbnail">
             <img v-else src="@/assets/attraction_icon/no-image.png" class="thumbnail">
@@ -42,6 +42,9 @@ export default {
             } else {
                 return require("@/assets/attraction_icon/etc.svg");
             }
+        },
+        attractionDetail() {
+            this.$router.push("/attraction/view/"+this.attraction.attractionId);
         }
     },
 };
@@ -64,6 +67,10 @@ export default {
     border-radius: 15px;
     overflow: hidden;
     box-shadow: -1px 5px 16px rgba(0, 0, 0, 0.13);
+}
+
+.card:hover {
+    cursor: pointer;
 }
 
 .image-area {
