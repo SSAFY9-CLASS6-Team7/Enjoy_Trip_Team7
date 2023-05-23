@@ -11,7 +11,8 @@
                     로그아웃
                     <img src="@/assets/user_icons/logout.svg" >
                 </button>
-                <img src="@/assets/header_icon/profile.svg" class='profile'>
+                <img v-if="checkUserInfo.profilePicPath != null && checkUserInfo.profilePicPath != ''" :src="'http://localhost/profilePath/' + checkUserInfo.profilePicPath" class='profile' >
+                <img v-if="checkUserInfo.profilePicPath == null || checkUserInfo.profilePicPath == ''" src="@/assets/header_icon/profile.svg" class='profile'>
                 <div class="id-email-container">
                     <div class="id">{{ checkUserInfo.nickname }}</div>
                     <div class="email">{{ checkUserInfo.email }}</div>
@@ -134,8 +135,7 @@ export default {
     },
     mounted() {
         setTimeout(() => {
-            console.log(this.checkUserInfo);
-            console.log(this.checkToken);
+            console.log(this.checkUserInfo.profilePicPath);
             this.isOpen = true; 
         }, 100);
     },
@@ -210,7 +210,9 @@ export default {
 
 .profile {
     width: 45px;
+    height: 45px;
     margin:0 20px 0 0 ;
+    border-radius: 45%;
 }
 
 .go-to-login {

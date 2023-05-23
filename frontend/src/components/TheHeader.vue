@@ -42,7 +42,8 @@
       </div>
 
       <div v-if="checkToken" class="user-area" @click="profileClick" >
-        <img class="profile-img" src="../assets/header_icon/profile.svg" />
+        <img class="profile-img"  v-if="checkUserInfo.profilePicPath != null && checkUserInfo.profilePicPath != ''" :src="'http://localhost/profilePath/' + checkUserInfo.profilePicPath" />
+        <img class="profile-img" v-if="checkUserInfo.profilePicPath == null || checkUserInfo.profilePicPath == ''" src="@/assets/header_icon/profile.svg">
         <div>{{ checkUserInfo.nickname }}</div>
       </div>
 
@@ -171,7 +172,9 @@ export default {
 
 .profile-img {
   background-color: #e8e8e8;
-  border-radius: 22px;
+  border-radius: 45px;
+  width: 45px;
+  height: 45px;
   margin:0 10px 0 0;
 }
 

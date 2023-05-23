@@ -72,7 +72,7 @@ import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
 import axios from 'axios';
-import { mapGetters } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'BoardCreate',
@@ -99,6 +99,7 @@ export default {
       ...mapGetters('userStore', ['checkUserInfo']),
   },
   methods: {
+    ...mapActions(['pageNoChange']),
     onEditorChange(value) {
       this.content = value.html;
     },
@@ -116,6 +117,7 @@ export default {
       }
 
       await axios.post('http://localhost/board', f);
+      this.pageNoChange(1);
       this.$router.push("/board");
       this.$router.go(0);
     },
