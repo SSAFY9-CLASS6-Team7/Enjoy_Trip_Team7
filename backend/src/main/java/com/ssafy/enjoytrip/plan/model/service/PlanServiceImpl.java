@@ -30,7 +30,7 @@ public class PlanServiceImpl implements PlanService {
 	@Override
 	public Map<String, Object> getPlanList(Map<String, Object> map) throws SQLException {
 		Page page = new Page();
-		int pageNo = Integer.parseInt(String.valueOf(map.get("pgno")));
+		int pageNo = Integer.parseInt(String.valueOf(map.get("pageNo")));
 		page.setPageNo(pageNo);
 		page.setListSize(LIST_SIZE);
 		map.put("page", page);

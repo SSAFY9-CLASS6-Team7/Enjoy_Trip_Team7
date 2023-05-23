@@ -87,11 +87,11 @@ const routes = [
     component: () => import(/* webpackChunkName: "plan" */ '../views/AppPlan.vue'),
     redirect: '/plan/list',
     children: [
-      {
-        path: 'create',
-        name: 'plancreate',
-        component: () => import(/* webpackChunkName: "plan" */ '@/components/plan/PlanCreate.vue'),
-      },
+      // {
+      //   path: 'create',
+      //   name: 'plancreate',
+      //   component: () => import(/* webpackChunkName: "plan" */ '@/components/plan/PlanCreate.vue'),
+      // },
       {
         path: 'empty',
         name: 'planempty',

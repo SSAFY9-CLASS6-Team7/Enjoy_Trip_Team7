@@ -284,6 +284,7 @@ export default {
   width: 200px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   font-size: 12px;
   margin: 0 20px;
 }

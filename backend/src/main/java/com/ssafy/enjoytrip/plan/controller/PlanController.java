@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpSession;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,21 +24,18 @@ public class PlanController {
 		this.planService = planService;
 	}
 
-	private User getLoginUser(HttpSession session) {
-		// ----- DUMMY USER FOR TEST -----
-		User dummyUser = new User();
-		dummyUser.setUserId("TestUser1");
-		session.setAttribute("loginUser", dummyUser);
-		// --------------------------------
-		return (User) session.getAttribute("loginUser");
-	}
+//	private User getLoginUser(HttpSession session) {
+//		// ----- DUMMY USER FOR TEST -----
+//		User dummyUser = new User();
+//		dummyUser.setUserId("TestUser1");
+//		session.setAttribute("loginUser", dummyUser);
+//		// --------------------------------
+//		return (User) session.getAttribute("loginUser");
+//	}
 	
 	@GetMapping
-	public Map<String, Object> getPlanList(@RequestParam(required = false) String pageNo, HttpSession session) throws SQLException {
-		Map<String, Object> param = new HashMap<>();
-		param.put("userId", getLoginUser(session).getUserId());
-		param.put("pgno", pageNo);
-		return planService.getPlanList(param);
+	public Map<String, Object> getPlanList(@RequestParam Map<String, Object> paramMap) throws SQLException {
+		return planService.getPlanList(paramMap);
 	}
 
 	@GetMapping("{planId}")
@@ -49,19 +44,18 @@ public class PlanController {
 	}
 
 	@PostMapping
-	public void createPlan(@RequestBody Plan plan, HttpSession session) throws SQLException {
-		plan.setUserId(getLoginUser(session).getUserId());
+	public void createPlan(@RequestBody Plan plan) throws SQLException {
 		planService.createPlan(plan);
 	}
 	
 	@PostMapping("{planId}")
-	public void updatePlan(@RequestBody Plan plan, @PathVariable int planId, HttpSession session) throws SQLException {
+	public void updatePlan(@RequestBody Plan plan, @PathVariable int planId) throws SQLException {
 		plan.setPlanId(planId);
 		planService.updatePlan(plan);
 	}
 	
 	@DeleteMapping("{planId}")
-	public void deletePlan(@PathVariable int planId, HttpSession session) throws SQLException {
+	public void deletePlan(@PathVariable int planId) throws SQLException {
 		planService.deletePlan(planId);
 	}
 	

@@ -12,10 +12,6 @@
         :planId="focusedPlanId"
         v-if="openedModal === 'update' && isModalOpen === true"
       ></plan-update-modal>
-      <!-- <attraction-search-modal
-        @setModal="setModal"
-        @addAttraction="addAttraction"
-      ></attraction-search-modal> -->
     </div>
     <div class="left-aside"></div>
     <div>
@@ -27,21 +23,26 @@
         </button>
       </div>
       <div class="line"></div>
-      <div class="main">
-        <plan-list-item
-          v-for="plan in plans"
-          :key="plan.planId"
-          :planId="plan.planId"
-          :needToUpdate="needToUpdate"
-          @updateModalOpen="updateModalOpen"
-          @setNeedToUpdate="setNeedToUpdate"
-        ></plan-list-item>
+      <div class="empty-main" v-if="plans.length === 0">
+        <plan-empty @setCreateModal="createModalOpen"></plan-empty>
       </div>
-      <plan-pagination
-        class="pagination"
-        :pageResult="pageResult"
-        @pageChange="pageChange"
-      ></plan-pagination>
+      <div class="plan-main" v-if="plans.length !== 0">
+        <div class="main">
+          <plan-list-item
+            v-for="plan in plans"
+            :key="plan.planId"
+            :planId="plan.planId"
+            :needToUpdate="needToUpdate"
+            @updateModalOpen="updateModalOpen"
+            @setNeedToUpdate="setNeedToUpdate"
+          ></plan-list-item>
+        </div>
+        <plan-pagination
+          class="pagination"
+          :pageResult="pageResult"
+          @pageChange="pageChange"
+        ></plan-pagination>
+      </div>
     </div>
     <div class="right-aside"></div>
   </div>
@@ -52,7 +53,9 @@ import PlanListItem from './plan_components/PlanListItem.vue';
 import PlanCreateModal from './plan_components/PlanCreateModal.vue';
 import PlanUpdateModal from './plan_components/PlanUpdateModal.vue';
 import PlanPagination from './plan_components/PlanPagination.vue';
+import PlanEmpty from './PlanEmpty.vue';
 import axios from 'axios';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'PlanList',
@@ -61,6 +64,7 @@ export default {
     PlanCreateModal,
     PlanUpdateModal,
     PlanPagination,
+    PlanEmpty,
   },
   data() {
     return {
@@ -71,7 +75,11 @@ export default {
       pageNo: 1,
       pageResult: {},
       needToUpdate: false,
+      userId: '',
     };
+  },
+  computed: {
+    ...mapGetters('userStore', ['checkUserInfo']),
   },
   watch: {
     // 목록 내용이 변경 시 다시 로딩
@@ -111,13 +119,16 @@ export default {
       await this.loadPlans();
     },
     loadPlans() {
-      axios.get(`http://localhost/plan?pageNo=${this.pageNo}`).then((response) => {
-        this.plans = response.data.plans;
-        this.pageResult = response.data.pageResult;
-      });
+      axios
+        .get(`http://localhost/plan?pageNo=${this.pageNo}&userId=${this.userId}`)
+        .then((response) => {
+          this.plans = response.data.plans;
+          this.pageResult = response.data.pageResult;
+        });
     },
   },
   created() {
+    this.userId = this.checkUserInfo.userId;
     this.loadPlans();
   },
 };
