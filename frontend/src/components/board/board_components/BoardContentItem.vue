@@ -21,7 +21,7 @@
             <div class="hits">{{ board.hits }}</div>
             <div class="heart">{{ board.heart }}</div>
         </div>
-        <div class="divider"/>
+        <div class="devider"/>
     </div>
 </template>
 
@@ -127,7 +127,7 @@ export default {
     align-items: center;
 }
 
-.divider {
+.devider {
     height: 1px;
     background-color: #e7e7e7;
     
