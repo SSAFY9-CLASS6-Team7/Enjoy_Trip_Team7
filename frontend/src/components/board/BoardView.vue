@@ -33,8 +33,7 @@
         <div class="devider"/>
 
         <div class="board-content">
-            <div class="board-content-value" v-html="formatBoardContent(board.boardContent)">
-            </div>
+            <div class="board-content-value" v-html="formatBoardContent(board.boardContent)"></div>
             <div v-if="images.length > 0" class="board-images">
                 <swiper :options="swiperOption3">
                     <swiper-slide class="image-swiper-item" v-for="image in images" :key="image">
@@ -44,11 +43,7 @@
                     </swiper-slide>
                 </swiper>
             </div>
-
-            <div v-if="board.attracionId > 0" class="attraction-embedded"> 
-                <h3>관광지 임베딩 영역</h3>
-            </div>
-            
+            <board-attraction v-if="board.attractionId > 0" :attraction-id="this.board.attractionId"></board-attraction>
         </div>
         
         <div class="heart-container">
@@ -81,7 +76,8 @@
 <script>
 import DeleteModal from './board_components/DeleteModal.vue';
 import ImageModal from './board_components/ImageModal.vue';
-import BoardComment from '@/components/board/board_components/BoardComment.vue'
+import BoardComment from '@/components/board/board_components/BoardComment.vue';
+import BoardAttraction from '@/components/board/board_components/BoardAttraction.vue';
 import { mapGetters } from 'vuex';
 import axios from "axios";
 import { Swiper, SwiperSlide } from "vue-awesome-swiper";
@@ -89,7 +85,7 @@ import "swiper/css/swiper.css"; // swiper CSS 파일 import
 
 export default {
     name : 'BoardView',
-    components: { BoardComment, DeleteModal, Swiper, SwiperSlide, ImageModal },
+    components: { BoardComment, DeleteModal, Swiper, SwiperSlide, ImageModal, BoardAttraction },
     data(){
         return {
             baseUrl: process.env.VUE_APP_MY_BASE_URL,
@@ -206,7 +202,7 @@ export default {
         },
         imageOff(){
             this.imageDetail = '';
-        }
+        },
     },
     async created(){
         await axios.get(process.env.VUE_APP_MY_BASE_URL+"/board/"+ this.$route.params.boardId)
@@ -215,7 +211,6 @@ export default {
             this.images = response.data.images;
             this.commentAnonymous = this.board.anonymous;
             this.boardId = response.data.board.boardId;
-            
         } );
 
         await axios.get(process.env.VUE_APP_MY_BASE_URL+"/board/"+ this.board.boardId +"/comment")
@@ -371,9 +366,9 @@ export default {
 }
 
 .board-images {
-    position: absolute;
+    /* position: absolute; */
     width: 80%;
-    margin: 0 10% 0 10%;
+    margin: 20px 10% 30px 10%;
     height: 150px;
     bottom: 0;
     display: flex;

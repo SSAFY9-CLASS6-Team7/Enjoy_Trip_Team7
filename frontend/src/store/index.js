@@ -145,6 +145,9 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    activeMenuChange({ commit }, activeMenu) {
+      commit('activeMenuChange', activeMenu);
+    },
     pageNoChange({ commit }, pageNo) {
       commit('pageNoChange', pageNo);
     },
