@@ -154,6 +154,7 @@ export default {
     groupedAttractionsArray: {
       deep: true,
       handler() {
+        this.setSequence();
         // 객체 배열의 변화 감지
         this.$children.forEach((child) => {
           child.$forceUpdate();
@@ -162,6 +163,15 @@ export default {
     },
   },
   methods: {
+    setSequence(){
+      for (var dateAttractions of this.groupedAttractionsArray) {
+        var tmpSequence = 1;
+        for (var attraction of dateAttractions) {
+          attraction.sequence = tmpSequence;
+          tmpSequence += 1;
+        }
+      }
+    },
     setModal(value) {
       this.isModalOpen = value;
     },
@@ -203,6 +213,7 @@ export default {
       this.$refs.attractionsPerDate[this.focused - 1].scrollIntoView({ behavior: 'smooth' });
     },
     addAttraction(attraction) {
+      attraction.sequence = this.groupedAttractionsArray[this.focused - 1].length;
       this.groupedAttractionsArray[this.focused - 1].push(attraction);
     },
     async updatePlanAttractions() {

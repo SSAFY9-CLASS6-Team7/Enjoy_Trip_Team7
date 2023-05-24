@@ -53,6 +53,16 @@ export default {
     }
   },
   methods: {
+    refresh() {
+      this.positions = [];
+      this.latlngs = [];
+    },
+    sortPosArray() {
+      this.positions.sort((a, b) => a.sequence - b.sequence);
+      this.latlngs = this.positions.map((item) => item.latlng);
+      console.log('watch ing');
+      console.dir(this.positions);
+    },
     setMapPinSrc(attraction) {
       var imgSrc = '';
       if (attraction.code === 12) imgSrc = require('@/assets/map_assets/blue_tour_pin.svg');
@@ -67,8 +77,7 @@ export default {
       return markerImage;
     },
     async loadData() {
-      this.positions = [];
-      this.latlngs = [];
+      this.refresh();
       await Promise.all(
         this.groupedAttractionsArray[this.focused - 1].map(async (attraction) => {
           var targetAttraction = {};
@@ -78,12 +87,12 @@ export default {
           let obj = {};
           obj.title = targetAttraction.title;
           obj.latlng = new kakao.maps.LatLng(targetAttraction.lat, targetAttraction.lng);
-          this.latlngs.push(new kakao.maps.LatLng(targetAttraction.lat, targetAttraction.lng));
           obj.image = this.setMapPinSrc(targetAttraction);
-
+          obj.sequence = attraction.sequence;
           this.positions.push(obj);
         })
       );
+      this.sortPosArray();
       this.loadMaker();
       this.drawLine();
     },
