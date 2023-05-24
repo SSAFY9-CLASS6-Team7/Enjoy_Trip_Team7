@@ -73,19 +73,15 @@ export default {
     }
   },
   computed: {
-      ...mapGetters(['getSidoCode', 'getPage']),
+      ...mapGetters(['getSidoCode', 'getAttractionPageNo', 'getAttractionSidos', 'getAttractionCategory', 'getAttractionKeyword']),
     },
   methods: {
-    ...mapActions(['pageNoChange']),
+    ...mapActions(['attractionSidoChange', 'attractionPageNoChange', 'attractionKeywordChange', 'attractionCategoryChange']),
     toggleDropdown() {
       this.sidoDropdownOpen = !this.sidoDropdownOpen;
     },
-    pageChanged(clickedPage){
+    async pageChanged(clickedPage){
       this.pageNo = clickedPage;
-      this.goSearch();
-    },
-    async goSearch(){
-      this.pageNoChange(1);
       await axios({
         url: process.env.VUE_APP_MY_BASE_URL+`/attraction`,
         method: 'GET',
@@ -111,14 +107,74 @@ export default {
       }).then((response) => {
         this.attractions = response.data.attractions;
         this.pageResult = response.data.pageResult;
-        this.pageNoChange(this.pageNo);
-        console.log(this.attractions);
+        this.attractionPageNoChange(this.pageNo);
+      });
+    },
+
+    async goSearch(){
+      this.attractionSidoChange(this.selectedSido);     
+      this.attractionCategoryChange(this.category);
+      this.attractionPageNoChange(1);
+      this.pageNo = 1;
+      await axios({
+        url: process.env.VUE_APP_MY_BASE_URL+`/attraction`,
+        method: 'GET',
+        params: {
+          pageNo: 1,
+          code: this.category,
+          sido: this.selectedSido,
+          keyword: this.keyword,
+        },
+        paramsSerializer: (params) => {
+          const code = Array.isArray(params.code) ? params.code : [params.code];
+          const sido = Array.isArray(params.sido) ? params.sido : [params.sido];
+
+          return qs.stringify(
+            {
+              ...params,
+              code: code.join(','), 
+              sido: sido.join(','), 
+            },
+            { arrayFormat: 'comma' }
+          );
+        },
+      }).then((response) => {
+        this.attractions = response.data.attractions;
+        this.pageResult = response.data.pageResult;
       });
     },
   },
   async created() {
-    this.pageNo = this.getPage;
-    await this.goSearch();
+    this.pageNo = this.getAttractionPageNo;
+    this.selectedSido = this.getAttractionSidos;
+    this.category = this.getAttractionCategory;
+    this.keyword = this.getAttractionKeyword;
+    await axios({
+        url: process.env.VUE_APP_MY_BASE_URL+`/attraction`,
+        method: 'GET',
+        params: {
+          pageNo: this.pageNo,
+          code: this.category,
+          sido: this.selectedSido,
+          keyword: this.keyword,
+        },
+        paramsSerializer: (params) => {
+          const code = Array.isArray(params.code) ? params.code : [params.code];
+          const sido = Array.isArray(params.sido) ? params.sido : [params.sido];
+
+          return qs.stringify(
+            {
+              ...params,
+              code: code.join(','), 
+              sido: sido.join(','), 
+            },
+            { arrayFormat: 'comma' }
+          );
+        },
+      }).then((response) => {
+        this.attractions = response.data.attractions;
+        this.pageResult = response.data.pageResult;
+      });
   }
 }
 
