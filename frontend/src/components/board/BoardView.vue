@@ -39,7 +39,7 @@
                 <swiper :options="swiperOption3">
                     <swiper-slide class="image-swiper-item" v-for="image in images" :key="image">
                         <div class="card">
-                            <img :src="process.env.VUE_APP_MY_BASE_URL+`/imagePath/${image.imagePath}`" style="border-radius: 10px; height: 150px;" @click="detail(image)"/>
+                            <img :src="`${baseUrl}/imagePath/${image.imagePath}`" style="border-radius: 10px; height: 150px;" @click="detail(image)"/>
                         </div>
                     </swiper-slide>
                 </swiper>
@@ -92,6 +92,7 @@ export default {
     components: { BoardComment, DeleteModal, Swiper, SwiperSlide, ImageModal },
     data(){
         return {
+            baseUrl: process.env.VUE_APP_MY_BASE_URL,
             comments: [],
             board: {},
             profile: '',

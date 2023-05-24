@@ -29,7 +29,7 @@
             <div class="map-container">
                 <div class="inner-title" style="color: #E93F78; font-weight: 900; margin:0 0 10px 0"> <img src="@/assets/attraction_icon/address.svg" class="marker"> 위치</div>
                 <div class="address"> {{ this.attraction.address }}</div>
-                <attraction-map></attraction-map>
+                <attraction-kakao-map :location="this.location" :code="this.attraction.code"></attraction-kakao-map>
             </div>
 
         </div>
@@ -38,15 +38,16 @@
 </template>
   
 <script>
-import AttractionMap from '@/components/attraction/attraction_components/AttracionMap.vue'
+import AttractionKakaoMap from '@/components/attraction/attraction_components/AttractionKakaoMap.vue'
 import axios from 'axios'
 
 export default {
     name: "AttractionView",
-    components: { AttractionMap },
+    components: { AttractionKakaoMap },
     data() {
         return {
-            attraction: ''
+            attraction: '',
+            location: '',
         }
     },
     methods: {
@@ -71,8 +72,11 @@ export default {
         axios.get(process.env.VUE_APP_MY_BASE_URL+'/attraction/'+this.$route.params.attractionId)
         .then(response => {
             this.attraction = response.data
-            console.log(this.attraction);
-        }
+            this.location = {
+                lat: this.attraction.lat,
+                lng: this.attraction.lng
+                }
+            }
         );
     },
 };
@@ -111,6 +115,7 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding: 0px 0px 30px 0;
 }
 
 .header {
@@ -198,7 +203,7 @@ export default {
 }
 
 .overview-content::-webkit-scrollbar-track {
-    background-color: #a1a1a1;
+    /* background-color: #a1a1a1; */
     border-radius: 8px;
 }
 
