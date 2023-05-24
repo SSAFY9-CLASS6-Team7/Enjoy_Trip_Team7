@@ -11,7 +11,14 @@
       </div>
       <div class="line"></div>
       <div class="main">
-        <div class="map-area">Map</div>
+        <div class="map-area" id="map">
+          <the-kakao-map
+            v-if="groupedAttractionsArray.length !== 0"
+            :groupedAttractionsArray="groupedAttractionsArray"
+            :focused="focused"
+            :plan="plan"
+          ></the-kakao-map>
+        </div>
         <div class="sequence-area">
           <div class="date-slide">
             <div class="date-swiper" v-if="this.planDates.length !== 0">
@@ -43,7 +50,7 @@
                 <div class="attractions-area" v-if="groupedAttractions[date]">
                   <div
                     class="attractions"
-                    v-for="(attraction, index) in groupedAttractions[date]"
+                    v-for="(attraction, index) in groupedAttractionsArray[i]"
                     :key="attraction.planAttractionId"
                   >
                     <plan-attraction
@@ -59,6 +66,7 @@
         </div>
       </div>
     </div>
+    <!-- <div class="main-area"></div> -->
     <div class="right-aside"></div>
   </div>
 </template>
@@ -67,6 +75,7 @@ import PlanAttraction from './plan_components/PlanAttraction.vue';
 import axios from 'axios';
 import { Swiper, SwiperSlide } from 'vue-awesome-swiper';
 import 'swiper/css/swiper.css';
+import TheKakaoMap from '@/components/TheKakaoMap.vue';
 
 export default {
   name: 'PlanView',
@@ -74,11 +83,13 @@ export default {
     PlanAttraction,
     Swiper,
     SwiperSlide,
+    TheKakaoMap,
   },
   data() {
     return {
       plan: Object,
       groupedAttractions: Object, //key로 접근 가능
+      groupedAttractionsArray: [], //interable하게 배열로 변환
       focused: 1,
       //스와이프 관련 설정
       swiperOption: {
@@ -133,7 +144,7 @@ export default {
       const day = dateParts[2];
       return `${year}.${month}.${day}`;
     },
-    setGroupedAttractions() {
+    setGroupedAttractionsArray() {
       this.groupedAttractions = this.plan.planAttractions.reduce((groups, attraction) => {
         const { planDate } = attraction;
 
@@ -144,6 +155,14 @@ export default {
         groups[planDate].push(attraction);
         return groups;
       }, {});
+
+      for (var index in this.planDates) {
+        if (!this.groupedAttractions[this.planDates[index]]) {
+          this.groupedAttractions[this.planDates[index]] = [];
+        }
+      }
+
+      this.groupedAttractionsArray = Object.values(this.groupedAttractions);
     },
     updateFocusInfo() {
       this.$nextTick(() => {
@@ -161,7 +180,7 @@ export default {
     await axios.get(process.env.VUE_APP_MY_BASE_URL+'/plan/' + this.plan.planId).then((response) => {
       this.plan = response.data;
     });
-    this.setGroupedAttractions();
+    this.setGroupedAttractionsArray();
   },
 };
 </script>
@@ -169,7 +188,8 @@ export default {
 .plan-view-container {
   position: relative;
   width: 100%;
-  height: 81.5vh;
+  /* height: 81.5vh; */
+  padding-bottom: 30px;
   display: grid;
   grid-template-columns: 1fr 5fr 1fr;
   grid-template-areas: 'left  main  right';
@@ -248,7 +268,7 @@ export default {
 
 .date-slide {
   width: 100%;
-  height: 5%;
+  height: 35px;
   display: flex;
   justify-content: center;
   margin: 15px 0;

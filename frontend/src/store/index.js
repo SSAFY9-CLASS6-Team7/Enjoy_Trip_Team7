@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import createPersistedState from "vuex-persistedstate";
+import createPersistedState from 'vuex-persistedstate';
 
-import userStore from "@/store/modules/userStore";
+import userStore from '@/store/modules/userStore';
 
 Vue.use(Vuex);
 
@@ -14,23 +14,23 @@ export default new Vuex.Store({
     condition: sessionStorage.getItem('condition') || '',
     boardTab: sessionStorage.getItem('boardTab') || '',
     sidoCode: [
-      { code: '1', text: '서울' },
-      { code: '2', text: '인천' },
-      { code: '3', text: '대전' },
-      { code: '4', text: '대구' },
-      { code: '5', text: '광주' },
-      { code: '6', text: '부산' },
-      { code: '7', text: '울산' },
-      { code: '8', text: '세종특별자치시' },
-      { code: '31', text: '경기도' },
-      { code: '32', text: '강원도' },
-      { code: '33', text: '충청북도' },
-      { code: '34', text: '충청남도' },
-      { code: '35', text: '경상북도' },
-      { code: '36', text: '경상남도' },
-      { code: '37', text: '전라북도' },
-      { code: '38', text: '전라남도' },
-      { code: '39', text: '제주도' },
+      { code: '1', text: '서울', lat: 37.540705, lng: 126.956764 },
+      { code: '2', text: '인천', lat: 37.469221, lng: 126.573234 },
+      { code: '3', text: '대전', lat: 36.321655, lng: 127.378953 },
+      { code: '4', text: '대구', lat: 35.798838, lng: 128.583052 },
+      { code: '5', text: '광주', lat: 35.126033, lng: 126.831302 },
+      { code: '6', text: '부산', lat: 35.198362, lng: 129.053922 },
+      { code: '7', text: '울산', lat: 35.519301, lng: 129.239078 },
+      { code: '8', text: '세종특별자치시', lat: 36.5040736, lng: 127.2494855 },
+      { code: '31', text: '경기도', lat: 37.567167, lng: 127.190292 },
+      { code: '32', text: '강원도', lat: 37.555837, lng: 128.209315 },
+      { code: '33', text: '충청북도', lat: 36.628503, lng: 127.929344 },
+      { code: '34', text: '충청남도', lat: 36.557229, lng: 126.779757 },
+      { code: '35', text: '경상북도', lat: 36.248647, lng: 128.664734 },
+      { code: '36', text: '경상남도', lat: 35.259787, lng: 128.664734 },
+      { code: '37', text: '전라북도', lat: 35.716705, lng: 127.144185 },
+      { code: '38', text: '전라남도', lat: 34.8194, lng: 126.893113 },
+      { code: '39', text: '제주도', lat: 33.364805, lng: 126.542671 },
     ],
     contentTypeId: [
       { id: '12', text: '관광지' },
@@ -124,6 +124,6 @@ export default new Vuex.Store({
   plugins: [
     createPersistedState({
       storage: sessionStorage,
-    })
-  ]
+    }),
+  ],
 });
