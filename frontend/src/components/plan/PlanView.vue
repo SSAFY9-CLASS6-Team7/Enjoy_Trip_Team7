@@ -12,12 +12,12 @@
       <div class="line"></div>
       <div class="main">
         <div class="map-area" id="map">
-          <the-kakao-map
+          <plan-kakao-map
             v-if="groupedAttractionsArray.length !== 0"
             :groupedAttractionsArray="groupedAttractionsArray"
             :focused="focused"
             :plan="plan"
-          ></the-kakao-map>
+          ></plan-kakao-map>
         </div>
         <div class="sequence-area">
           <div class="date-slide">
@@ -72,10 +72,10 @@
 </template>
 <script>
 import PlanAttraction from './plan_components/PlanAttraction.vue';
+import PlanKakaoMap from './plan_components/PlanKakaoMap.vue';
 import axios from 'axios';
 import { Swiper, SwiperSlide } from 'vue-awesome-swiper';
 import 'swiper/css/swiper.css';
-import TheKakaoMap from '@/components/TheKakaoMap.vue';
 
 export default {
   name: 'PlanView',
@@ -83,7 +83,7 @@ export default {
     PlanAttraction,
     Swiper,
     SwiperSlide,
-    TheKakaoMap,
+    PlanKakaoMap,
   },
   data() {
     return {
@@ -177,9 +177,11 @@ export default {
   },
   async created() {
     this.plan.planId = this.$route.params.planId;
-    await axios.get(process.env.VUE_APP_MY_BASE_URL+'/plan/' + this.plan.planId).then((response) => {
-      this.plan = response.data;
-    });
+    await axios
+      .get(process.env.VUE_APP_MY_BASE_URL + '/plan/' + this.plan.planId)
+      .then((response) => {
+        this.plan = response.data;
+      });
     this.setGroupedAttractionsArray();
   },
 };
