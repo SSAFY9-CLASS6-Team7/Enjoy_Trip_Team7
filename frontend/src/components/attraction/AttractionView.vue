@@ -71,8 +71,7 @@ export default {
         axios.get(process.env.VUE_APP_MY_BASE_URL+'/attraction/'+this.$route.params.attractionId)
         .then(response => {
             this.attraction = response.data
-            console.log(this.attraction);
-        }
+            }
         );
     },
 };
@@ -198,7 +197,7 @@ export default {
 }
 
 .overview-content::-webkit-scrollbar-track {
-    background-color: #a1a1a1;
+    /* background-color: #a1a1a1; */
     border-radius: 8px;
 }
 

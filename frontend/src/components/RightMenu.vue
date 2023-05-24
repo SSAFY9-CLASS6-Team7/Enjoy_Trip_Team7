@@ -11,7 +11,7 @@
                     로그아웃
                     <img src="@/assets/user_icons/logout.svg" >
                 </button>
-                <img v-if="checkUserInfo.profilePicPath != null && checkUserInfo.profilePicPath != ''" :src="'http://localhost/profilePath/' + checkUserInfo.profilePicPath" class='profile' >
+                <img v-if="checkUserInfo.profilePicPath != null && checkUserInfo.profilePicPath != ''" :src="`${baseUrl}/profilePath/` + checkUserInfo.profilePicPath" class='profile' >
                 <img v-if="checkUserInfo.profilePicPath == null || checkUserInfo.profilePicPath == ''" src="@/assets/header_icon/profile.svg" class='profile'>
                 <div class="id-email-container">
                     <div class="id">{{ checkUserInfo.nickname }}</div>
@@ -85,6 +85,7 @@ export default {
     data() {
         return {
             isOpen: false,
+            baseUrl: process.env.VUE_APP_MY_BASE_URL,
         }
     },
     computed: {

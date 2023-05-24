@@ -5,7 +5,7 @@
             <div class="profile-image-container">
                 <div class="image-container" @click="uploadClick">
                     <input type="file" id="profileUpload" @change="profileUpload" hidden>
-                    <img v-if="checkUserInfo.profilePicPath != null && checkUserInfo.profilePicPath != ''" :src="'http://localhost/profilePath/' + checkUserInfo.profilePicPath" class='profile-image' >
+                    <img v-if="checkUserInfo.profilePicPath != null && checkUserInfo.profilePicPath != ''" :src="`${baseUrl}/profilePath/` + checkUserInfo.profilePicPath" class='profile-image' >
                 <img v-if="checkUserInfo.profilePicPath == null || checkUserInfo.profilePicPath == ''" src="@/assets/header_icon/profile.svg" class='profile-image'>
                     <img src="@/assets/user_icons/modify_profile.svg" class="modify-icon">
                 </div>
@@ -103,6 +103,7 @@ export default {
             birth: '',
             username: '',
             nickname: '',
+            baseUrl: process.env.VUE_APP_MY_BASE_URL,
         }
     },
     computed: {
@@ -187,7 +188,6 @@ export default {
         this.phone1 = phoneNumber[0];
         this.phone2 = phoneNumber[1];
         this.phone3 = phoneNumber[2];
-        console.log(this.checkUserInfo.profilePicPath);
         // this.profileImage = 'http://localhost/imagePath/' + this.checkUserInfo.profilePicPath;
     }
 }

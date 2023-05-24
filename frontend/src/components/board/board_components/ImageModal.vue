@@ -1,12 +1,17 @@
 <template>
     <div class="background-blur" @click="no">
-        <img :src="`process.env.VUE_APP_MY_BASE_URL/imagePath/${this.imagePath}`" class="image">
+        <img :src="`${baseUrl}/imagePath/${this.imagePath}`" class="image">
     </div>
 </template>
 <script>
 export default {
   name: 'ImageModal',
   props: ['imagePath'],
+  data() {
+    return {
+        baseUrl: process.env.VUE_APP_MY_BASE_URL,
+    }
+  },
   methods: {
     no(){
         this.$emit('imageOff');
