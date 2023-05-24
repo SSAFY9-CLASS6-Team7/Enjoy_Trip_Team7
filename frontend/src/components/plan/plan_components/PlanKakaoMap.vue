@@ -40,6 +40,11 @@ export default {
         this.loadData();
       });
     },
+    groupedAttractionsArray() {
+      this.$nextTick(() => {
+        this.loadData();
+      });
+    },
   },
   created() {},
   async mounted() {
@@ -73,7 +78,6 @@ export default {
         this.groupedAttractionsArray[this.focused - 1].map(async (attraction) => {
           var targetAttraction = {};
           const res = await axios.get('http://localhost/attraction/' + attraction.attractionId);
-          // console.dir(res.data);
           targetAttraction = res.data;
 
           let obj = {};
@@ -142,7 +146,6 @@ export default {
         });
         this.markers.push(marker);
       });
-      console.log('마커수 ::: ' + this.markers.length);
 
       // 4. 지도를 이동시켜주기
       // 배열.reduce( (누적값, 현재값, 인덱스, 요소)=>{ return 결과값}, 초기값);
@@ -156,10 +159,8 @@ export default {
       }
     },
     deleteMarker() {
-      console.log('마커 싹 지우자!!!', this.markers.length);
       if (this.markers.length > 0) {
         this.markers.forEach((item) => {
-          // console.log(item);
           item.setMap(null);
         });
       }
