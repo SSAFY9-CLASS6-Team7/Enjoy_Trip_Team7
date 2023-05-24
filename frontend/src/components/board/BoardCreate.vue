@@ -1,5 +1,10 @@
 <template>
   <div class="create-container">
+  <div class="plan-modal" v-if="isModalOpen">
+    <attraction-search-modal
+      @addAttraction="addAttraction"
+    ></attraction-search-modal>
+  </div>
   <div class="create-area">
     <div class="tab-title">글쓰기</div>
     <div class="category-anonymous-container">
@@ -39,7 +44,12 @@
     <div class="attraction-container">
       <div class="inner-title">관광지 선택</div>
       <div class="select-attraction">
-        <div class="empty-attraction" @click="selectAttraction">선택된 관광지가 없습니다.</div>
+        <div v-if="!selectedAttractionId" class="empty-attraction" @click="selectAttraction">선택된 관광지가 없습니다.</div>
+        <board-attraction v-if="selectedAttractionId" :attractionId="this.selectedAttractionId" @click="selectAttraction"></board-attraction>
+        <div v-if="selectedAttractionId" class="attraction-buttons">
+          <button class="delete-attraction" @click="deleteAttraction">관광지 삭제</button>
+          <button class="reroll" @click="selectAttraction">다시 고르기</button>
+        </div>
       </div>
     </div>
 
@@ -67,6 +77,8 @@
 </template>
 
 <script>
+import AttractionSearchModal from '../AttractionSearchModal.vue';
+import BoardAttraction from '@/components/board/board_components/BoardAttraction.vue';
 import { quillEditor } from "vue-quill-editor";
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
@@ -77,7 +89,7 @@ import { mapActions, mapGetters } from 'vuex';
 export default {
   name: 'BoardCreate',
   components: {
-    quillEditor,
+    quillEditor, BoardAttraction, AttractionSearchModal
   },
   data() {
     return {
@@ -87,8 +99,8 @@ export default {
       selectedAttractionId: '',
       userId: '',
       files: '',
-      selectedAttraction: '',
       anonymous: false,
+      isModalOpen: false,
     };
   },
   created() {
@@ -110,27 +122,41 @@ export default {
       f.append('boardContent', this.content);
       f.append('userId', this.userId);
       f.append('anonymous', this.anonymous);
+      if(this.selectedAttractionId != '') {
+        f.append('attractionId', this.selectedAttractionId);
+      }
       
       let uploadFiles = this.$refs.files.files;
       for (let i = 0; i < uploadFiles.length; i++){
         f.append('files', uploadFiles[i]);
       }
       
-      await axios.post(process.env.VUE_APP_MY_BASE_URL+'/board', f);
-      this.pageNoChange(1);
-      this.$router.push("/board");
-      this.$router.go(0);
+      await axios.post(process.env.VUE_APP_MY_BASE_URL+'/board', f)
+      .then(response => {
+        console.log(response);
+        this.pageNoChange(1);
+        this.$router.push("/board");
+      });
+      
     },
     handleFileChange(event) {
       this.files = Array.from(event.target.files);
     },
     selectAttraction() {
-
+      this.isModalOpen = true;
     },
     cancel(){
       this.$router.push("/board");
       this.$router.go(0);
+    },
+    addAttraction(attraction) {
+      this.selectedAttractionId = attraction.attractionId;
+      this.isModalOpen = false;
+    },
+    deleteAttraction() {
+      this.selectedAttractionId = '';
     }
+
   },
 };
 </script>
@@ -378,6 +404,40 @@ input[id="anonymousFlag"]:checked + label::after {
   font-weight: 600;
   text-align: left;
   margin: 20px 0 10px 0;
+}
+
+.reroll {
+  border: none;
+  color: #ffffff;
+  font-family: 'S-CoreDream-3Light';
+  font-weight: 800;
+  font-size: 18px;
+  background: linear-gradient(95.36deg, #E1306C 2.32%, #FF699A 68.42%, #FCAF45 104.98%);
+  background-blend-mode: darken;
+  border-radius: 8px;
+  padding: 10px 20px 10px 20px;
+  min-width: 100px;
+  margin: 0 0 0 40px;
+}
+
+.attraction-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.delete-attraction {
+  border: none;
+  color: #333333;
+  font-family: 'S-CoreDream-3Light';
+  font-weight: 800;
+  font-size: 18px;
+  background: #9b9b9b;
+  border-radius: 8px;
+  padding: 10px 20px 10px 20px;
+  min-width: 100px;
+  margin-right: 40px;
 }
 
 </style>
