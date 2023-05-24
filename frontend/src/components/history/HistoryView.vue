@@ -1,8 +1,10 @@
 <template>
   <div class="viewModal">
-    <div class="bigPictureWrapper">
-      <div class="bigPicture"></div>
-    </div>
+    <history-image-modal
+      v-if="imageDetail != ''"
+      @imageOff="imageOff"
+      :imagePath="this.imageDetail"
+    ></history-image-modal>
     <div class="modal-card" v-if="history.history">
       <div class="img-area">
         <!-- 이미지 없으면 샘플이미지 1개 -->
@@ -10,7 +12,6 @@
           :src="setSampleImageSrc()"
           class="history-img"
           v-if="this.imageList.length === 0"
-          @click="bigImage()"
         />
         <!-- 이미지 하나라도 있으면 스와이프 -->
         <div class="img-swiper" v-if="this.imageList.length !== 0">
@@ -24,7 +25,7 @@
               :key="image.imageId"
               style="100%"
             >
-              <img :src="setImageSrc(image)" class="history-img" @click="bigImage()" />
+              <img :src="setImageSrc(image)" class="history-img" @click="bigImage(image)" />
             </swiper-slide>
             <div class="swiper-button-next img-next" slot="button-next">
               <img src="@/assets/right.svg" width="40px" height="40px" style="right: 30px" />
@@ -54,6 +55,7 @@
 </template>
 
 <script>
+import HistoryImageModal from './history_components/HistoryImageModal.vue';
 import axios from 'axios';
 import { Swiper, SwiperSlide } from 'vue-awesome-swiper';
 import 'swiper/css/swiper.css'; // swiper CSS 파일 import
@@ -63,12 +65,14 @@ export default {
   components: {
     Swiper,
     SwiperSlide,
+    HistoryImageModal
   },
   data() {
     return {
       history: Object,
       imageList: [],
       imageUrl: [],
+      imageDetail: '',
       //스와이프 관련 설정
       swiperOption: {
         slidesPerView: 1,
@@ -98,9 +102,11 @@ export default {
       return `${year}.${month}.${day}`;
     },
     // TODO: 이미지 크게 띄우기
-    bigImage: function () {
-      console.dir(this);
-      console.log('이미지 크게 띄우기');
+    bigImage(image) {
+      this.imageDetail = image.imagePath;
+    },
+    imageOff() {
+      this.imageDetail = '';
     },
     //update 모달로 변경하기
     emitGotoUpdate() {
@@ -118,13 +124,13 @@ export default {
     },
     //삭제 진행하기
     async deleteHistory() {
-      await axios.delete(`http://localhost/history/` + this.historyId);
+      await axios.delete(process.env.VUE_APP_MY_BASE_URL + `/history/` + this.historyId);
       this.$emit('emitNeedToUpdate');
       this.$emit('emitModalOff');
     },
     //이미지 소스를 세팅하기
     setImageSrc(image) {
-      return 'http://localhost/imagePath/' + image.imagePath;
+      return process.env.VUE_APP_MY_BASE_URL + '/imagePath/' + image.imagePath;
     },
     //샘플 이미지 소스를 세팅하기
     setSampleImageSrc() {
@@ -134,7 +140,7 @@ export default {
   },
   async mounted() {
     await axios
-      .get('http://localhost/history/' + this.historyId)
+      .get(process.env.VUE_APP_MY_BASE_URL + '/history/' + this.historyId)
       .then((response) => (this.history = response.data));
     this.imageList = this.history.images;
   },
