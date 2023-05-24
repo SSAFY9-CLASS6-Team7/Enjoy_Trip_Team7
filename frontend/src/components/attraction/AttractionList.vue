@@ -112,6 +112,7 @@ export default {
         this.attractions = response.data.attractions;
         this.pageResult = response.data.pageResult;
         this.pageNoChange(this.pageNo);
+        console.log(this.attractions);
       });
     },
   },

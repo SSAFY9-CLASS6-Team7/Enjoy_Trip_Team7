@@ -178,7 +178,6 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if (!to.path.includes('/board')) {
-    console.log("초기화!!");
     store.commit('resetBoardState'); 
   }
   next();
