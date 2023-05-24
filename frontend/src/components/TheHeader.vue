@@ -42,7 +42,7 @@
       </div>
 
       <div v-if="checkToken" class="user-area" @click="profileClick" >
-        <img class="profile-img"  v-if="checkUserInfo.profilePicPath != null && checkUserInfo.profilePicPath != ''" :src="'http://localhost/profilePath/' + checkUserInfo.profilePicPath" />
+        <img class="profile-img"  v-if="checkUserInfo.profilePicPath != null && checkUserInfo.profilePicPath != ''" :src="`${baseUrl}/profilePath/` + checkUserInfo.profilePicPath" />
         <img class="profile-img" v-if="checkUserInfo.profilePicPath == null || checkUserInfo.profilePicPath == ''" src="@/assets/header_icon/profile.svg">
         <div>{{ checkUserInfo.nickname }}</div>
       </div>
@@ -60,6 +60,7 @@ export default {
   name: "TheHeader",
   data() {
     return {
+      baseUrl: process.env.VUE_APP_MY_BASE_URL,
       // activeMenuItem: '',
     }
   },
