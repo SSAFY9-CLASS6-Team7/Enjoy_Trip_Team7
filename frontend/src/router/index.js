@@ -168,6 +168,37 @@ const routes = [
       },
     ],
   },
+  {
+    path: '/announcement',
+    name: 'announcement',
+    component: () => import(/* webpackChunkName: "attraction" */ '../views/AppAnnouncement.vue'),
+    redirect: '/announcement/list',
+    children: [
+      {
+        path: 'list',
+        name: 'announcementlist',
+        component: () => import(/* webpackChunkName: "board" */ '@/components/announcement/AnnouncementList.vue'),
+      },
+      {
+        path: 'create',
+        name: 'announcementcreate',
+        component: () =>
+          import(/* webpackChunkName: "board" */ '../components/announcement/AnnouncementCreate.vue'),
+      },
+      {
+        path: 'update/:boardId',
+        name: 'announcementupdate',
+        component: () =>
+          import(/* webpackChunkName: "board" */ '../components/announcement/AnnouncementUpdate.vue'),
+      },
+      {
+        path: 'view/:boardId',
+        name: 'announcementview',
+        component: () =>
+          import(/* webpackChunkName: "board" */ '../components/announcement/AnnouncementView.vue'),
+      },
+    ],
+  }
 ];
 
 const router = new VueRouter({
