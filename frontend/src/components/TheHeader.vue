@@ -86,7 +86,7 @@ export default {
     profileClick() {
       this.setActiveMenuItem('-1');
       this.openRightMenu();
-  },
+    },
   },
 };
 </script>
