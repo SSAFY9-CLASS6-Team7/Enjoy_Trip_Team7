@@ -51,7 +51,7 @@ public class HistoryServiceImpl implements HistoryService {
 
         Map<String, Object> result = new HashMap<>();
 
-        int totalCount = historyMapper.selectHistoryCount();
+        int totalCount = historyMapper.selectHistoryCount(map);
         PageResult pageResult = new PageResult(pageNo, totalCount, LIST_SIZE, 5);
         result.put("histories", historyMapper.selectHistoryList(map));
         result.put("pageResult", pageResult);

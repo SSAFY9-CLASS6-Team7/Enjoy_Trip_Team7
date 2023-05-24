@@ -24,9 +24,10 @@
 	</select>
 
 	<!-- int selectHistoryCount() -->
-	<select id="selectHistoryCount" resultType="int">
+	<select id="selectHistoryCount" resultType="int" parameterType="map">
 		select count(*)
 		from history
+		where user_id = #{userId}
 	</select>
 
 	<!-- History selectHistoryById(int historyId)-->
