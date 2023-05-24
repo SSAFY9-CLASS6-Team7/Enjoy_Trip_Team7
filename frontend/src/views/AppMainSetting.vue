@@ -1,5 +1,8 @@
 <template>
-  <div class="main-container">
+  <div class="main-setting-container">
+    <div class="blackbg">
+      <button class="save-btn" @click="saveCustomInfo">수정완료</button>
+    </div>
     <div class="main-img">
       <swiper class="image-swiper" :options="swiperOption2">
         <swiper-slide class="image-swiper-item" v-for="image in images" :key="image">
@@ -33,16 +36,14 @@
         </div>
       </div>
     </div>
-    <div class="custom-main-container" v-if="this.checkToken">
-      <div class="custom-main" v-for="(item, index) in mainCustom" :key="index">
-        <component class="custom-main-items" :is="mainCustom[index]"></component>
-      </div>
-    </div>
-    <div class="normal-main-container" v-if="!this.checkToken">
-      <main-cards></main-cards>
-      <main-community></main-community>
-      <main-history></main-history>
-      <main-plan></main-plan>
+    <div class="custom-main-container">
+      <draggable v-model="mainCustom">
+        <div class="custom-main" v-for="(item, index) in mainCustom" :key="index">
+          <div class="component-container">
+            <component class="custom-main-items" :is="mainCustom[index]"></component>
+          </div>
+        </div>
+      </draggable>
     </div>
   </div>
 </template>
@@ -55,10 +56,12 @@ import MainCards from '@/components/main/MainCards';
 import MainHistory from '@/components/main/MainHistory.vue';
 import MainPlan from '@/components/main/MainPlan.vue';
 import { mapGetters } from 'vuex';
+import draggable from 'vuedraggable';
 
 export default {
   name: 'AppUser',
   components: {
+    draggable,
     Swiper,
     SwiperSlide,
     MainCommunity,
@@ -130,9 +133,17 @@ export default {
   computed: {
     ...mapGetters('userStore', ['checkToken', 'checkUserInfo']),
   },
-  methods: {},
+  methods: {
+    saveCustomInfo() {
+      //TODO: db저장
+      this.$router.push('/');
+    },
+  },
   created() {
     this.userId = this.checkUserInfo.userId;
+    //TODO: db에 컬럼 추가(100-200-300-400 형식으로)
+    //가져와서 파싱하는 건 프론트에서, 저장할 때도 위 형식으로 변환해서
+    // this.mainCustom = this.checkUserInfo.mainOrder;
   },
 };
 </script>
@@ -140,6 +151,28 @@ export default {
 <style scoped>
 .main-img {
   height: 450px;
+}
+
+.blackbg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 550px;
+  background-color: #000000c1;
+  z-index: 2;
+}
+
+.save-btn {
+  position: relative;
+  top: 40%;
+  color: white;
+  font-size: 30px;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.111);
+  border: 3px white solid;
+  padding: 30px 40px;
+  border-radius: 30px;
 }
 
 /* Swiper 추가 */

@@ -82,6 +82,7 @@ export default {
   display: grid;
   justify-content: space-between;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  margin-top: 20px;
 }
 
 .main-history-continer .history-container-title {
