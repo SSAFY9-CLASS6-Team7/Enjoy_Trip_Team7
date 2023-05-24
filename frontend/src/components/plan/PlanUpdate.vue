@@ -17,7 +17,14 @@
       </div>
       <div class="line"></div>
       <div class="main">
-        <div class="map-area">Map</div>
+        <div class="map-area" id="map">
+          <plan-kakao-map
+            v-if="groupedAttractionsArray.length !== 0"
+            :groupedAttractionsArray="groupedAttractionsArray"
+            :focused="focused"
+            :plan="plan"
+          ></plan-kakao-map>
+        </div>
         <div class="sequence-area">
           <div class="date-slide">
             <div class="date-swiper" v-if="this.planDates.length !== 0">
@@ -81,6 +88,7 @@
 <script>
 import AttractionSearchModal from '../AttractionSearchModal.vue';
 import PlanAttraction from './plan_components/PlanAttraction.vue';
+import PlanKakaoMap from './plan_components/PlanKakaoMap.vue';
 import draggable from 'vuedraggable';
 import axios from 'axios';
 import { Swiper, SwiperSlide } from 'vue-awesome-swiper';
@@ -91,6 +99,7 @@ export default {
   components: {
     AttractionSearchModal,
     PlanAttraction,
+    PlanKakaoMap,
     draggable,
     Swiper,
     SwiperSlide,
@@ -141,6 +150,15 @@ export default {
       this.$nextTick(() => {
         this.scrollToFocused();
       });
+    },
+    groupedAttractionsArray: {
+      deep: true,
+      handler() {
+        // 객체 배열의 변화 감지
+        this.$children.forEach((child) => {
+          child.$forceUpdate();
+        });
+      },
     },
   },
   methods: {
@@ -208,7 +226,7 @@ export default {
       }
 
       await axios.post(
-        process.env.VUE_APP_MY_BASE_URL+'/plan/' + this.plan.planId + '/attraction',
+        process.env.VUE_APP_MY_BASE_URL + '/plan/' + this.plan.planId + '/attraction',
         newAttractionList
       );
       this.$router.push('/plan/view/' + this.plan.planId);
@@ -221,9 +239,11 @@ export default {
   },
   async created() {
     this.plan.planId = this.$route.params.planId;
-    await axios.get(process.env.VUE_APP_MY_BASE_URL+'/plan/' + this.plan.planId).then((response) => {
-      this.plan = response.data;
-    });
+    await axios
+      .get(process.env.VUE_APP_MY_BASE_URL + '/plan/' + this.plan.planId)
+      .then((response) => {
+        this.plan = response.data;
+      });
     this.setGroupedAttractionsArray();
   },
 };
