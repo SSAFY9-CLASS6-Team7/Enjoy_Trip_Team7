@@ -17,7 +17,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     private String resourcePath = "file:///C:/enjoytrip_image/images/";
     private String profilePath = "/profilePath/**";
     private String profileResource = "file:///C:/enjoytrip_image/profile/";
-    private final JwtInterceptor jwtInterceptor;
+//    private final JwtInterceptor jwtInterceptor;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {

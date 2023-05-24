@@ -1,26 +1,15 @@
 <template>
   <div class="create-container">
-    <div class="plan-modal" v-if="isModalOpen">
-    <attraction-search-modal @addAttraction="addAttraction"></attraction-search-modal>
-    </div>
+
   <div class="create-area">
     <div class="tab-title">글쓰기</div>
     <div class="category-anonymous-container">
       <div class="category-container">
         <div class="inner-title">말머리</div>
         <select class="condition-box" v-model="selectedCode">
-          <option value="100" selected>자유</option>
-          <option value="101">후기</option>
-          <option value="102">추천</option>
-          <option value="103">질문</option>
+          <option value="900" selected>공지</option>
          </select>
       </div>
-      <div class="anonymous-container">
-        <div class="inner-title">익명</div>
-        <input type="checkbox" id="anonymousFlag" v-model='anonymous'/>
-        <label for="anonymousFlag" class="is-anonymous"></label>
-      </div>
-
     </div>
 
     <div class="title-input-container">
@@ -37,17 +26,6 @@
             @change="onEditorChange"
             required>
           </quill-editor>
-      </div>
-    </div>
-    <div class="attraction-container">
-      <div class="inner-title">관광지 선택</div>
-      <div class="select-attraction">
-        <div v-if="!selectedAttractionId" class="empty-attraction" @click="selectAttraction">선택된 관광지가 없습니다.</div>
-        <board-attraction v-if="selectedAttractionId" :attractionId="this.selectedAttractionId" @click="selectAttraction"></board-attraction>
-        <div v-if="selectedAttractionId" class="attraction-buttons">
-          <button class="delete-attraction" @click="deleteAttraction">관광지 삭제</button>
-          <button class="reroll" @click="selectAttraction">다시 고르기</button>
-        </div>
       </div>
     </div>
 
@@ -75,8 +53,6 @@
 </template>
 
 <script>
-import AttractionSearchModal from '../AttractionSearchModal.vue';
-import BoardAttraction from '@/components/board/board_components/BoardAttraction.vue';
 import { quillEditor } from "vue-quill-editor";
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
@@ -86,20 +62,15 @@ import { mapGetters } from 'vuex';
 
 export default {
   name: 'BoardUpdate',
-  components: {
-    quillEditor, BoardAttraction, AttractionSearchModal
-  },
+  components: { quillEditor },
   data() {
     return {
-      selectedCode: '100',
+      selectedCode: '900',
       boardId: '',
       title: '',
       content: '',
-      selectedAttractionId: '',
       userId: '',
       files: '',
-      anonymous: false,
-      isModalOpen: false,
     };
   },
   created() {
@@ -108,14 +79,12 @@ export default {
     
     this.boardId = this.$route.params.boardId;
     console.log("board Id : " + this.boardId);
-    axios.get(process.env.VUE_APP_MY_BASE_URL+'/board/' + this.boardId)
+    axios.get(process.env.VUE_APP_MY_BASE_URL+'/announcement/' + this.boardId)
         .then(response => {
         console.log(response.data);
         this.selectedCode = response.data.board.code;
         this.title = response.data.board.title;
         this.content = response.data.board.boardContent;
-        this.selectedAttractionId = response.data.board.attractionId;
-        this.anonymous = response.data.board.anonymous;
     });
   },
   computed: {
@@ -130,42 +99,25 @@ export default {
       f.append('code', this.selectedCode);
       f.append('title', this.title);
       f.append('boardContent', this.content);
-      f.append('anonymous', this.anonymous);
-      console.log("관광지 번호 : " + this.selectedAttractionId);
-      if(this.selectedAttractionId != '') {
-        f.append('attractionId', this.selectedAttractionId);
-      } else {
-        f.append('attractionId', '');
-      }
 
       let uploadFiles = this.$refs.files.files;
       for (let i = 0; i < uploadFiles.length; i++){
         f.append('files', uploadFiles[i]);
       }
 
-      await axios.put(process.env.VUE_APP_MY_BASE_URL+'/board/'+this.boardId, f)
+      await axios.put(process.env.VUE_APP_MY_BASE_URL+'/announcement/'+this.boardId, f)
       .then(response => {
         console.log(response);
-        this.$router.push("/board");
+        this.$router.push("/announcement");
       });
     },
     handleFileChange(event) {
       this.files = Array.from(event.target.files);
     },
-    selectAttraction() {
-      this.isModalOpen = true;
-    },
     cancel(){
       this.$router.push("/board");
       this.$router.go(0);
     },
-    addAttraction(attraction) {
-      this.selectedAttractionId = attraction.attractionId;
-      this.isModalOpen = false;
-    },
-    deleteAttraction() {
-      this.selectedAttractionId = '';
-    }
   },
 };
 </script>
