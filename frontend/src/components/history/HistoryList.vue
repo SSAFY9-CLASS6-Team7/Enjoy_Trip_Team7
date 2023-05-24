@@ -13,13 +13,7 @@
     <div>
       <div class="inner-header">
         <h2>기록</h2>
-        <button
-          class="create-btn"
-          @click="
-            setType('create');
-            setModal(true);
-          "
-        >
+        <button class="create-btn" @click="setCreateModal">
           <img class="create-btn-vector" src="../../assets/common/plus_icon_white.svg" />
           기록 추가
         </button>
@@ -55,6 +49,7 @@ import HistoryModal from './history_components/HistoryModal.vue';
 import HistoryPagination from './history_components/HistoryPagination.vue';
 import HistoryEmpty from './HistoryEmpty.vue';
 import axios from 'axios';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'HistoryList',
@@ -73,7 +68,11 @@ export default {
       needToUpate: false,
       pageNo: 1,
       pageResult: {},
+      userId: '',
     };
+  },
+  computed: {
+    ...mapGetters('userStore', ['checkToken', 'checkUserInfo']),
   },
   methods: {
     //열리는 모달 창의 타입(생성/조회/수정) 변경
@@ -100,8 +99,13 @@ export default {
     },
     //기록 생성 모달 열기
     setCreateModal() {
-      this.setType('create');
-      this.setModal(true);
+      if (this.checkToken) {
+        this.setType('create');
+        this.setModal(true);
+      } else {
+        alert('로그인이 필요합니다!');
+        this.$router.push('/user/login');
+      }
     },
     async pageChange(clickedPage) {
       this.pageNo = clickedPage;
@@ -109,11 +113,13 @@ export default {
     },
     // 기록 리스트 로딩
     async loadHistories() {
-      await axios.get(`http://localhost/history?pageNo=${this.pageNo}`).then((response) => {
-        // await axios.get(`http://43.201.218.74/history?pageNo=${this.pageNo}`).then((response) => {
-        this.histories = response.data.histories;
-        this.pageResult = response.data.pageResult;
-      });
+      await axios
+        .get(process.env.VUE_APP_MY_BASE_URL+`/history?pageNo=${this.pageNo}&userId=${this.userId}`)
+        .then((response) => {
+          // await axios.get(`http://43.201.218.74/history?pageNo=${this.pageNo}`).then((response) => {
+          this.histories = response.data.histories;
+          this.pageResult = response.data.pageResult;
+        });
     },
   },
   watch: {
@@ -126,6 +132,7 @@ export default {
     },
   },
   created() {
+    this.userId = this.checkUserInfo.userId;
     this.loadHistories();
   },
 };

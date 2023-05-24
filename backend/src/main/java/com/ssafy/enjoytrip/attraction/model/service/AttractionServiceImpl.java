@@ -2,13 +2,16 @@ package com.ssafy.enjoytrip.attraction.model.service;
 
 import com.ssafy.enjoytrip.attraction.model.Attraction;
 import com.ssafy.enjoytrip.attraction.model.mapper.AttractionMapper;
+import com.ssafy.enjoytrip.util.model.Page;
+import com.ssafy.enjoytrip.util.model.PageResult;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AttractionServiceImpl implements AttractionService{
@@ -18,13 +21,34 @@ public class AttractionServiceImpl implements AttractionService{
     private final AttractionMapper attractionMapper;
 
     @Override
-    public List<Attraction> getAttractionList(Map<String, Object> paramMap) throws SQLException {
-        int pageNo;
-        if ("".equals((String) paramMap.get("pageNo"))) pageNo = 1;
-        else pageNo = Integer.parseInt((String) paramMap.get("pageNo"));
-        paramMap.put("start", pageNo * LIST_SIZE - LIST_SIZE);
-        paramMap.put("size", LIST_SIZE);
-        return attractionMapper.selectAttraction(paramMap);
+    public Map<String, Object> getAttractionList(Map<String, Object> paramMap) throws SQLException {
+        Map<String, Object> map = new HashMap<>();
+
+        Page page = new Page();
+        int pageNo = Integer.parseInt(String.valueOf(paramMap.get("pageNo")));
+        page.setPageNo(pageNo);
+        page.setListSize(LIST_SIZE);
+        map.put("page", page);
+
+        String[] codes = paramMap.get("code").toString().split(",");
+        String[] sidos = paramMap.get("sido").toString().split(",");
+        if (codes.length > 0 && !codes[0].isEmpty()) {
+            map.put("codes", Arrays.asList(codes));
+        } else {
+            map.put("codes", Collections.emptyList());
+        }
+        if (sidos.length > 0 && !sidos[0].isEmpty()) {
+            map.put("sidos", Arrays.asList(sidos));
+        } else {
+            map.put("sidos", Collections.emptyList());
+        }map.put("keyword", paramMap.get("keyword"));
+
+        Map<String, Object> result = new HashMap<>();
+        int totalCount = attractionMapper.selectAttractionCount(map);
+        PageResult pageResult = new PageResult(pageNo, totalCount, LIST_SIZE, 5);
+        result.put("attractions", attractionMapper.selectAttraction(map));
+        result.put("pageResult", pageResult);
+        return result;
     }
 
     @Override

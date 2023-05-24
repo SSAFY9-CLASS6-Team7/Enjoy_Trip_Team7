@@ -10,5 +10,8 @@ public class Plan {
 	private String createTime;
 	private String content;
 	private String userId;
+	private String startDay;
+	private String endDay;
+	private int travelArea;
 	private List<PlanAttraction> planAttractions;
 }

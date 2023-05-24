@@ -1,5 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import store from '../store/index';
+
 
 Vue.use(VueRouter);
 
@@ -27,7 +29,7 @@ const routes = [
           import(/* webpackChunkName: "board" */ '../components/board/BoardCreate.vue'),
       },
       {
-        path: 'update',
+        path: 'update/:boardId',
         name: 'boardupdate',
         component: () =>
           import(/* webpackChunkName: "board" */ '../components/board/BoardUpdate.vue'),
@@ -87,11 +89,11 @@ const routes = [
     component: () => import(/* webpackChunkName: "plan" */ '../views/AppPlan.vue'),
     redirect: '/plan/list',
     children: [
-      {
-        path: 'create',
-        name: 'plancreate',
-        component: () => import(/* webpackChunkName: "plan" */ '@/components/plan/PlanCreate.vue'),
-      },
+      // {
+      //   path: 'create',
+      //   name: 'plancreate',
+      //   component: () => import(/* webpackChunkName: "plan" */ '@/components/plan/PlanCreate.vue'),
+      // },
       {
         path: 'empty',
         name: 'planempty',
@@ -108,12 +110,12 @@ const routes = [
       //   component: () => import(/* webpackChunkName: "plan" */ '@/components/plan/PlanSearch.vue'),
       // },
       {
-        path: 'update',
+        path: 'update/:planId',
         name: 'planupdate',
         component: () => import(/* webpackChunkName: "plan" */ '@/components/plan/PlanUpdate.vue'),
       },
       {
-        path: 'view',
+        path: 'view/:planId',
         name: 'planview',
         component: () => import(/* webpackChunkName: "plan" */ '@/components/plan/PlanView.vue'),
       },
@@ -159,7 +161,7 @@ const routes = [
           import(/* webpackChunkName: "user" */ '@/components/attraction/AttractionList.vue'),
       },
       {
-        path: 'view',
+        path: 'view/:attractionId',
         name: 'attractionview',
         component: () =>
           import(/* webpackChunkName: "user" */ '@/components/attraction/AttractionView.vue'),
@@ -172,6 +174,16 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  if (!to.path.includes('/board')) {
+    store.commit('resetBoardState'); 
+  }
+  if (!to.path.includes('/attraction')) {
+    store.commit('attractionReset');
+  }
+  next();
 });
 
 export default router;

@@ -40,7 +40,6 @@
         <div class="heart">좋아요</div>
       </div>
 
-      <!-- child Component 영역 -->
       <board-content :boards='boards'></board-content>
 
       <board-pagination class="pagination" @pageChange="pageChanged" :pageResult="pageResult"></board-pagination>
@@ -50,6 +49,7 @@
 </template>
 
 <script >
+import { mapActions, mapGetters } from 'vuex';
 import BoardContent from '@/components/board/board_components/BoardContent.vue'
 import BoardPagination from '@/components/board/board_components/BoardPagination.vue'
 import axios from 'axios'
@@ -67,39 +67,73 @@ export default {
       pageResult: {},
     }
   },
+  computed: {
+      ...mapGetters('userStore', ['checkToken', 'checkUserInfo']),
+      ...mapGetters(['getPage', 'getBoardTab', 'getSearchKeyword', 'getCondition']),
+  },
   methods: {
-    writePage() {
-      this.$router.push("create");
-    },
+    ...mapActions(['pageNoChange', 'boardTabChange', 'conditionChange', 'searchKeywordChange']),
     goSearch(){
-      axios.get(`http://43.201.218.74/board?pageNo=1&code=${this.activeBoardTab}&condition=${this.selectedCondition}&anonymous=&keyword=${this.searchKeyword}`)
-      .then(response => this.boards = response.data.boards)
-    },
-    tabChange(code) {
-      axios.get(`http://43.201.218.74/board?pageNo=1&code=${code}&condition=${this.selectedCondition}&anonymous=&keyword=${this.searchKeyword}`)
+      axios.get(process.env.VUE_APP_MY_BASE_URL+`/board?pageNo=1&code=${this.activeBoardTab}&condition=${this.selectedCondition}&anonymous=&keyword=${this.searchKeyword}`)
       .then(response => {
         this.boards = response.data.boards
+        this.pageResult = response.data.pageResult;
+        this.pageResult.pageNo = 1;
+        this.pageNo = 1;
+        this.pageNoChange(1);
+        this.conditionChange(this.selectedCondition);
+        this.searchKeywordChange(this.searchKeyword);
+        })
+    },
+    tabChange(code) {
+      axios.get(process.env.VUE_APP_MY_BASE_URL+`/board?pageNo=1&code=${code}&condition=&anonymous=&keyword=`)
+      .then(response => {
+        this.boards = response.data.boards
+        this.pageResult = response.data.pageResult;
         this.activeBoardTab = code;
+        this.pageResult.pageNo = 1;
+        this.pageNo = 1;
+        this.pageNoChange(1);
+        this.boardTabChange(code);
+        this.conditionChange('');
+        this.searchKeywordChange('');
         }
       )
     },
     pageChanged(clickedPage){
-      axios.get(`http://43.201.218.74/board?pageNo=${clickedPage}&code=${this.activeBoardTab}&condition=${this.selectedCondition}&anonymous=&keyword=${this.searchKeyword}`)
+      axios.get(process.env.VUE_APP_MY_BASE_URL+`/board?pageNo=${clickedPage}&code=${this.activeBoardTab}&condition=${this.selectedCondition}&anonymous=&keyword=${this.searchKeyword}`)
       .then( response => {
         this.boards = response.data.boards;
+        this.pageNo = clickedPage;
         this.pageResult = response.data.pageResult;
+        this.pageNoChange(clickedPage);
       })
     },
     createBoard(){
-      this.$router.push("/board/create");
+      if (this.checkToken) {
+        this.$router.push("/board/create");
+      }else {
+        alert("로그인이 필요합니다!");
+        this.$router.push("/user/login");
+      }
     }
 
   },
   async created(){
-    await axios.get(`http://43.201.218.74/board?pageNo=${this.pageNo}&code=${this.activeBoardTab}&condition=&anonymous=&keyword=`)
+    this.pageNo = this.getPage;
+    this.searchKeyword = this.getSearchKeyword;
+    this.activeBoardTab = this.getBoardTab;
+    this.selectedCondition = this.getCondition;
+  
+    await axios.get(process.env.VUE_APP_MY_BASE_URL+`/board?pageNo=${this.pageNo}&code=${this.activeBoardTab}&condition=${this.selectedCondition}&anonymous=&keyword=${this.searchKeyword}`)
     .then(response => {
       this.boards = response.data.boards;
       this.pageResult = response.data.pageResult;
+      if (this.pageResult.pageNo > this.pageResult.lastPage) {
+        this.pageResult.pageNo = this.pageResult.lastPage;
+        this.pageNoChange(this.pageResult.pageNo);
+        this.pageChanged(this.pageResult.lastPage);
+        }
       }
     );
   }

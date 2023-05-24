@@ -9,6 +9,9 @@
 		<result column="title" property="title" />
 		<result column="createtime" property="createTime" />
 		<result column="content" property="content" />
+		<result column="start_day" property="startDay" />
+		<result column="end_day" property="endDay" />
+		<result column="travel_area" property="travelArea" />
 		<result column="user_id" property="userId" />
 	</resultMap>
 	
@@ -28,17 +31,23 @@
 	<select id="selectPlanAttractionListByPlanId" parameterType="int" resultType="planAttraction">
 		SELECT plan_attraction_id planAttractionId, plan_id planId, attraction_id attractionId, sequence, plan_date planDate
 		FROM plan_attraction
-		WHERE plan_id = #{id}
+		WHERE plan_id = #{planId}
 		order by sequence
 	</select>
 
 	<!-- List<Plan> selectPlanList(String userId) -->
 	<select id="selectPlanList" parameterType="map" resultMap="planResultMap">
-		select plan_id, title, createtime, content, user_id
+		select *
 		from plan
 		where user_id = #{userId}
 		order by createtime desc
-		limit #{start}, #{listsize}
+		limit #{page.beginPage}, #{page.listSize}
+	</select>
+
+	<!-- selectPlanCount -->
+	<select id="selectPlanCount" resultType="int">
+		select count(*)
+		from plan
 	</select>
 
 	<!-- Plan selectPlanById(int planId) -->
@@ -51,14 +60,14 @@
 
 	<!-- void insertPlan(Plan plan) -->
 	<insert id="insertPlan" parameterType="plan">
-		insert into plan (title, createtime, content, user_id)
-		values(#{title},CURRENT_TIMESTAMP,#{content},#{userId})
+		insert into plan (title, createtime, content, user_id, start_day, end_day, travel_area)
+		values(#{title},CURRENT_TIMESTAMP,#{content},#{userId}, #{startDay}, #{endDay}, #{travelArea})
 	</insert>
 
 	<!-- void updatePlan(Plan plan) -->
 	<update id="updatePlan" parameterType="plan">
 		update plan
-		set title=#{title}, content=#{content}
+		set title=#{title}, content=#{content}, start_day=#{startDay}, end_day=#{endDay}, travel_area=#{travelArea}
 		where plan_id = #{planId}
 	</update>
 

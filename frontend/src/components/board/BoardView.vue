@@ -1,5 +1,7 @@
 <template>
 <div class="container">
+    <delete-modal v-if="modal" @no="no" @modalOff="modalOff" @yes="yes" :link='this.deleteLink'></delete-modal>
+    <image-modal v-if="imageDetail != ''" @imageOff="imageOff" :imagePath="this.imageDetail"></image-modal>
     <div class="left-aside"></div>
         
     <div class="content-container">
@@ -12,14 +14,16 @@
         </div>
         <div class="header">
             <div class="header-left">
-                <img v-if="this.profile == ''" src="@/assets/header_icon/profile.svg" class="profile-image">
-                <img v-if="this.profile != ''" :src="this.profile" class="profile-image">
-                <div class="user-name">{{ board.userId }}</div>
+                <img v-if="this.profile == '' || this.board.anonymous" src="@/assets/header_icon/profile.svg" class="profile-image">
+                <img v-if="this.profile != '' && !this.board.anonymous" :src="this.profile" class="profile-image">
+                <div v-if="this.board.anonymous" class="user-name"> 익 명 </div>
+                <div v-if="!this.board.anonymous" class="user-name">{{ board.userId }}</div>
             </div>
             <div class="header-right">
                 <div class="buttons">
-                    <button class="modify-button"><img src="@/assets/common/modify_icon.svg" style="height: 20px"></button>
-                    <button class="delete-button"><img src="@/assets/common/x_icon.svg" style="width:14px"></button>
+                    <button class="list-button" @click="moveList">목록</button>
+                    <button v-if="this.checkToken && this.checkUserInfo.userId === this.board.userId" class="modify-button" @click='boardModify'><img src="@/assets/common/modify_icon.svg" style="height: 20px"></button>
+                    <button v-if="this.checkToken && this.checkUserInfo.userId === this.board.userId" class="delete-button" @click='boardDelete'><img src="@/assets/common/x_icon.svg" style="width:14px"></button>
                 </div>
                 <div class="board-createtime">
                     {{ formattedCreateTime }}
@@ -32,8 +36,15 @@
             <div class="board-content-value" v-html="formatBoardContent(board.boardContent)">
             </div>
             <div v-if="images.length > 0" class="board-images">
-                <h3>사진 스와이퍼 영역</h3>
+                <swiper :options="swiperOption3">
+                    <swiper-slide class="image-swiper-item" v-for="image in images" :key="image">
+                        <div class="card">
+                            <img :src="`${baseUrl}/imagePath/${image.imagePath}`" style="border-radius: 10px; height: 150px;" @click="detail(image)"/>
+                        </div>
+                    </swiper-slide>
+                </swiper>
             </div>
+
             <div v-if="board.attracionId > 0" class="attraction-embedded"> 
                 <h3>관광지 임베딩 영역</h3>
             </div>
@@ -52,13 +63,13 @@
         <div class="devider"/>
 
         <div class="comment-input-container">
-            <textarea type="text" class="comment-input" :placeholder="this.commentPlaceholder" @keyup.enter="commentSubmit" v-model="commentInputValue"/>
+            <textarea type="text" class="comment-input" :placeholder="this.commentPlaceholder" @keyup.enter="commentSubmit" v-model="commentInputValue" />
             <button class="comment-submit" @click="commentSubmit">
                 <img class="comment-submit-button" src="@/assets/board_icons/comment-submit.svg">
             </button>
         </div>
         <div class="comments">
-            <board-comment v-for="comment in comments" :key='comment' :comment="comment"></board-comment>
+            <board-comment v-for="comment in comments" :key='comment' :comment="comment" :anonymous='commentAnonymous' :boardId='boardId' @commentDelete='commentDelete'></board-comment>
         </div>
     </div>
 
@@ -68,13 +79,20 @@
 </template>
 
 <script>
+import DeleteModal from './board_components/DeleteModal.vue';
+import ImageModal from './board_components/ImageModal.vue';
 import BoardComment from '@/components/board/board_components/BoardComment.vue'
+import { mapGetters } from 'vuex';
 import axios from "axios";
+import { Swiper, SwiperSlide } from "vue-awesome-swiper";
+import "swiper/css/swiper.css"; // swiper CSS 파일 import
+
 export default {
     name : 'BoardView',
-    components: { BoardComment },
+    components: { BoardComment, DeleteModal, Swiper, SwiperSlide, ImageModal },
     data(){
         return {
+            baseUrl: process.env.VUE_APP_MY_BASE_URL,
             comments: [],
             board: {},
             profile: '',
@@ -83,6 +101,20 @@ export default {
             commentPlaceholder: 
             `😁댓글은 자신을 나타내는 얼굴입니다. \n상처나 피해를 줄 수 있는 내용 또는 욕설/인격 모독성 내용이 포함된 경우에는 사전 고지 없이 댓글 삭제 및 제재 조치가 가해질 수 있습니다.`,
             commentInputValue: '',
+            commentAnonymous: '',
+            boardId: '',
+            modal: false,
+            imageDetail: '',
+            deleteLink: '',
+            swiperOption3: {
+                slidesPerView: 8,
+                spaceBetween: 2,
+                direction: 'horizontal',
+                pagination: {
+                    el: ".swiper-pagination",
+                    clickable: true
+                },
+            },
         }
     },
     computed:{
@@ -95,7 +127,8 @@ export default {
             const minutes = ('0' + date.getMinutes()).slice(-2);
 
             return `${year}/${month}/${day} ${hours}:${minutes}`;
-        }
+        },
+      ...mapGetters('userStore', ['checkToken', 'checkUserInfo']),
     },
     methods: {
         formatCategoryIcon(code){
@@ -114,27 +147,88 @@ export default {
         formatBoardContent(content) {
             return content.replace(/\n/g, '<br>');
         },
-        heartClick(){
-            this.isHeart = !this.isHeart;
-        },
-        commentSubmit(){
-            if (this.commentInputValue != ''){
-                console.log('댓글 전송!!!');
-                this.commentInputValue = '';
+        async heartClick(){
+            let f = {
+                boardId: this.board.boardId,
+                userId: this.checkUserInfo.userId,
+                heart: this.board.heart
             }
+
+            await axios.put(process.env.VUE_APP_MY_BASE_URL+`/board/${this.board.boardId}/heart`, f);
+            this.isHeart = !this.isHeart;
+            this.$router.go(0);
+        },
+        async commentSubmit(){
+            if (!this.checkToken) {
+                alert("로그인이 필요합니다.");
+                this.$router.push("/user/login");
+            }else {
+                if (this.commentInputValue != ''){
+                    let comment = {
+                        boardId: this.board.boardId,
+                        userId: this.checkUserInfo.userId,
+                        commentContent: this.commentInputValue,
+                        anonymous: this.board.anonymous
+                    }
+                    await axios.post(process.env.VUE_APP_MY_BASE_URL+`/board/${this.board.boardId}/comment`, comment);
+                    this.$router.go(0);
+                }
+            }
+        },
+        async commentDelete(link) {
+            this.deleteLink = link;
+            this.modal = true;
+        },
+        async boardDelete(){
+            this.deleteLink = process.env.VUE_APP_MY_BASE_URL+'/board/'+this.board.boardId;
+            this.modal = true;
+        },
+        boardModify() {
+            this.$router.push('/board/update/'+this.board.boardId);
+        },
+        moveList() {
+            this.$router.push("/board");
+        },
+        modalOff() {
+            this.modal = false;
+        },
+        async yes(myLink) {
+            if (myLink.includes("comment")) {
+                await axios.delete(myLink);
+                this.$router.go(0);
+            } else {
+                await axios.delete(myLink);
+                this.$router.push("/board");
+            }
+        },
+        detail(image){
+            this.imageDetail = image.imagePath;
+        },
+        imageOff(){
+            this.imageDetail = '';
         }
     },
-    created(){
-        this.board.boardId = this.$route.params.boardId;
-        axios.get("http://43.201.218.74/board/"+ this.board.boardId)
+    async created(){
+        await axios.get(process.env.VUE_APP_MY_BASE_URL+"/board/"+ this.$route.params.boardId)
         .then(response =>{
-            this.board = response.data.board        
+            this.board = response.data.board;
+            this.images = response.data.images;
+            this.commentAnonymous = this.board.anonymous;
+            this.boardId = response.data.board.boardId;
+            
         } );
-        axios.get("http://43.201.218.74/board/"+ this.board.boardId +"/comment")
+
+        await axios.get(process.env.VUE_APP_MY_BASE_URL+"/board/"+ this.board.boardId +"/comment")
         .then(response =>{
-            console.log(response.data);
             this.comments = response.data;
         } );
+
+        if (this.checkToken) {
+            await axios.get(process.env.VUE_APP_MY_BASE_URL+`/board/${this.board.boardId}/heart/${this.checkUserInfo.userId}`)
+            .then(response => {
+                this.isHeart = response.data.isHeart;
+            })
+        }
     }
 }
 </script>
@@ -153,9 +247,8 @@ export default {
     grid-template-areas: 'left content right';
     justify-items: stretch;
     min-width: 1900px;
-    max-width: 1900px;
-
 }
+
 .left-aside {
     grid-area: left;
 }
@@ -221,6 +314,17 @@ export default {
     margin: 5px 0 7px 0;    
 }
 
+.list-button {
+    border: none;
+    border-radius: 5px;
+    margin: 0px 20px 0px 0;
+    padding: 2px 7px 2px 7px;
+    background: #d6d6d6;
+    font-size: 16px;
+    font-family: 'S-CoreDream-3Light';
+    font-weight: 600;
+}
+
 .modify-button {
     border: none;
     border-radius: 5px;
@@ -263,6 +367,53 @@ export default {
     min-height: 250px;
     display: flex;
     flex-direction: column;
+    position: relative;
+}
+
+.board-images {
+    position: absolute;
+    width: 80%;
+    margin: 0 10% 0 10%;
+    height: 150px;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+}
+
+.card {
+  height: 150px;
+  border-radius: 10px;
+  display: inline-block;
+  margin: 0 10px 0 0;
+  overflow: visible; 
+}
+
+.card:hover {
+    cursor: pointer;
+}
+
+.swiper-wrapper{
+    
+    width: 100%;
+}
+
+.swiper-container {
+    margin: 0 0 0 0;
+    padding: 10px 0 10px 0;
+    width: 100%;
+    height: 170px;
+}
+
+.image-swiper-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 20px 0 20px;
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  display: none;
 }
 
 .heart-container {
@@ -343,5 +494,8 @@ export default {
     margin: 1px 5px 0 5px;
 }
 
+.comments {
+    position: relative;
+}
 
 </style>

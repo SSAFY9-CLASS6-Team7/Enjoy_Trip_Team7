@@ -13,7 +13,7 @@
             </div>
             <div class="id-input-area">
               <img src="@/assets/user_icons/login_input.svg" class="input-image">
-              <input type="text" class="id-input">
+              <input type="text" class="id-input" v-model="user.userId">
             </div>
           </div>
 
@@ -23,18 +23,18 @@
             </div>
             <div class="password-input-area">
               <img src="@/assets/user_icons/password_input.svg" class="input-image">
-              <input :type="showPassword ? 'password' : 'text'" class="password-input">
+              <input :type="showPassword ? 'password' : 'text'" class="password-input" v-model="user.password">
               <img src="@/assets/user_icons/eye.svg" class="password-type-change" @click="passwordTypeChange">
             </div>
           </div>
 
-          <button class="login">Login</button>
+          <button class="login" @click="login">Login</button>
 
           <div class="user-service">
             <div class="user-info">아이디나 비밀번호를 잊으셨나요?  
               <span class="find-user-info" @click="findUserInfo">여기</span>를 클릭하세요.  
             </div>
-            <div class="sign-up" @onclick="signUp">회원 가입</div>
+            <div class="sign-up" @click="signUp">회원 가입</div>
           </div>
 
           <div class="devider"></div>
@@ -48,8 +48,6 @@
         </div>
       </div>
 
-      
-
       <div class="right-aside"></div>
 
     </div>
@@ -57,6 +55,7 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
 export default {
     name: 'UserLogin',
     components: {},
@@ -64,18 +63,34 @@ export default {
         return {
             message: '',
             showPassword: 'password',
+            user: {
+              userId: '',
+              password: '',
+            }
         };
+    },
+    computed: {
+      ...mapGetters('userStore', ['checkToken', 'checkUserInfo']),
     },
     created() {},
     methods: {
+      ...mapActions('userStore', ['userConfirm']),
       passwordTypeChange() {
         this.showPassword = !this.showPassword;
       },
       signUp() {
-
+        this.$router.push("/user/signup")
       },
       findUserInfo() {
 
+      },
+      async login(){
+        await this.userConfirm(this.user);
+        if (this.checkToken) {
+          this.$router.push("/");
+        }else {
+          alert("ID나 비밀번호가 맞지 않습니다.");
+        }
       }
     },
 };

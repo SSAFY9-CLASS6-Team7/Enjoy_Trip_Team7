@@ -43,7 +43,7 @@ public class HistoryServiceImpl implements HistoryService {
 	@Override
 	public Map<String, Object> getHistoryList(Map<String, Object> map) throws SQLException {
 		Page page = new Page();
-        int pageNo = Integer.parseInt(String.valueOf(map.get("pgno")));
+        int pageNo = Integer.parseInt(String.valueOf(map.get("pageNo")));
         page.setPageNo(pageNo);
         page.setListSize(LIST_SIZE);
         map.put("page", page);
@@ -51,7 +51,7 @@ public class HistoryServiceImpl implements HistoryService {
 
         Map<String, Object> result = new HashMap<>();
 
-        int totalCount = historyMapper.selectBoardCount();
+        int totalCount = historyMapper.selectHistoryCount();
         PageResult pageResult = new PageResult(pageNo, totalCount, LIST_SIZE, 5);
         result.put("histories", historyMapper.selectHistoryList(map));
         result.put("pageResult", pageResult);

@@ -10,6 +10,6 @@ import java.util.Map;
 @Mapper
 public interface AttractionMapper {
     List<Attraction> selectAttraction(Map<String, Object> paramMap) throws SQLException;
-
+    int selectAttractionCount(Map<String, Object> paramMap) throws SQLException;
     Attraction selectAttractionByAttractionId(int attractionId) throws SQLException;
 }

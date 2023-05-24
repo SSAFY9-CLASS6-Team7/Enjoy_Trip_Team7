@@ -14,7 +14,7 @@
       </div>
       <div class="anonymous-container">
         <div class="inner-title">익명</div>
-        <input type="checkbox" id="anonymousFlag"/>
+        <input type="checkbox" id="anonymousFlag" v-model='anonymous'/>
         <label for="anonymousFlag" class="is-anonymous"></label>
       </div>
 
@@ -22,7 +22,7 @@
 
     <div class="title-input-container">
       <div class="inner-title">제 목</div>
-      <input type="text" class="board-title-input" placeholder="제목을 입력하세요">
+      <input type="text" class="board-title-input" placeholder="제목을 입력하세요" v-model="title">
     </div>
 
     <div class="content-input-container">
@@ -47,12 +47,11 @@
       <div class="inner-title">사진 업로드</div>
       <div class="filebox">
         <label class="upload-search-button" for="file">찾아보기...</label> 
-        <div v-if="selectedFiles.length == 0" class="upload-name">선택된 파일 없음</div>
-        <!-- <div v-if="selectedFiles.length > 0" class="upload-name"> {{ selectedFiles.join(', ') }} </div> -->
-        <div v-if="selectedFiles.length > 0" class="upload-name" >
-          <span v-for="file in this.selectedFiles" :key="file"> {{ file.name }} </span>
+        <div v-if="this.files.length == 0" class="upload-name">선택된 파일 없음</div>
+        <div v-if="this.files.length > 0" class="upload-name" >
+          <span v-for="file in this.files" :key="file"> {{ file.name }} </span>
         </div>
-        <input type="file" id="file" @change="handleFileChange" multiple >
+        <input type="file" id="file" ref="files" @change="handleFileChange" multiple >
       </div>
     </div>
 
@@ -73,6 +72,7 @@ import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
 import axios from 'axios';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'BoardCreate',
@@ -82,33 +82,55 @@ export default {
   data() {
     return {
       selectedCode: '100',
+      title: '',
       content: '',
       selectedAttractionId: '',
+      userId: '',
+      files: '',
       selectedAttraction: '',
-      selectedFiles: [],
+      anonymous: false,
     };
   },
-  created() {},
+  created() {
+    this.files = [];
+    this.userId = this.checkUserInfo.userId;
+  },
+  computed: {
+      ...mapGetters('userStore', ['checkUserInfo']),
+  },
   methods: {
+    ...mapActions(['pageNoChange']),
     onEditorChange(value) {
-      console.log(value);
       this.content = value.html;
     },
-    boardSubmit(){
+    async boardSubmit(){
       let f = new FormData();
+      f.append('code', this.selectedCode);
+      f.append('title', this.title);
       f.append('boardContent', this.content);
-      axios.post('http://localhost/board', f).then(
-        response => (
-          console.log(response.data)
-        )
-      );
+      f.append('userId', this.userId);
+      f.append('anonymous', this.anonymous);
+      
+      let uploadFiles = this.$refs.files.files;
+      for (let i = 0; i < uploadFiles.length; i++){
+        f.append('files', uploadFiles[i]);
+      }
+      
+      await axios.post(process.env.VUE_APP_MY_BASE_URL+'/board', f);
+      this.pageNoChange(1);
+      this.$router.push("/board");
+      this.$router.go(0);
     },
     handleFileChange(event) {
-      this.selectedFiles = Array.from(event.target.files);
+      this.files = Array.from(event.target.files);
     },
     selectAttraction() {
 
     },
+    cancel(){
+      this.$router.push("/board");
+      this.$router.go(0);
+    }
   },
 };
 </script>

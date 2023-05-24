@@ -163,14 +163,14 @@ export default {
       for (let u = 0; u < tempFiles.length; u++) {
         f.append('files', tempFiles[u]);
       }
-      await axios.put(`http://localhost/history/` + this.historyId, f);
+      await axios.put(process.env.VUE_APP_MY_BASE_URL+`/history/` + this.historyId, f);
       this.$emit('emitNeedToUpdate');
       this.$emit('emitModalOff');
     },
     setThumbnailSrc() {
       if (this.imageList.length > 0) {
-        return 'http://localhost/imagePath/' + this.imageList[0].imagePath;
-        // this.thumnailUrl = 'http://localhost/imagePath/' + this.imageList[0].imagePath;
+        return process.env.VUE_APP_MY_BASE_URL+'/imagePath/' + this.imageList[0].imagePath;
+        // this.thumnailUrl = 'http://192.168.212.72/imagePath/' + this.imageList[0].imagePath;
       } else {
         let sampleSrc = (this.historyId % 5) + 1;
         return require(`@/assets/sample/sample${sampleSrc}.jpg`);
@@ -181,7 +181,7 @@ export default {
   //TODO: db에서 이미지 로딩으로 문제 발생시 나머지 데이터들도 로딩안됨
   async mounted() {
     await axios
-      .get('http://localhost/history/' + this.historyId)
+      .get(process.env.VUE_APP_MY_BASE_URL+'/history/' + this.historyId)
       .then((response) => (this.history = response.data));
     //미리 정보 로딩
     this.imageList = this.history.images;

@@ -7,20 +7,21 @@
                 <!-- <img src='@/assets/board_icons/board_category/자유.svg'/> -->
             </div>
             <div class="is-image">
-                <img v-if="images > 0" src="@/assets/board_icons/isImage.svg"/>
+                <img v-if="images.length > 0" src="@/assets/board_icons/isImage.svg"/>
             </div>
             <div class="board-title" @click="boardView">
                 {{ board.title }}
                 <div v-if="comments > 0" class="comment-length">
                    [{{ comments }}]
-                </div>
             </div>
-            <div class="writer">{{ board.userId }} </div>
+            </div>
+            <div v-if="!board.anonymous" class="writer">{{ nickname }} </div>
+            <div v-if="board.anonymous" class="writer"> 익 명 </div>
             <div class="create-time">{{ formatCreateTime(board.createTime) }}</div>
             <div class="hits">{{ board.hits }}</div>
             <div class="heart">{{ board.heart }}</div>
         </div>
-        <div class="divider"/>
+        <div class="devider"/>
     </div>
 </template>
 
@@ -34,7 +35,8 @@ export default {
         return {
             message: '',
             comments: '',
-            images: '',
+            images: [],
+            nickname: '',
         };
     },
     methods: {
@@ -71,22 +73,30 @@ export default {
             }
             return path;
         },
+        fetchUserInfo() {
+            axios.get(process.env.VUE_APP_MY_BASE_URL+`/user/${this.board.userId}`)
+            .then(response => {
+                this.nickname = response.data.userInfo.nickname;
+            });
+        },
         fetchComments() {
-            axios.get(`http://43.201.218.74/board/${this.board.boardId}/comment`)
+            axios.get(process.env.VUE_APP_MY_BASE_URL+`/board/${this.board.boardId}/comment`)
             .then(response => this.comments = response.data.length);
         },
-        fetchImages() {
-            axios.get(`http://43.201.218.74/board/${this.board.boardId}`)
-            .then(response => this.images = response.data.images.length);
+        async fetchImages() {
+            await axios.get(process.env.VUE_APP_MY_BASE_URL+`/board/${this.board.boardId}/image`)
+            .then(response =>{
+                this.images = response.data.images
+            } );
         },
         boardView(){
-            console.log(this.board.boardId);
             this.$router.push('/board/view/'+this.board.boardId);
         },
     },
     created() {
         this.fetchComments();
         this.fetchImages();
+        this.fetchUserInfo();
     },
     watch: {
         board(){
@@ -117,7 +127,7 @@ export default {
     align-items: center;
 }
 
-.divider {
+.devider {
     height: 1px;
     background-color: #e7e7e7;
     
@@ -151,6 +161,10 @@ export default {
     color: #1B1C37;
     font-family: 'S-CoreDream-3Light';
     font-weight: 600;
+}
+
+.board-title:hover {
+    cursor: pointer;
 }
 
 .writer {

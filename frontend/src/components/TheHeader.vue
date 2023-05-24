@@ -36,23 +36,36 @@
           <router-link to="/board">게시판</router-link>
         </div>
       </div>
-      <div class="user-area">
+      <div v-if="!checkToken" class="user-area" @click="setActiveMenuItem('-1')">
         <img class="profile-img" src="../assets/header_icon/profile.svg" />
         <router-link to="/user/login">로그인</router-link>
       </div>
+
+      <div v-if="checkToken" class="user-area" @click="profileClick" >
+        <img class="profile-img"  v-if="checkUserInfo.profilePicPath != null && checkUserInfo.profilePicPath != ''" :src="`${baseUrl}/profilePath/` + checkUserInfo.profilePicPath" />
+        <img class="profile-img" v-if="checkUserInfo.profilePicPath == null || checkUserInfo.profilePicPath == ''" src="@/assets/header_icon/profile.svg">
+        <div>{{ checkUserInfo.nickname }}</div>
+      </div>
+
+      <button class="menu-open" @click="openRightMenu">
+        <img src="@/assets/common/more.svg" style="width: 30px;">
+      </button>
     </div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 export default {
   name: "TheHeader",
   data() {
     return {
+      baseUrl: process.env.VUE_APP_MY_BASE_URL,
       // activeMenuItem: '',
     }
   },
   computed: {  
+    ...mapGetters('userStore', ['checkToken', 'checkUserInfo']),
     activeMenuItem : function() {
       return this.$store.state.activeMenuItem;
     },
@@ -67,6 +80,13 @@ export default {
     setActiveMenuItem(menuItem) {
       this.$store.commit('activeMenuChange', menuItem);
     },
+    openRightMenu() {
+      this.$emit('openRightMenu')
+    },
+    profileClick() {
+      this.setActiveMenuItem('-1');
+      this.openRightMenu();
+  },
   },
 };
 </script>
@@ -147,9 +167,16 @@ export default {
   align-items: center;
 }
 
+.user-area:hover {
+  cursor: pointer;
+}
+
 .profile-img {
   background-color: #e8e8e8;
-  border-radius: 22px;
+  border-radius: 45px;
+  width: 45px;
+  height: 45px;
+  margin:0 10px 0 0;
 }
 
 a {
@@ -160,5 +187,16 @@ a {
 
 img {
   height: 40px;
+}
+
+.menu-open {
+  position:absolute;
+  right:0%;
+  border: none;   
+  border-radius: 40px 0 0 40px;
+  padding: 0 10px 0 10px;
+  background: linear-gradient(105.82deg, #E1306C 9.07%, #FF699A 40.96%, rgba(252, 175, 69, 0.7) 71.54%);
+  display: flex;
+  align-items: center;
 }
 </style>

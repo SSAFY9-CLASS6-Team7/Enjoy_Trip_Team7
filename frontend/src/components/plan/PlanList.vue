@@ -1,7 +1,17 @@
 <template>
   <div class="plan-container">
     <div class="plan-modal" v-if="isModalOpen">
-      <attraction-search-modal @setModal="setModal"></attraction-search-modal>
+      <plan-create-modal
+        @setModal="setModal"
+        @setNeedToUpdate="setNeedToUpdate"
+        v-if="openedModal === 'create' && isModalOpen === true"
+      ></plan-create-modal>
+      <plan-update-modal
+        @setModal="setModal"
+        @setNeedToUpdate="setNeedToUpdate"
+        :planId="focusedPlanId"
+        v-if="openedModal === 'update' && isModalOpen === true"
+      ></plan-update-modal>
     </div>
     <div class="left-aside"></div>
     <div>
@@ -13,14 +23,26 @@
         </button>
       </div>
       <div class="line"></div>
-      <div class="main">
-        <plan-list-item
-          v-for="plan in plans"
-          :key="plan.planId"
-          :planId="plan.planId"
-        ></plan-list-item>
+      <div class="empty-main" v-if="plans.length === 0">
+        <plan-empty @setCreateModal="createModalOpen"></plan-empty>
       </div>
-      <div class="pagination"></div>
+      <div class="plan-main" v-if="plans.length !== 0">
+        <div class="main">
+          <plan-list-item
+            v-for="plan in plans"
+            :key="plan.planId"
+            :planId="plan.planId"
+            :needToUpdate="needToUpdate"
+            @updateModalOpen="updateModalOpen"
+            @setNeedToUpdate="setNeedToUpdate"
+          ></plan-list-item>
+        </div>
+        <plan-pagination
+          class="pagination"
+          :pageResult="pageResult"
+          @pageChange="pageChange"
+        ></plan-pagination>
+      </div>
     </div>
     <div class="right-aside"></div>
   </div>
@@ -28,36 +50,91 @@
 
 <script>
 import PlanListItem from './plan_components/PlanListItem.vue';
-import AttractionSearchModal from '../AttractionSearchModal.vue';
+import PlanCreateModal from './plan_components/PlanCreateModal.vue';
+import PlanUpdateModal from './plan_components/PlanUpdateModal.vue';
+import PlanPagination from './plan_components/PlanPagination.vue';
+import PlanEmpty from './PlanEmpty.vue';
 import axios from 'axios';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'PlanList',
   components: {
     PlanListItem,
-    AttractionSearchModal,
+    PlanCreateModal,
+    PlanUpdateModal,
+    PlanPagination,
+    PlanEmpty,
   },
   data() {
     return {
       plans: [],
       isModalOpen: false,
+      openedModal: '',
+      focusedPlanId: '',
       pageNo: 1,
+      pageResult: {},
+      needToUpdate: false,
+      userId: '',
     };
+  },
+  computed: {
+    ...mapGetters('userStore', ['checkUserInfo', 'checkToken']),
+  },
+  watch: {
+    // 목록 내용이 변경 시 다시 로딩
+    needToUpdate: async function () {
+      if (this.needToUpdate === true) {
+        await this.loadPlans();
+        this.setNeedToUpdate(false);
+      }
+    },
   },
   methods: {
     //모달 창 오픈 여부 변경
     setModal(value) {
       this.isModalOpen = value;
+      if (value === false) {
+        this.openedModal = '';
+        this.focusedPlanId = '';
+      }
     },
-    //(변경필요)모달열기
     createModalOpen() {
+      if (this.checkToken) {
+        this.openedModal = 'create';
+        this.setModal(true);
+      } else {
+        alert('로그인이 필요합니다!');
+        this.$router.push('/user/login');
+      }
+    },
+    updateModalOpen(planId) {
+      this.focusedPlanId = planId;
+      this.openedModal = 'update';
       this.setModal(true);
     },
+    setNeedToUpdate(value) {
+      this.needToUpdate = value;
+    },
+    addAttraction(attraction) {
+      console.log('---관광지 정보 넘어옴 : ' + attraction.title);
+    },
+    async pageChange(clickedPage) {
+      this.pageNo = clickedPage;
+      await this.loadPlans();
+    },
+    loadPlans() {
+      axios
+        .get(process.env.VUE_APP_MY_BASE_URL + `/plan?pageNo=${this.pageNo}&userId=${this.userId}`)
+        .then((response) => {
+          this.plans = response.data.plans;
+          this.pageResult = response.data.pageResult;
+        });
+    },
   },
-  async created() {
-    await axios
-      .get(`http://localhost/plan?pageNo=${this.pageNo}`)
-      .then((response) => (this.plans = response.data));
+  created() {
+    this.userId = this.checkUserInfo.userId;
+    this.loadPlans();
   },
 };
 </script>
@@ -108,6 +185,10 @@ export default {
   background-color: white;
 }
 
+.main > * {
+  margin: 2%;
+}
+
 .create-btn {
   padding: 7px 10px;
   margin-top: 20px;
@@ -129,7 +210,6 @@ export default {
 .pagination {
   grid-area: page;
   min-height: 60px;
-  border: #fcaf45 1px solid;
 }
 
 button {

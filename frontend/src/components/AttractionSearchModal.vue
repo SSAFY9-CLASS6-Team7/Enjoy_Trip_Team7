@@ -1,4 +1,5 @@
 <template>
+  <!-- 사용 시 부모 쪽에서 emitAddAttraction 이벤트와 emitModalOff 이벤트를 @으로 받으면 됨 -->
   <div class="att-search-modal">
     <div class="search-blackbg" @click="emitModalOff"></div>
     <div class="search-whitebg">
@@ -11,7 +12,7 @@
                 시·도 선택
                 <img src="@/assets/board_icons/dropdown.svg" />
               </button>
-              <ul ref="sidoDropdownMenu" class="dropdown-menu">
+              <ul class="dropdown-menu" v-show="sidoDropdownOpen">
                 <div class="dropdown-li" v-for="sido in sidoCode" :key="sido.code">
                   <li>
                     <label
@@ -32,7 +33,7 @@
                 카테고리 선택
                 <img src="@/assets/board_icons/dropdown.svg" />
               </button>
-              <ul ref="categoryDropdownMenu" class="dropdown-menu">
+              <ul class="dropdown-menu" v-show="categoryDropdownOpen">
                 <div
                   class="dropdown-li"
                   v-for="category in contentTypeId"
@@ -62,12 +63,26 @@
                 v-for="result in searchResults"
                 :key="result.attractionId"
               >
-                <plan-attraction-item :attraction="result"></plan-attraction-item>
+                <plan-search-item
+                  :attraction="result"
+                  @setFocusedAttId="setFocusedAttId"
+                ></plan-search-item>
               </div>
+              <infinite-loading
+                v-if="infiniteScrollFeature"
+                @infinite="infiniteHandler"
+              ></infinite-loading>
             </div>
           </div>
           <div class="att-detail-area">
-            <div class="att-detail"></div>
+            <div class="att-detail">
+              <div class="att-detail-view" v-if="focusedAttId !== 0">
+                <plan-search-detail
+                  :attractionId="focusedAttId"
+                  @emitAddAttraction="emitAddAttraction"
+                ></plan-search-detail>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -75,13 +90,18 @@
   </div>
 </template>
 <script>
-import PlanAttractionItem from './plan/plan_components/PlanAttractionItem.vue';
+import PlanSearchItem from './plan/plan_components/PlanSearchItem.vue';
+import PlanSearchDetail from './plan/plan_components/PlanSearchDetail.vue';
+import InfiniteLoading from 'vue-infinite-loading';
 import axios from 'axios';
+import qs from 'qs';
 
 export default {
   name: 'AttractionSearchModal',
   components: {
-    PlanAttractionItem,
+    PlanSearchItem,
+    PlanSearchDetail,
+    InfiniteLoading,
   },
   data() {
     return {
@@ -89,7 +109,12 @@ export default {
       category: [],
       keyword: '',
       searchResults: [],
+      focusedAttId: 0,
       pageNo: 1,
+      pageResult: {},
+      sidoDropdownOpen: 0,
+      categoryDropdownOpen: 0,
+      infiniteScrollFeature: false,
     };
   },
   computed: {
@@ -103,46 +128,95 @@ export default {
   methods: {
     //버튼 클릭시 해당하는 드롭다운을 토글
     toggleDropdown(dropdownStyle) {
-      console.log(dropdownStyle, 1);
-
-      var dropdownMenu = null;
-      if (dropdownStyle === 'sido') dropdownMenu = this.$refs.sidoDropdownMenu;
-      if (dropdownStyle === 'category') dropdownMenu = this.$refs.categoryDropdownMenu;
-      console.log(dropdownMenu.style.display); //TODO: 처음 버튼 클릭 시 여기가 null도 아니고 아무것도 안찍히는데 해결 필요
-      dropdownMenu.style.display = dropdownMenu.style.display === 'none' ? 'block' : 'none';
-      console.log(dropdownStyle, 2);
-      console.log(dropdownMenu.style.display);
+      if (dropdownStyle === 'sido') {
+        let tmp = (this.sidoDropdownOpen + 1) % 2;
+        this.sidoDropdownOpen = tmp;
+      } else if (dropdownStyle === 'category') {
+        let tmp = (this.categoryDropdownOpen + 1) % 2;
+        this.categoryDropdownOpen = tmp;
+      }
     },
     //인풋이 변경되면 sido 배열을 업데이트
     sidoUpdate() {
       const checkedInputs = Array.from(document.querySelectorAll('input[name="sido"]:checked'));
       this.sido = checkedInputs.map((input) => input.value);
     },
+    //인풋이 변경되면 category 배열을 업데이트
     cateUpdate() {
       const checkedInputs = Array.from(document.querySelectorAll('input[name="category"]:checked'));
       this.category = checkedInputs.map((input) => input.value);
+      //기타 처리
+      if (this.category.includes('0')) this.category.push(...['14', '25', '28', '38']);
+    },
+    //클릭한 서치 결과의 관광지 아이디 세팅
+    setFocusedAttId(id) {
+      this.focusedAttId = id;
     },
     //키워드로 검색하기
     async keywordSearch() {
-      console.log('lets search');
-      await axios
-        .get(
-          `http://localhost/attraction?pageNo=${this.pageNo}&code=${this.category}&sido=${this.sido}&keyword=${this.keyword}`
-        )
-        .then((response) => (this.searchResults = response.data));
-      //검색하면 드롭다운 닫기
-      this.$refs.sidoDropdownMenu.style.display = 'none';
-      this.$refs.categoryDropdownMenu.style.display = 'none';
+      this.infiniteScrollFeature = false; //무한 스크롤 기능 껐다가
+      await this.refresh();
+      this.infiniteScrollFeature = true; //무한 스크롤 기능 다시 켜주기
+    },
+    //초기화 작업(비동기처리를 위해 분리)
+    refresh() {
+      this.sidoDropdownOpen = 0;
+      this.categoryDropdownOpen = 0;
+      this.pageNo = 1;
+      this.searchResults = [];
+      this.pageResult = {};
     },
     //모달 창을 닫기
     emitModalOff() {
       this.$emit('setModal', false);
     },
+    //관광지 선택 완료, 관광지 정보를 부모 객체로 전달
+    emitAddAttraction(attraction) {
+      this.$emit('addAttraction', attraction);
+      this.emitModalOff(); //전달하고 모달 창 닫기
+    },
+    //무한 스크롤
+    async infiniteHandler($state) {
+      this.infiniteState = $state;
+      await axios({
+        url: process.env.VUE_APP_MY_BASE_URL+`/attraction`,
+        method: 'GET',
+        params: {
+          pageNo: this.pageNo,
+          code: this.category,
+          sido: this.sido,
+          keyword: this.keyword,
+        },
+        paramsSerializer: (params) => {
+          // code와 sido 값이 배열 형태인지 확인하여 배열이 아니면 단일 값으로 전달
+          const code = Array.isArray(params.code) ? params.code : [params.code];
+          const sido = Array.isArray(params.sido) ? params.sido : [params.sido];
+
+          return qs.stringify(
+            {
+              ...params,
+              code: code.join(','), // 배열 형태의 값을 쉼표로 구분하여 문자열로 변환
+              sido: sido.join(','), // 배열 형태의 값을 쉼표로 구분하여 문자열로 변환
+            },
+            { arrayFormat: 'comma' }
+          );
+        },
+      }).then((response) => {
+        if (response.data.attractions.length) {
+          this.pageNo += 1;
+          this.searchResults.push(...response.data.attractions);
+          this.pageResult = response.data.pageResult;
+          $state.loaded();
+        } else {
+          $state.complete();
+        }
+      });
+    },
   },
 };
 </script>
 <style scoped>
-.plan-search-modal,
+.att-search-modal,
 .search-blackbg {
   width: 100%;
   height: 100%;
@@ -210,12 +284,13 @@ export default {
   width: 200px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   font-size: 12px;
   margin: 0 20px;
 }
 
 .dropdown-menu {
-  display: none;
+  /* display: none; */
   position: absolute;
   border-radius: 4px;
   z-index: 1; /*다른 요소들보다 앞에 배치*/
@@ -296,11 +371,13 @@ export default {
   align-items: center;
   justify-content: center;
   border-left: 0.5px solid #cacaca;
+  overflow: hidden;
 }
 
 .att-detail {
-  width: 80%;
+  width: 90%;
   height: 95%;
-  background-color: aquamarine;
+  padding: 0 0 0 5%;
+  overflow: auto;
 }
 </style>

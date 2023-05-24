@@ -27,6 +27,11 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public User getUserInfo(String userId) throws SQLException {
+        return userMapper.selectUserByUserId(userId);
+    }
+
+    @Override
     public void createUser(User user) throws SQLException {
         userMapper.insertUser(user);
     }
@@ -43,6 +48,5 @@ public class UserServiceImpl implements UserService{
             user.setProfilePicPath(profilePicPath);
         }
         userMapper.updateUser(user);
-
     }
 }
