@@ -17,17 +17,27 @@
     <div class="plan-attraction-info">{{ attraction.overView }}</div>
     <div class="address-title"><img src="@/assets/plan_icon/pin.svg" />위치</div>
     <div class="plan-attraction-address">{{ attraction.address }}</div>
-    <div class="map-area">Map</div>
+    <div class="map-area" id="map">
+      <attraction-kakao-map
+        :location="this.location"
+        :code="this.attraction.code"
+      ></attraction-kakao-map>
+    </div>
   </div>
 </template>
 <script>
+import AttractionKakaoMap from '@/components/attraction/attraction_components/AttractionKakaoMap.vue';
 import axios from 'axios';
 export default {
   name: 'PlanAttractionItem',
+  components: {
+    AttractionKakaoMap,
+  },
   data() {
     return {
       attraction: Object,
       contentTypeSrc: '',
+      location: Object,
     };
   },
   props: ['attractionId'],
@@ -40,7 +50,13 @@ export default {
     async loadData(attractionId) {
       await axios
         .get(process.env.VUE_APP_MY_BASE_URL + `/attraction/${attractionId}`)
-        .then((response) => (this.attraction = response.data));
+        .then((response) => {
+          this.attraction = response.data;
+          this.location = {
+            lat: this.attraction.lat,
+            lng: this.attraction.lng,
+          };
+        });
       this.setContentTypeSrc();
     },
     //관광지 타입 설정하기
