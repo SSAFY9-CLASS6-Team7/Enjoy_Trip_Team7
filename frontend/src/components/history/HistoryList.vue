@@ -99,6 +99,7 @@ export default {
     },
     //기록 생성 모달 열기
     setCreateModal() {
+      console.log('modal on!');
       if (this.checkToken) {
         this.setType('create');
         this.setModal(true);
@@ -114,12 +115,17 @@ export default {
     // 기록 리스트 로딩
     async loadHistories() {
       await axios
-        .get(process.env.VUE_APP_MY_BASE_URL+`/history?pageNo=${this.pageNo}&userId=${this.userId}`)
+        .get(
+          process.env.VUE_APP_MY_BASE_URL + `/history?pageNo=${this.pageNo}&userId=${this.userId}`
+        )
         .then((response) => {
-          // await axios.get(`http://43.201.218.74/history?pageNo=${this.pageNo}`).then((response) => {
           this.histories = response.data.histories;
           this.pageResult = response.data.pageResult;
         });
+      if (this.$route.params.historyId) {
+        console.log(this.$route.params.historyId);
+        this.setViewModal(this.$route.params.historyId);
+      }
     },
   },
   watch: {
