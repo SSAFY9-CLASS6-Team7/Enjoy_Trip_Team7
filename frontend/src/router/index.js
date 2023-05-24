@@ -2,7 +2,6 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import store from '../store/index';
 
-
 Vue.use(VueRouter);
 
 const routes = [
@@ -55,9 +54,9 @@ const routes = [
           import(/* webpackChunkName: "history" */ '@/components/history/HistoryList.vue'),
       },
       // {
-      //   path: "create",
+      //   path: "list/:create",
       //   name: "historycreate",
-      //   component: () => import(/* webpackChunkName: "history" */ '@/components/history/HistoryCreate.vue'),
+      //   component: () => import(/* webpackChunkName: "history" */ '@/components/history/HistoryList.vue'),
       // },
       {
         path: 'empty',
@@ -76,11 +75,12 @@ const routes = [
       //   name: "historyupdate",
       //   component: () => import(/* webpackChunkName: "history" */ '@/components/history/HistoryUpdate.vue'),
       // },
-      // {
-      //   path: "view/:historyId",
-      //   name: "historyview",
-      //   component: () => import(/* webpackChunkName: "history" */ '@/components/history/HistoryView.vue'),
-      // },
+      {
+        path: 'list/:historyId',
+        name: 'historyview',
+        component: () =>
+          import(/* webpackChunkName: "history" */ '@/components/history/HistoryList.vue'),
+      },
     ],
   },
   {
@@ -177,19 +177,24 @@ const routes = [
       {
         path: 'list',
         name: 'announcementlist',
-        component: () => import(/* webpackChunkName: "board" */ '@/components/announcement/AnnouncementList.vue'),
+        component: () =>
+          import(/* webpackChunkName: "board" */ '@/components/announcement/AnnouncementList.vue'),
       },
       {
         path: 'create',
         name: 'announcementcreate',
         component: () =>
-          import(/* webpackChunkName: "board" */ '../components/announcement/AnnouncementCreate.vue'),
+          import(
+            /* webpackChunkName: "board" */ '../components/announcement/AnnouncementCreate.vue'
+          ),
       },
       {
         path: 'update/:boardId',
         name: 'announcementupdate',
         component: () =>
-          import(/* webpackChunkName: "board" */ '../components/announcement/AnnouncementUpdate.vue'),
+          import(
+            /* webpackChunkName: "board" */ '../components/announcement/AnnouncementUpdate.vue'
+          ),
       },
       {
         path: 'view/:boardId',
@@ -198,7 +203,7 @@ const routes = [
           import(/* webpackChunkName: "board" */ '../components/announcement/AnnouncementView.vue'),
       },
     ],
-  }
+  },
 ];
 
 const router = new VueRouter({
@@ -209,7 +214,7 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if (!to.path.includes('/board')) {
-    store.commit('resetBoardState'); 
+    store.commit('resetBoardState');
   }
   if (!to.path.includes('/attraction')) {
     store.commit('attractionReset');

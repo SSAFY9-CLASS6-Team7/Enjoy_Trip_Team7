@@ -1,83 +1,86 @@
 <template>
+  <div class="main-container">
+    <div class="main-img">
+      <swiper class="image-swiper" :options="swiperOption2">
+        <swiper-slide class="image-swiper-item" v-for="image in images" :key="image">
+          <img :src="image.path" height="450px" width="100%" />
+        </swiper-slide>
+      </swiper>
 
-<div class="main-container">
-
-  <div class="main-img">
-    <swiper class="image-swiper" :options="swiperOption2">
-      <swiper-slide class="image-swiper-item" v-for="image in images" :key="image">
-        <img :src="image.path" height="450px" width="100%">
-      </swiper-slide>
-    </swiper>
-
-    <!-- 공지사항 영역 -->
-    <div class="announcement">    
-      <div class="announcement-title">
-        <div class="announcement-title-value">공지사항</div>
-      </div>
-      <div class="page-navigation">
-        <div class="swiper-button-prev announcement-prev" slot="button-prev"> ← </div>
-        <div class="swiper-button-next announcement-next" slot="button-next"> → </div>
-      </div>
-      <div class="announcement-content" style="display: inline-block;">
-        <swiper class="announcement-swiper" :options="swiperOption1">
-          <swiper-slide class="swiper-item" v-for="announcement in announcements" :key="announcement">
-            <div class="announcement-value" > {{ announcement.title }} </div>
-            <div class="announcement-time">
-              <img src="../assets/clock.svg" style="margin-right:10px">
-              {{ announcement.time }}
-            </div>
-          </swiper-slide>
-        </swiper>
+      <!-- 공지사항 영역 -->
+      <div class="announcement">
+        <div class="announcement-title">
+          <div class="announcement-title-value">공지사항</div>
+        </div>
+        <div class="page-navigation">
+          <div class="swiper-button-prev announcement-prev" slot="button-prev">←</div>
+          <div class="swiper-button-next announcement-next" slot="button-next">→</div>
+        </div>
+        <div class="announcement-content" style="display: inline-block">
+          <swiper class="announcement-swiper" :options="swiperOption1">
+            <swiper-slide
+              class="swiper-item"
+              v-for="announcement in announcements"
+              :key="announcement"
+            >
+              <div class="announcement-value">{{ announcement.title }}</div>
+              <div class="announcement-time">
+                <img src="../assets/clock.svg" style="margin-right: 10px" />
+                {{ announcement.time }}
+              </div>
+            </swiper-slide>
+          </swiper>
+        </div>
       </div>
     </div>
+
+    <main-cards></main-cards>
+    <main-community></main-community>
+    <main-history></main-history>
   </div>
-  
-  <main-cards></main-cards>
-  <main-community></main-community>
-
-</div>
-
 </template>
 
 <script>
-import { Swiper, SwiperSlide } from "vue-awesome-swiper";
-import "swiper/css/swiper.css"; // swiper CSS 파일 import
+import { Swiper, SwiperSlide } from 'vue-awesome-swiper';
+import 'swiper/css/swiper.css'; // swiper CSS 파일 import
 import MainCommunity from '@/components/main/MainCommunity';
 import MainCards from '@/components/main/MainCards';
+import MainHistory from '@/components/main/MainHistory.vue';
 
 export default {
-  name: "AppUser",
-  components:	{
-       Swiper,
-       SwiperSlide,
-       MainCommunity,
-       MainCards
-	},
+  name: 'AppUser',
+  components: {
+    Swiper,
+    SwiperSlide,
+    MainCommunity,
+    MainCards,
+    MainHistory,
+  },
   data() {
     return {
       images: [
         {
-          path: require("../assets/main1.png")
+          path: require('../assets/main1.png'),
         },
         {
-          path: require("../assets/main2.png")
+          path: require('../assets/main2.png'),
         },
         {
-          path: require("../assets/main3.png")
-        }
+          path: require('../assets/main3.png'),
+        },
       ],
       announcements: [
         {
-          title : "최종 관통 일정 공개",
-          time: "2023.05.10"
+          title: '최종 관통 일정 공개',
+          time: '2023.05.10',
         },
         {
-          title : "전환 되나용?",
-          time: "2023.05.11"
+          title: '전환 되나용?',
+          time: '2023.05.11',
         },
         {
-          title : "전환 잘 되네용 ^_^",
-          time: "2023.05.12"
+          title: '전환 잘 되네용 ^_^',
+          time: '2023.05.12',
         },
       ],
       swiperOption1: {
@@ -85,36 +88,35 @@ export default {
         spaceBetween: 10,
         direction: 'vertical',
         autoplay: {
-          delay: 3000, 
-          disableOnInteraction: false 
+          delay: 3000,
+          disableOnInteraction: false,
         },
         pagination: {
-          el: ".swiper-pagination",
-          clickable: true
+          el: '.swiper-pagination',
+          clickable: true,
         },
-        navigation: { 
-          nextEl: '.announcement-next', 
-          prevEl: '.announcement-prev' 
-        } 
+        navigation: {
+          nextEl: '.announcement-next',
+          prevEl: '.announcement-prev',
+        },
       },
       swiperOption2: {
         slidesPerView: 1,
         spaceBetween: 10,
         direction: 'horizontal',
         autoplay: {
-          delay: 4000, 
-          disableOnInteraction: false 
+          delay: 4000,
+          disableOnInteraction: false,
         },
         pagination: {
-          el: ".swiper-pagination",
-          clickable: false
+          el: '.swiper-pagination',
+          clickable: false,
         },
       },
     };
-  }, 
+  },
   methods: {},
 };
-
 </script>
 
 <style scoped>
@@ -172,7 +174,7 @@ export default {
   flex-grow: 3;
 }
 
-.announcement-title > .announcement-title-value{
+.announcement-title > .announcement-title-value {
   font-size: 24px;
   font-weight: 300;
   color: #e2e2e2;
@@ -192,16 +194,16 @@ export default {
 }
 
 .announcement .swiper-button-prev {
-   position: absolute;
-   left: 20px;
-   font-size: 20px;
-   color: #e2e2e2;
+  position: absolute;
+  left: 20px;
+  font-size: 20px;
+  color: #e2e2e2;
 }
-.announcement .swiper-button-next{
-   position: absolute;
-   left: 60px;
-   font-size: 20px;
-   color: #e2e2e2;
+.announcement .swiper-button-next {
+  position: absolute;
+  left: 60px;
+  font-size: 20px;
+  color: #e2e2e2;
 }
 
 .announcement .page-navigation {
@@ -212,5 +214,4 @@ export default {
 .swiper-button-prev::after {
   display: none;
 }
-
 </style>
