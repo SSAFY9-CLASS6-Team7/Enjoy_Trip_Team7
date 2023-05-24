@@ -67,6 +67,7 @@ public class UserController {
 
     @DeleteMapping("/{userId}")
     public void deleteUser(@PathVariable String userId) throws SQLException {
+        log.info("회원 탈퇴 {}", userId);
         userService.deleteUser(userId);
     }
 

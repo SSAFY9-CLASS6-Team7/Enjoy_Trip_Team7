@@ -1,9 +1,11 @@
 package com.ssafy.enjoytrip.user.model.mapper;
 
 import com.ssafy.enjoytrip.user.model.User;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.sql.SQLException;
 
+@Mapper
 public interface UserMapper {
     User login(User inputUser) throws SQLException;
 

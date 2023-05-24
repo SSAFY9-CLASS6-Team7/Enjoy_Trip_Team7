@@ -1,5 +1,7 @@
 <template>
   <div>
+    <delete-modal v-if="isModal" @yes="goDelete" @modalOff="modalOff"></delete-modal>
+    <exit-user-modal v-if="exitModal" @modalOff="modalOff"></exit-user-modal>
     <div class="login-container">
       <div class="left-aside"></div>
 
@@ -19,35 +21,51 @@
 </template>
 
 <script>
+import axios from 'axios';
 import { mapGetters } from 'vuex';
+import DeleteModal from '@/components/board/board_components/DeleteModal.vue';
+import ExitUserModal from '@/components/user/user_components/ExitUserModal.vue';
+
 export default {
     name: 'UserCheck',
-    components: {},
+    components: { DeleteModal, ExitUserModal },
     data() {
         return {
             message: '회원정보 수정을 위해서 인증이 필요합니다. <br>비밀번호를 한번 더 입력해주세요.',
             showPassword: 'password',
             password: '',
+            isModal: false,
+            exitModal: false,
         };
     },
     computed: {
-      ...mapGetters('userStore', ['checkUserInfo']),
+      ...mapGetters('userStore', ['checkUserInfo', 'nextPath']),
     },
     created() {},
     methods: {
-      passwordTypeChange() {
-        this.showPassword = !this.showPassword;
-      },
-      signUp() {
-        this.$router.push("/user/signup")
-      },
       findUserInfo() {
-          if (this.password === this.checkUserInfo.password) {
-            this.$router.push("/user/modify");
+        if (this.password === this.checkUserInfo.password) {
+          if (this.nextPath === '/user/modify') {
+            this.$router.push(this.nextPath);
           }else {
-            alert("비밀번호가 맞지 않습니다.");
+            this.isModal = true;
           }
-      }
+        }else {
+          alert("비밀번호가 맞지 않습니다.");
+        }
+      },
+      modalOff() {
+        this.isModal = false;
+        this.$router.push("/");
+      },
+      goDelete() {
+        this.isModal = false;
+        axios.delete(process.env.VUE_APP_MY_BASE_URL+"/user/"+this.checkUserInfo.userId)
+        .then(response => {
+          console.log(response);
+          this.exitModal = true;
+        });
+      },
     },
 };
 </script>
