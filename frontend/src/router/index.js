@@ -180,6 +180,9 @@ router.beforeEach((to, from, next) => {
   if (!to.path.includes('/board')) {
     store.commit('resetBoardState'); 
   }
+  if (!to.path.includes('/attraction')) {
+    store.commit('attractionReset');
+  }
   next();
 });
 

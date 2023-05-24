@@ -36,7 +36,6 @@ export default {
                 center: new window.kakao.maps.LatLng(this.location.lat, this.location.lng),
                 level: 5,
             };
-
             this.map = new window.kakao.maps.Map(container, options);
 
             this.loadMarker();
