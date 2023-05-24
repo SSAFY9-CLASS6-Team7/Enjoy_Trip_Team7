@@ -41,7 +41,11 @@ export default new Vuex.Store({
     ],
     selectedSido: sessionStorage.getItem("sido") || [],
     selctedCategory: sessionStorage.getItem("category") || [],
-    selectedKeyword: sessionStorage.getItem("keyword") || ''
+    selectedKeyword: sessionStorage.getItem("keyword") || '',
+    attractionPageNo: sessionStorage.getItem("attractionPageNo") || 1,
+    attractionKeyword: sessionStorage.getItem("attractionKeyword") || '',
+    attractionSidos: sessionStorage.getItem("attractionSidos") || [],
+    attractionCategory: sessionStorage.getItem("attractionCategory") || [],
   },
   getters: {
     getSidoCode: (state) => {
@@ -67,7 +71,19 @@ export default new Vuex.Store({
     },
     getBoardTab: (state) => {
       return state.boardTab;
-    }
+    },
+    getAttractionPageNo: (state) => {
+      return state.attractionPageNo;
+    },
+    getAttractionKeyword: (state) => {
+      return state.attractionKeyword; 
+    },
+    getAttractionSidos: (state) => {
+      return state.attractionSidos; 
+    },
+    getAttractionCategory: (state) => {
+      return state.attractionCategory; 
+    },
   },
   mutations: {
     activeMenuChange(state, data) {
@@ -100,11 +116,40 @@ export default new Vuex.Store({
       sessionStorage.setItem('pageNo', 1);
       sessionStorage.setItem('searchKeyword', ''),
       sessionStorage.setItem('condition', '')
+    },
+    attractionPageNoChange: (state, attractionPageNo) => {
+      state.attractionPageNo = attractionPageNo;
+      sessionStorage.setItem("attractionPageNo", attractionPageNo);
+    },
+    attractionKeywordChange: (state, attractionKeyword) => {
+      state.attractionKeyword = attractionKeyword;
+      sessionStorage.setItem("attractionKeyword", attractionKeyword);
+    },
+    attractionSidosChange: (state, attractionSidos) => {
+      state.attractionSidos = attractionSidos;
+      sessionStorage.setItem("attractionSidos", attractionSidos);
+    },
+    attractionCategoryChange: (state, attractionCategory) => {
+      state.attractionCategory = attractionCategory;
+      sessionStorage.setItem("attractionCategory", attractionCategory);
+    },
+    attractionReset: (state) => {
+      state.attractionKeyword = '';
+      sessionStorage.setItem("attractionKeyword", '');
+      state.attractionSidos = [];
+      sessionStorage.setItem("attractionSidos", []);
+      state.attractionCategory = [];
+      sessionStorage.setItem("attractionCategory", []);
+      state.attractionPageNo = 1;
+      sessionStorage.setItem("attractionPageNo", 1);
     }
   },
   actions: {
     pageNoChange({ commit }, pageNo) {
       commit('pageNoChange', pageNo);
+    },
+    attractionPageNoChange({ commit }, attractionPageNo) {
+      commit('attractionPageNoChange', attractionPageNo);
     },
     boardTabChange({ commit }, code) {
       commit('boardTabChange', code);
@@ -115,7 +160,12 @@ export default new Vuex.Store({
     searchKeywordChange({ commit }, searchKeyword) {
       commit('searchKeywordChange', searchKeyword);
     },
-    
+    attractionSidoChange({ commit }, attractionSido) {
+      commit('attractionSidosChange', attractionSido);
+    },
+    attractionCategoryChange({ commit }, category) {
+      commit('attractionCategoryChange', category);
+    }
 
   },
   modules: {
