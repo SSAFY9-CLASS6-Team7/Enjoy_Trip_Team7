@@ -37,7 +37,7 @@ public class PlanServiceImpl implements PlanService {
 		map.put("userId", map.get("userId"));
 
 		Map<String, Object> result = new HashMap<>();
-		int totalCount = planMapper.selectPlanCount();
+		int totalCount = planMapper.selectPlanCount(map);
 		PageResult pageResult = new PageResult(pageNo, totalCount, LIST_SIZE, 5);
 		result.put("plans", planMapper.selectPlanList(map));
 		result.put("pageResult", pageResult);

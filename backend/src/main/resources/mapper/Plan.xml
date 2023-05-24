@@ -45,9 +45,10 @@
 	</select>
 
 	<!-- selectPlanCount -->
-	<select id="selectPlanCount" resultType="int">
+	<select id="selectPlanCount" resultType="int" parameterType="map">
 		select count(*)
 		from plan
+		where user_id = #{userId}
 	</select>
 
 	<!-- Plan selectPlanById(int planId) -->
