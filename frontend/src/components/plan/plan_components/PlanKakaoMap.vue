@@ -13,6 +13,7 @@ export default {
     return {
       map: null,
       positions: [],
+      latlngs: [],
       markers: [],
       travelSido: 0,
     };
@@ -60,12 +61,14 @@ export default {
         imgSrc = require('@/assets/map_assets/green_restaurant_pin.svg');
       else imgSrc = require('@/assets/map_assets/black_etc_pin.svg');
       const imgSize = new kakao.maps.Size(50, 70);
-      const markerImage = new kakao.maps.MarkerImage(imgSrc, imgSize);
+      const imageOption = { offset: new kakao.maps.Point(23, 65) };
+      const markerImage = new kakao.maps.MarkerImage(imgSrc, imgSize, imageOption);
       return markerImage;
     },
     async loadData() {
       this.travelSido = this.plan.travelArea;
       this.positions = [];
+      this.latlngs = [];
       await Promise.all(
         this.groupedAttractionsArray[this.focused - 1].map(async (attraction) => {
           var targetAttraction = {};
@@ -76,6 +79,7 @@ export default {
           let obj = {};
           obj.title = targetAttraction.title;
           obj.latlng = new kakao.maps.LatLng(targetAttraction.lat, targetAttraction.lng);
+          this.latlngs.push(new kakao.maps.LatLng(targetAttraction.lat, targetAttraction.lng));
           obj.image = this.setMapPinSrc(targetAttraction);
 
           this.positions.push(obj);
@@ -83,6 +87,7 @@ export default {
       );
       this.loadMap();
       this.loadMaker();
+      this.drawLine();
     },
 
     // api 불러오기
@@ -158,6 +163,16 @@ export default {
           item.setMap(null);
         });
       }
+    },
+    drawLine() {
+      var linePath = new kakao.maps.Polyline({
+        path: this.latlngs, // 선을 구성하는 좌표배열
+        strokeWeight: 5,
+        strokeColor: '#E1306C',
+        strokeOpacity: 0.9,
+        strokeStyle: 'solid',
+      });
+      linePath.setMap(this.map);
     },
   },
 };
