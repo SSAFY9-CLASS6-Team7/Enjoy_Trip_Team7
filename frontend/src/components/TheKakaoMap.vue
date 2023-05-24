@@ -41,9 +41,10 @@ export default {
     },
   },
   created() {},
-  mounted() {
+  async mounted() {
     // api 스크립트 소스 불러오기 및 지도 출력
     if (window.kakao && window.kakao.maps) {
+      await this.loadData();
       this.loadMap();
     } else {
       this.loadScript();
@@ -87,7 +88,7 @@ export default {
       const container = document.getElementById('map');
       const options = {
         center: new window.kakao.maps.LatLng(this.SidoLatLng[0], this.SidoLatLng[1]),
-        level: 3,
+        level: 10,
       };
 
       this.map = new window.kakao.maps.Map(container, options);
