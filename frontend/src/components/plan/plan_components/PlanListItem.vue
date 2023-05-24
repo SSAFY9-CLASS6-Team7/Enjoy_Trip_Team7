@@ -87,7 +87,7 @@ export default {
     },
     //삭제 진행하기
     async deletePlan() {
-      await axios.delete(process.env.VUE_APP_MY_BASE_URL+`/plan/` + this.planId);
+      await axios.delete(process.env.VUE_APP_MY_BASE_URL + `/plan/` + this.planId);
       this.$emit('setNeedToUpdate', true);
       // this.$router.push('/plan/');
     },
@@ -112,43 +112,43 @@ export default {
         this.travelAreaImgSrc = require('@/assets/main_attractions/daegu.png');
       } else if (this.plan.travelArea === 5) {
         //광주
-        this.travelAreaImgSrc = require('@/assets/main_attractions/daejeon.png');
+        this.travelAreaImgSrc = require('@/assets/main_attractions/gwangju.jpg');
       } else if (this.plan.travelArea === 6) {
         //부산
         this.travelAreaImgSrc = require('@/assets/main_attractions/busan.png');
       } else if (this.plan.travelArea === 7) {
         //울산
-        this.travelAreaImgSrc = require('@/assets/main_attractions/daejeon.png');
+        this.travelAreaImgSrc = require('@/assets/main_attractions/ulsan.png');
       } else if (this.plan.travelArea === 8) {
         //세종
         this.travelAreaImgSrc = require('@/assets/main_attractions/daejeon.png');
       } else if (this.plan.travelArea === 31) {
         //경기도
-        this.travelAreaImgSrc = require('@/assets/main_attractions/daejeon.png');
+        this.travelAreaImgSrc = require('@/assets/main_attractions/gyeonggido.jpg');
       } else if (this.plan.travelArea === 32) {
         //강원도
-        this.travelAreaImgSrc = require('@/assets/main_attractions/daejeon.png');
+        this.travelAreaImgSrc = require('@/assets/main_attractions/gangwondo.jpg');
       } else if (this.plan.travelArea === 33) {
         //충북
-        this.travelAreaImgSrc = require('@/assets/main_attractions/daejeon.png');
+        this.travelAreaImgSrc = require('@/assets/main_attractions/chungbuk.jpg');
       } else if (this.plan.travelArea === 34) {
         //충남
-        this.travelAreaImgSrc = require('@/assets/main_attractions/daejeon.png');
+        this.travelAreaImgSrc = require('@/assets/main_attractions/chungnam.jpg');
       } else if (this.plan.travelArea === 35) {
         //경북
-        this.travelAreaImgSrc = require('@/assets/main_attractions/daejeon.png');
+        this.travelAreaImgSrc = require('@/assets/main_attractions/gyeongbuk.jpg');
       } else if (this.plan.travelArea === 36) {
         //경남
-        this.travelAreaImgSrc = require('@/assets/main_attractions/daejeon.png');
+        this.travelAreaImgSrc = require('@/assets/main_attractions/gyeongnam.jpg');
       } else if (this.plan.travelArea === 37) {
         //전북
-        this.travelAreaImgSrc = require('@/assets/main_attractions/daejeon.png');
+        this.travelAreaImgSrc = require('@/assets/main_attractions/jeonbuk.jpg');
       } else if (this.plan.travelArea === 38) {
         //전남
-        this.travelAreaImgSrc = require('@/assets/main_attractions/daejeon.png');
+        this.travelAreaImgSrc = require('@/assets/main_attractions/jeonnam.jpg');
       } else if (this.plan.travelArea === 39) {
         //제주
-        this.travelAreaImgSrc = require('@/assets/main_attractions/daejeon.png');
+        this.travelAreaImgSrc = require('@/assets/main_attractions/jeju.jpg');
       }
     },
   },
