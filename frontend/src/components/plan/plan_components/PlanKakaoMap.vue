@@ -15,6 +15,7 @@ export default {
       positions: [],
       latlngs: [],
       markers: [],
+      linePathArr: [],
     };
   },
   props: {
@@ -34,15 +35,12 @@ export default {
     },
   },
   watch: {
-    focused() {
-      this.$nextTick(() => {
-        this.loadData();
-      });
+    focused: function () {
+      this.loadData();
     },
-    groupedAttractionsArray() {
-      this.$nextTick(() => {
-        this.loadData();
-      });
+
+    groupedAttractionsArray: function () {
+      this.loadData();
     },
   },
   created() {},
@@ -86,6 +84,8 @@ export default {
           this.positions.push(obj);
         })
       );
+      this.loadMaker();
+      this.drawLine();
     },
 
     // api 불러오기
@@ -110,8 +110,6 @@ export default {
 
       this.map = new window.kakao.maps.Map(container, options);
       await this.loadData();
-      this.loadMaker();
-      this.drawLine();
     },
     // 지정한 위치에 마커 불러오기
     loadMaker() {
@@ -147,7 +145,16 @@ export default {
         });
       }
     },
+    deletePoly() {
+      if (this.linePathArr.length > 0) {
+        this.linePathArr.forEach((item) => {
+          item.setMap(null);
+        });
+      }
+    },
     drawLine() {
+      this.deletePoly();
+      this.linePathArr = [];
       var linePath = new kakao.maps.Polyline({
         path: this.latlngs, // 선을 구성하는 좌표배열
         strokeWeight: 5,
@@ -156,6 +163,7 @@ export default {
         strokeStyle: 'solid',
       });
       linePath.setMap(this.map);
+      this.linePathArr.push(linePath);
     },
   },
 };
