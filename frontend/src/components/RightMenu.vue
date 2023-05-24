@@ -64,7 +64,7 @@
                 <span>계획</span>
             </div>
             <div class="inner-devider"></div>
-            <div class="quit-user">
+            <div class="quit-user" @click="userExit">
                 <img src="@/assets/quit_user.svg" style="margin:0 10px 0 0;">
                 <span>탈퇴</span>
             </div>
@@ -92,7 +92,7 @@ export default {
         ...mapGetters('userStore', ['checkToken', 'checkUserInfo']),
     },
     methods: {
-        ...mapActions('userStore', ['userConfirm', 'userLogout']),
+        ...mapActions('userStore', ['userConfirm', 'userLogout', 'nextPathChange']),
         menuClose(){
             this.$emit('openRightMenu');
         },
@@ -124,6 +124,11 @@ export default {
 
         },
         moveModifyUser() {
+            this.nextPathChange('/user/modify');
+            this.movePage('/user/check');
+        },
+        userExit() {
+            this.nextPathChange('delete');
             this.movePage('/user/check');
         },
         movePage(link){

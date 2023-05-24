@@ -8,6 +8,7 @@ const userStore = {
     isLogin: false,
     userInfo: null,
     isValidToken: false,
+    nextPath: sessionStorage.getItem("nextPath")|| '',
   },
   getters: {
     checkUserInfo: function (state) {
@@ -16,6 +17,9 @@ const userStore = {
     checkToken: function (state) {
       return state.isLogin;
     },
+    nextPath: function (state) {
+      return state.nextPath;
+    }
   },
   mutations: {
     SET_IS_LOGIN: (state, isLogin) => {
@@ -27,6 +31,9 @@ const userStore = {
     SET_USER_INFO: (state, userInfo) => {
       state.userInfo = userInfo;
     },
+    SET_NEXT_PATH: (state, nextPath) => {
+      state.nextPath = nextPath;
+    }
   },
   actions: {
     async userConfirm({ commit }, user) {
@@ -91,8 +98,11 @@ const userStore = {
       commit("SET_USER_INFO", null);
       commit("SET_IS_LOGIN", false);
       commit("SET_IS_VALID_TOKEN", false);
-
     },
+    nextPathChange({ commit }, nextPath) {
+      sessionStorage.setItem("nextPath", nextPath);
+      commit("SET_NEXT_PATH", nextPath);
+    }
   },
 };
 

@@ -79,7 +79,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('userStore', ['checkUserInfo']),
+    ...mapGetters('userStore', ['checkUserInfo', 'checkToken']),
   },
   watch: {
     // 목록 내용이 변경 시 다시 로딩
