@@ -45,12 +45,24 @@ export default {
     // api 스크립트 소스 불러오기 및 지도 출력
     if (window.kakao && window.kakao.maps) {
       await this.loadData();
-      this.loadMap();
+      // this.loadMap();
     } else {
       this.loadScript();
     }
   },
   methods: {
+    setMapPinSrc(attraction) {
+      var imgSrc = '';
+      if (attraction.code === 12) imgSrc = require('@/assets/map_assets/blue_tour_pin.svg');
+      else if (attraction.code === 15) imgSrc = require('@/assets/map_assets/orange_event_pin.svg');
+      else if (attraction.code === 32) imgSrc = require('@/assets/map_assets/pink_stay_pin.svg');
+      else if (attraction.code === 39)
+        imgSrc = require('@/assets/map_assets/green_restaurant_pin.svg');
+      else imgSrc = require('@/assets/map_assets/black_etc_pin.svg');
+      const imgSize = new kakao.maps.Size(50, 70);
+      const markerImage = new kakao.maps.MarkerImage(imgSrc, imgSize);
+      return markerImage;
+    },
     async loadData() {
       this.travelSido = this.plan.travelArea;
       this.positions = [];
@@ -64,10 +76,12 @@ export default {
           let obj = {};
           obj.title = targetAttraction.title;
           obj.latlng = new kakao.maps.LatLng(targetAttraction.lat, targetAttraction.lng);
+          obj.image = this.setMapPinSrc(targetAttraction);
 
           this.positions.push(obj);
         })
       );
+      this.loadMap();
       this.loadMaker();
     },
 
@@ -93,7 +107,7 @@ export default {
 
       this.map = new window.kakao.maps.Map(container, options);
       //   this.loadMaker();
-      this.loadData();
+      // this.loadData();
     },
     // 지정한 위치에 마커 불러오기
     loadMaker() {
@@ -101,9 +115,14 @@ export default {
       this.deleteMarker();
       // 마커 이미지를 생성합니다
       //TODO: 임시로 이미지 넣어둠
-      // const imgSrc = require('@/assets/plan_icon/pin.svg');
+      // const imgSrc = require('@/assets/map_assets/black_etc_pin.svg');
+      // const imgSrc = require('@/assets/map_assets/blue_tour_pin.svg');
+      // const imgSrc = require('@/assets/map_assets/green_restaurant_pin.svg');
+      // const imgSrc = require('@/assets/map_assets/orange_event_pin.svg');
+      // const imgSrc = require('@/assets/map_assets/pink_stay_pin.svg');
       // 마커 이미지의 이미지 크기 입니다
       // const imgSize = new kakao.maps.Size(24, 35);
+      // const imgSize = new kakao.maps.Size(50, 70);
       // const markerImage = new kakao.maps.MarkerImage(imgSrc, imgSize);
 
       // 마커를 생성합니다
@@ -114,6 +133,7 @@ export default {
           position: position.latlng, // 마커를 표시할 위치
           title: position.title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
           // image: markerImage, // 마커의 이미지
+          image: position.image,
         });
         this.markers.push(marker);
       });
