@@ -43,7 +43,7 @@
             <if test="gender != null">gender = #{gender},</if>
             <if test="birth != null">birth = #{birth},</if>
             <if test="profilePicPath != null">profile_pic_path = #{profilePicPath},</if>
-            <if test="mainpageCustom != ''">mainpage_custom = #{mainpageCustom}</if>
+            <if test="mainpageCustom != null">mainpage_custom = #{mainpageCustom}</if>
         </set>
          WHERE user_id = #{userId}
     </update>
