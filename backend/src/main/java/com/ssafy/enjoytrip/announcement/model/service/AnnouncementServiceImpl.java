@@ -38,7 +38,8 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     private final ImageMapper imageMapper;
 
     @Override
-    public Map<String, Object> getBoardList(Map<String, Object> paramMap) throws SQLException {
+    public Map<String, Object> getAnnouncementList(Map<String, Object> paramMap) throws SQLException {
+        log.info("Controller ==== {}", paramMap.toString());
         Page page = new Page();
         int pageNo = Integer.parseInt(String.valueOf(paramMap.get("pageNo")));
         page.setPageNo(pageNo);
@@ -46,26 +47,26 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 
         Map<String, Object> result = new HashMap<>();
 
-        int totalCount = announcementMapper.selectBoardCount(paramMap);
+        int totalCount = announcementMapper.selectAnnouncementCount(paramMap);
         PageResult pageResult = new PageResult(pageNo, totalCount);
-        result.put("boards",  announcementMapper.selectBoard(paramMap));
+        result.put("boards",  announcementMapper.selectAnnouncement(paramMap));
         result.put("pageResult", pageResult);
         return result;
     }
 
     @Transactional
     @Override
-    public Map<String, Object> getBoard(int boardId) throws SQLException {
+    public Map<String, Object> getAnnouncement(int announcementId) throws SQLException {
         Map<String, Integer> paramMap = new HashMap<>();
         paramMap.put("type", TYPE);
-        paramMap.put("dataId", boardId);
+        paramMap.put("dataId", announcementId);
 
         // 조회수 증가
-        announcementMapper.updateHits(boardId);
+        announcementMapper.updateHits(announcementId);
 
         Map<String, Object> result = new HashMap<>();
 
-        result.put("board", announcementMapper.selectBoardByBoardId(boardId));
+        result.put("board", announcementMapper.selectAnnouncementByAnnouncementId(announcementId));
         result.put("images", imageMapper.selectImage(paramMap));
 
         return result;
@@ -73,7 +74,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 
     @Transactional
     @Override
-    public void updateBoard(Board board, List<MultipartFile> files) throws SQLException, IOException {
+    public void updateAnnouncement(Board board, List<MultipartFile> files) throws SQLException, IOException {
         Map<String, Integer> paramMap = new HashMap<>();
         int dataId = board.getBoardId();
         paramMap.put("type", TYPE);
@@ -83,7 +84,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
         deleteImageFile(images);
 
         imageMapper.cascadeDeleteImage(paramMap);
-        announcementMapper.updateBoard(board);
+        announcementMapper.updateAnnouncement(board);
         if (files != null) {
             insertImages(dataId, files);
         }
@@ -91,27 +92,27 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 
     @Transactional
     @Override
-    public void deleteBoard(int boardId) throws SQLException {
+    public void deleteAnnouncement(int announcementId) throws SQLException {
         Map<String, Integer> paramMap = new HashMap<>();
         paramMap.put("type", TYPE);
-        paramMap.put("dataId", boardId);
+        paramMap.put("dataId", announcementId);
 
         List<Image> images = imageMapper.selectImage(paramMap);
         deleteImageFile(images);
 
 
         imageMapper.cascadeDeleteImage(paramMap);
-        announcementMapper.deleteBoard(boardId);
+        announcementMapper.deleteAnnouncement(announcementId);
     }
 
     // 사진 포함
     @Transactional
     @Override
-    public void createBoard(Board board, List<MultipartFile> files) throws SQLException, IOException {
+    public void createAnnouncement(Board board, List<MultipartFile> files) throws SQLException, IOException {
         // for Test
         if (board.getCode() == 0) board.setCode(100);
 
-        announcementMapper.insertBoard(board);
+        announcementMapper.insertAnnouncement(board);
 
         int dataId = board.getBoardId();
         log.info("files {}", files);

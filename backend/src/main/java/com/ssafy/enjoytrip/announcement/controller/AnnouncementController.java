@@ -23,35 +23,35 @@ public class AnnouncementController {
 
 
     @GetMapping
-    public Map<String, Object> getBoardList(@RequestParam Map<String, Object> paramMap) throws SQLException {
-        return announcementService.getBoardList(paramMap);
+    public Map<String, Object> getAnnouncementList(@RequestParam Map<String, Object> paramMap) throws SQLException {
+        log.info("Controller ==== {}", paramMap.toString());
+        return announcementService.getAnnouncementList(paramMap);
     }
 
-    @GetMapping("/{boardId}")
-    public Map<String, Object> getBoard(@PathVariable int boardId) throws SQLException {
-        return announcementService.getBoard(boardId);
+    @GetMapping("/{announcementId}")
+    public Map<String, Object> getAnnouncement(@PathVariable int announcementId) throws SQLException {
+        return announcementService.getAnnouncement(announcementId);
     }
 
-    @GetMapping("/{boardId}/image")
-    public Map<String, Object> getIsImage(@PathVariable int boardId) throws SQLException{
-        return announcementService.getIsImage(boardId);
+    @GetMapping("/{announcementId}/image")
+    public Map<String, Object> getIsImage(@PathVariable int announcementId) throws SQLException{
+        return announcementService.getIsImage(announcementId);
     }
 
-    @PutMapping("/{boardId}")
-    public void updateBoard(Board board, @PathVariable int boardId, List<MultipartFile> files) throws SQLException, IOException {
-        board.setBoardId(boardId);
-        log.info("board == {}", board.toString());
-        announcementService.updateBoard(board, files);
+    @PutMapping("/{announcementId}")
+    public void updateAnnouncement(Board board, @PathVariable int announcementId, List<MultipartFile> files) throws SQLException, IOException {
+        board.setBoardId(announcementId);
+        announcementService.updateAnnouncement(board, files);
     }
 
-    @DeleteMapping("/{boardId}")
-    public void deleteBoard(@PathVariable int boardId) throws SQLException {
-        announcementService.deleteBoard(boardId);
+    @DeleteMapping("/{announcementId}")
+    public void deleteAnnouncement(@PathVariable int announcementId) throws SQLException {
+        announcementService.deleteAnnouncement(announcementId);
     }
 
     // File 업로드 포함
     @PostMapping
-    public void createBoard(Board board, List<MultipartFile> files) throws SQLException, IOException {
-        announcementService.createBoard(board, files);
+    public void createAnnouncement(Board board, List<MultipartFile> files) throws SQLException, IOException {
+        announcementService.createAnnouncement(board, files);
     }
 }

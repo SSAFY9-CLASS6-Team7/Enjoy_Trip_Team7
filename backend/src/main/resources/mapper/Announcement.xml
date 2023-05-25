@@ -18,7 +18,7 @@
     </resultMap>
 
     <!-- 게시글 전체 조회 -->
-    <select id="selectBoard" resultMap="boardMap" parameterType="hashMap">
+    <select id="selectAnnouncement" resultMap="boardMap" parameterType="hashMap">
         SELECT *
           FROM announcement
         <where>
@@ -29,7 +29,7 @@
     </select>
 
     <!-- 게시글 전체 개수 조회 -->
-    <select id="selectBoardCount" resultType="int" parameterType="hashMap">
+    <select id="selectAnnouncementCount" resultType="int" parameterType="hashMap">
         SELECT COUNT(*)
           FROM announcement
         <where>
@@ -38,7 +38,7 @@
     </select>
 
     <!-- 게시글 상세 내용 조회 -->
-    <select id="selectBoardByBoardId" parameterType="int" resultMap="boardMap">
+    <select id="selectAnnouncementByAnnouncementId" parameterType="int" resultMap="boardMap">
         SELECT *
           FROM announcement
          WHERE board_id = #{boardId}
@@ -52,13 +52,13 @@
     </update>
 
     <!-- 게시글 등록 -->
-    <insert id="insertBoard" parameterType="Board" useGeneratedKeys="true" keyProperty="boardId">
+    <insert id="insertAnnouncement" parameterType="Board" useGeneratedKeys="true" keyProperty="boardId">
         INSERT INTO announcement (code, title, createtime, board_content, user_id)
         VALUES (#{code}, #{title}, now(), #{boardContent}, #{userId})
     </insert>
 
     <!-- 게시글 수정 -->
-    <update id="updateBoard" parameterType="Board">
+    <update id="updateAnnouncement" parameterType="Board">
         UPDATE announcement
         <set>
             <if test="title != null">title = #{title},</if>
@@ -68,7 +68,7 @@
     </update>
 
     <!-- 게시글 삭제 -->
-    <delete id="deleteBoard" parameterType="int">
+    <delete id="deleteAnnouncement" parameterType="int">
         DELETE
           FROM announcement
          WHERE board_id = #{boardId}

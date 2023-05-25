@@ -9,15 +9,15 @@ import java.util.List;
 import java.util.Map;
 
 public interface AnnouncementService {
-    Map<String, Object> getBoardList(Map<String, Object> paramMap) throws SQLException;
+    Map<String, Object> getAnnouncementList(Map<String, Object> paramMap) throws SQLException;
 
-    Map<String, Object> getBoard(int boardId) throws SQLException;
+    Map<String, Object> getAnnouncement(int announcementId) throws SQLException;
 
-    void createBoard(Board board, List<MultipartFile> files) throws SQLException, IOException;
+    void createAnnouncement(Board board, List<MultipartFile> files) throws SQLException, IOException;
 
-    void updateBoard(Board board, List<MultipartFile> files) throws SQLException, IOException;
+    void updateAnnouncement(Board board, List<MultipartFile> files) throws SQLException, IOException;
 
-    void deleteBoard(int boardId) throws SQLException;
+    void deleteAnnouncement(int announcementId) throws SQLException;
 
-    Map<String, Object> getIsImage(int boardId) throws SQLException;
+    Map<String, Object> getIsImage(int announcementId) throws SQLException;
 }
