@@ -10,7 +10,7 @@
       <!-- 공지사항 영역 -->
       <div class="announcement">
         <div class="announcement-title">
-          <div class="announcement-title-value">공지사항</div>
+          <div class="announcement-title-value" @click="moveAnnouncementList">공지사항</div>
         </div>
         <div class="page-navigation">
           <div class="swiper-button-prev announcement-prev" slot="button-prev">←</div>
@@ -23,10 +23,10 @@
               v-for="announcement in announcements"
               :key="announcement"
             >
-              <div class="announcement-value">{{ announcement.title }}</div>
-              <div class="announcement-time">
+              <div class="announcement-value" @click="moveAnnouncementView(announcement.boardId)">{{ announcement.title }}</div>
+              <div class="announcement-time" @click="moveAnnouncementView(announcement.boardId)">
                 <img src="../assets/clock.svg" style="margin-right: 10px" />
-                {{ announcement.time }}
+                {{ formatDate(announcement.createTime) }}
               </div>
             </swiper-slide>
           </swiper>
@@ -55,6 +55,7 @@ import MainCards from '@/components/main/MainCards';
 import MainHistory from '@/components/main/MainHistory.vue';
 import MainPlan from '@/components/main/MainPlan.vue';
 import { mapGetters } from 'vuex';
+import axios from 'axios';
 
 export default {
   name: 'AppUser',
@@ -81,20 +82,8 @@ export default {
           path: require('../assets/main3.png'),
         },
       ],
-      announcements: [
-        {
-          title: '최종 관통 일정 공개',
-          time: '2023.05.10',
-        },
-        {
-          title: '전환 되나용?',
-          time: '2023.05.11',
-        },
-        {
-          title: '전환 잘 되네용 ^_^',
-          time: '2023.05.12',
-        },
-      ],
+      searchKeyword: '',
+      announcements: [],
       swiperOption1: {
         slidesPerView: 1,
         spaceBetween: 10,
@@ -130,9 +119,24 @@ export default {
   computed: {
     ...mapGetters('userStore', ['checkToken', 'checkUserInfo']),
   },
-  methods: {},
-  created() {
-    this.userId = this.checkUserInfo.userId;
+  methods: {
+    formatDate(date) {
+      return date.split(' ')[0];  
+    },
+    moveAnnouncementView(announcementId) {
+      this.$router.push("/announcement/view/"+announcementId);
+    },
+    moveAnnouncementList() {
+      this.$router.push("/announcement");
+    },
+  },
+  async created() {
+    // this.userId = this.checkUserInfo.userId;
+    await axios.get(process.env.VUE_APP_MY_BASE_URL+`/announcement?pageNo=1&keyword=${this.searchKeyword}`)
+    .then(response => {
+      console.dir(response.data.boards);
+      this.announcements = response.data.boards;
+    })
   },
 };
 </script>
@@ -192,6 +196,10 @@ export default {
   flex-grow: 3;
 }
 
+.announcement-title:hover {
+  cursor: pointer;
+}
+
 .announcement-title > .announcement-title-value {
   font-size: 24px;
   font-weight: 300;
@@ -231,5 +239,9 @@ export default {
 .swiper-button-next::after,
 .swiper-button-prev::after {
   display: none;
+}
+
+.swiper-item:hover {
+  cursor: pointer;
 }
 </style>
