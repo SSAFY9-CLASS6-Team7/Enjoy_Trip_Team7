@@ -1,12 +1,12 @@
 <template>
   <div class="footer">
     <div class="menu-set">
-      <router-link to="/user/login">About</router-link>
-      <router-link to="/board">Features</router-link>
-      <router-link to="/plan">Works</router-link>
-      <router-link to="/history">Blog</router-link>
-      <router-link to="/attraction">Help</router-link>
-      <router-link to="/attraction">Contacts</router-link>
+      <router-link to="/">About</router-link>
+      <router-link to="/">Features</router-link>
+      <router-link to="/">Works</router-link>
+      <router-link to="/">Blog</router-link>
+      <router-link to="/">Help</router-link>
+      <router-link to="/">Contacts</router-link>
     </div>
     <div>&copy; All rights Reserved. SSAFY Inc.</div>
     <div class="bottom-bar"></div>
