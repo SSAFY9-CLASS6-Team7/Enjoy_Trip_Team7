@@ -2,6 +2,7 @@
   <div class="main-setting-container">
     <div class="blackbg">
       <button class="save-btn" @click="saveCustomInfo">수정완료</button>
+      <div class="text-msg">각 항목들을 드래그해 순서를 변경할 수 있습니다.</div>
     </div>
     <div class="main-img">
       <swiper class="image-swiper" :options="swiperOption2">
@@ -38,10 +39,19 @@
     </div>
     <div class="custom-main-container">
       <draggable v-model="mainCustom">
-        <div class="custom-main" v-for="(item, index) in mainCustom" :key="index">
-          <div class="component-container">
-            <component class="custom-main-items" :is="mainCustom[index]"></component>
-          </div>
+        <div
+          class="custom-main"
+          v-for="(item, index) in mainCustom"
+          :key="index"
+          v-bind:class="[
+            {
+              'main-history': isMainHistory(mainCustom[index]),
+              'main-plan': isMainPlan(mainCustom[index]),
+              'last-content': isLastCotent(index),
+            },
+          ]"
+        >
+          <component class="custom-main-items" :is="mainCustom[index]"></component>
         </div>
       </draggable>
     </div>
@@ -55,8 +65,9 @@ import MainCommunity from '@/components/main/MainCommunity';
 import MainCards from '@/components/main/MainCards';
 import MainHistory from '@/components/main/MainHistory.vue';
 import MainPlan from '@/components/main/MainPlan.vue';
-import { mapGetters } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import draggable from 'vuedraggable';
+import axios from 'axios';
 
 export default {
   name: 'AppUser',
@@ -72,7 +83,8 @@ export default {
   data() {
     return {
       userid: '',
-      mainCustom: [MainPlan, MainHistory, MainCards, MainCommunity],
+      //100: 게시판 200:기록 300:관광지 400:계획
+      mainCustom: [],
       images: [
         {
           path: require('../assets/main1.png'),
@@ -134,16 +146,52 @@ export default {
     ...mapGetters('userStore', ['checkToken', 'checkUserInfo']),
   },
   methods: {
-    saveCustomInfo() {
-      //TODO: db저장
+    ...mapActions('userStore', ['userConfirm']),
+    async saveCustomInfo() {
+      let tempCustomOrder = [];
+
+      for (var component of this.mainCustom) {
+        if (component === MainCommunity) tempCustomOrder.push(100);
+        else if (component === MainHistory) tempCustomOrder.push(200);
+        else if (component === MainCards) tempCustomOrder.push(300);
+        else if (component === MainPlan) tempCustomOrder.push(400);
+      }
+      let f = new FormData();
+      let newMainpageCustom = tempCustomOrder.join('-');
+
+      f.append('mainpageCustom', newMainpageCustom);
+      await axios.put(process.env.VUE_APP_MY_BASE_URL + '/user/' + this.checkUserInfo.userId, f);
+
+      let user = {
+        userId: this.checkUserInfo.userId,
+        password: this.checkUserInfo.password,
+        mainpageCustom: newMainpageCustom,
+      };
+      //vuex에 반영하는 부분
+      await this.userConfirm(user);
+      //메인화면으로 이동
       this.$router.push('/');
+    },
+    isMainHistory(component) {
+      return component === MainHistory ? true : false;
+    },
+    isMainPlan(component) {
+      return component === MainPlan ? true : false;
+    },
+    isLastCotent(index) {
+      return index === this.mainCustom.length - 1 ? true : false;
     },
   },
   created() {
     this.userId = this.checkUserInfo.userId;
-    //TODO: db에 컬럼 추가(100-200-300-400 형식으로)
-    //가져와서 파싱하는 건 프론트에서, 저장할 때도 위 형식으로 변환해서
-    // this.mainCustom = this.checkUserInfo.mainOrder;
+    //100: 게시판 200:기록 300:관광지 400:계획(default: 300-100-200-400)
+    var tempArr = this.checkUserInfo.mainpageCustom.split('-');
+    for (var tempNumber of tempArr) {
+      if (tempNumber === '100') this.mainCustom.push(MainCommunity);
+      else if (tempNumber === '200') this.mainCustom.push(MainHistory);
+      else if (tempNumber === '300') this.mainCustom.push(MainCards);
+      else if (tempNumber === '400') this.mainCustom.push(MainPlan);
+    }
   },
 };
 </script>
@@ -173,6 +221,17 @@ export default {
   border: 3px white solid;
   padding: 30px 40px;
   border-radius: 30px;
+}
+.save-btn:hover {
+  background: rgba(255, 255, 255, 0.274);
+}
+
+.text-msg {
+  position: relative;
+  top: 45%;
+  color: white;
+  font-size: 20px;
+  font-weight: 400;
 }
 
 /* Swiper 추가 */
@@ -264,5 +323,25 @@ export default {
 .swiper-button-next::after,
 .swiper-button-prev::after {
   display: none;
+}
+
+.normal-main-container > *,
+.custom-main-container > * {
+  padding: 50px 0;
+}
+
+.main-history >>> *,
+.main-plan >>> * {
+  margin-bottom: 0px !important;
+  min-height: 0px;
+}
+
+.last-content {
+  margin-bottom: 100px;
+}
+
+.main-history >>> h1,
+.main-plan >>> h1 {
+  margin: 30px 0;
 }
 </style>

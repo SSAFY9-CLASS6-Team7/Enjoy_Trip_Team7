@@ -44,6 +44,7 @@
           {
             'main-history': isMainHistory(mainCustom[index]),
             'main-plan': isMainPlan(mainCustom[index]),
+            'last-content': isLastCotent(index),
           },
         ]"
       >
@@ -60,7 +61,7 @@
       <div class="main-history">
         <main-history></main-history>
       </div>
-      <div class="main-plan">
+      <div class="main-plan last-content">
         <main-plan></main-plan>
       </div>
     </div>
@@ -90,7 +91,7 @@ export default {
   data() {
     return {
       userid: '',
-      mainCustom: [MainPlan, MainHistory, MainCards, MainCommunity],
+      mainCustom: [],
       images: [
         {
           path: require('../assets/main1.png'),
@@ -155,15 +156,24 @@ export default {
     isMainPlan(component) {
       return component === MainPlan ? true : false;
     },
+    isLastCotent(index) {
+      return index === this.mainCustom.length - 1 ? true : false;
+    },
   },
   async created() {
     if (this.checkUserInfo !== null) {
       this.userId = this.checkUserInfo.userId;
     }
+    var tempArr = this.checkUserInfo.mainpageCustom.split('-');
+    for (var tempNumber of tempArr) {
+      if (tempNumber === '100') this.mainCustom.push(MainCommunity);
+      else if (tempNumber === '200') this.mainCustom.push(MainHistory);
+      else if (tempNumber === '300') this.mainCustom.push(MainCards);
+      else if (tempNumber === '400') this.mainCustom.push(MainPlan);
+    }
     await axios
       .get(process.env.VUE_APP_MY_BASE_URL + `/announcement?pageNo=1&keyword=${this.searchKeyword}`)
       .then((response) => {
-        console.dir(response.data.boards);
         this.announcements = response.data.boards;
       });
   },
@@ -273,7 +283,8 @@ export default {
 .swiper-item:hover {
   cursor: pointer;
 }
-.normal-main-container > * {
+.normal-main-container > *,
+.custom-main-container > * {
   padding: 50px 0;
 }
 
@@ -283,7 +294,7 @@ export default {
   min-height: 0px;
 }
 
-.main-plan {
+.last-content {
   margin-bottom: 100px;
 }
 

@@ -25,7 +25,13 @@
             <div class="id">{{ checkUserInfo.nickname }}</div>
             <div class="email">{{ checkUserInfo.email }}</div>
           </div>
-          <button class="custom-main-btn" @click="gotoSetting">
+          <button
+            class="custom-main-btn"
+            @click="
+              gotoSetting();
+              closeRightMenu();
+            "
+          >
             <img class="setting-btn-vector" src="@/assets/user_icons/setting.svg" />
             메인화면 커스텀
           </button>
