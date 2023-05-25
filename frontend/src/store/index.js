@@ -39,13 +39,19 @@ export default new Vuex.Store({
       { id: '39', text: '음식점' },
       { id: '0', text: '기타' }, //위 4개에 해당하지 않는 모든 타입
     ],
-    selectedSido: sessionStorage.getItem("sido") || [],
-    selctedCategory: sessionStorage.getItem("category") || [],
-    selectedKeyword: sessionStorage.getItem("keyword") || '',
-    attractionPageNo: sessionStorage.getItem("attractionPageNo") || 1,
-    attractionKeyword: sessionStorage.getItem("attractionKeyword") || '',
-    attractionSidos: sessionStorage.getItem("attractionSidos") || [],
-    attractionCategory: sessionStorage.getItem("attractionCategory") || [],
+    selectedSido: sessionStorage.getItem('sido') || [],
+    selctedCategory: sessionStorage.getItem('category') || [],
+    selectedKeyword: sessionStorage.getItem('keyword') || '',
+    attractionPageNo: sessionStorage.getItem('attractionPageNo') || 1,
+    attractionKeyword: sessionStorage.getItem('attractionKeyword') || '',
+    attractionSidos: sessionStorage.getItem('attractionSidos') || [],
+    attractionCategory: sessionStorage.getItem('attractionCategory') || [],
+    // mainColor1: '#e1306c',
+    // mainColor2: '#ff699a',
+    // mainColor3: '#fcaf45',
+    mainColor1: sessionStorage.getItem('mainColor1') || '#e1306c',
+    mainColor2: sessionStorage.getItem('mainColor2') || '#ff699a',
+    mainColor3: sessionStorage.getItem('mainColor3') || '#fcaf45',
   },
   getters: {
     getSidoCode: (state) => {
@@ -76,13 +82,22 @@ export default new Vuex.Store({
       return state.attractionPageNo;
     },
     getAttractionKeyword: (state) => {
-      return state.attractionKeyword; 
+      return state.attractionKeyword;
     },
     getAttractionSidos: (state) => {
-      return state.attractionSidos; 
+      return state.attractionSidos;
     },
     getAttractionCategory: (state) => {
-      return state.attractionCategory; 
+      return state.attractionCategory;
+    },
+    getMainColor1: (state) => {
+      return state.mainColor1;
+    },
+    getMainColor2: (state) => {
+      return state.mainColor2;
+    },
+    getMainColor3: (state) => {
+      return state.mainColor3;
     },
   },
   mutations: {
@@ -108,41 +123,52 @@ export default new Vuex.Store({
       sessionStorage.setItem('searchKeyword', searchKeyword);
     },
     resetBoardState(state) {
-      state.boardTab = '',
-      state.pageNo = 1,
-      state.condition = '',
-      state.searchKeyword = '',
-      sessionStorage.setItem('boardTab', '');
+      (state.boardTab = ''),
+        (state.pageNo = 1),
+        (state.condition = ''),
+        (state.searchKeyword = ''),
+        sessionStorage.setItem('boardTab', '');
       sessionStorage.setItem('pageNo', 1);
-      sessionStorage.setItem('searchKeyword', ''),
-      sessionStorage.setItem('condition', '')
+      sessionStorage.setItem('searchKeyword', ''), sessionStorage.setItem('condition', '');
     },
     attractionPageNoChange: (state, attractionPageNo) => {
       state.attractionPageNo = attractionPageNo;
-      sessionStorage.setItem("attractionPageNo", attractionPageNo);
+      sessionStorage.setItem('attractionPageNo', attractionPageNo);
     },
     attractionKeywordChange: (state, attractionKeyword) => {
       state.attractionKeyword = attractionKeyword;
-      sessionStorage.setItem("attractionKeyword", attractionKeyword);
+      sessionStorage.setItem('attractionKeyword', attractionKeyword);
     },
     attractionSidosChange: (state, attractionSidos) => {
       state.attractionSidos = attractionSidos;
-      sessionStorage.setItem("attractionSidos", attractionSidos);
+      sessionStorage.setItem('attractionSidos', attractionSidos);
     },
     attractionCategoryChange: (state, attractionCategory) => {
       state.attractionCategory = attractionCategory;
-      sessionStorage.setItem("attractionCategory", attractionCategory);
+      sessionStorage.setItem('attractionCategory', attractionCategory);
     },
     attractionReset: (state) => {
       state.attractionKeyword = '';
-      sessionStorage.setItem("attractionKeyword", '');
+      sessionStorage.setItem('attractionKeyword', '');
       state.attractionSidos = [];
-      sessionStorage.setItem("attractionSidos", []);
+      sessionStorage.setItem('attractionSidos', []);
       state.attractionCategory = [];
-      sessionStorage.setItem("attractionCategory", []);
+      sessionStorage.setItem('attractionCategory', []);
       state.attractionPageNo = 1;
-      sessionStorage.setItem("attractionPageNo", 1);
-    }
+      sessionStorage.setItem('attractionPageNo', 1);
+    },
+    mainColor1Change: (state, color1) => {
+      state.mainColor1 = color1;
+      sessionStorage.setItem('mainColor1', color1);
+    },
+    mainColor2Change: (state, color2) => {
+      state.mainColor2 = color2;
+      sessionStorage.setItem('mainColor2', color2);
+    },
+    mainColor3Change: (state, color3) => {
+      state.mainColor3 = color3;
+      sessionStorage.setItem('mainColor3', color3);
+    },
   },
   actions: {
     activeMenuChange({ commit }, activeMenu) {
@@ -168,8 +194,16 @@ export default new Vuex.Store({
     },
     attractionCategoryChange({ commit }, category) {
       commit('attractionCategoryChange', category);
-    }
-
+    },
+    mainColor1Change({ commit }, color1) {
+      commit('mainColor1Change', color1);
+    },
+    mainColor2Change({ commit }, color2) {
+      commit('mainColor2Change', color2);
+    },
+    mainColor3Change({ commit }, color3) {
+      commit('mainColor3Change', color3);
+    },
   },
   modules: {
     userStore,

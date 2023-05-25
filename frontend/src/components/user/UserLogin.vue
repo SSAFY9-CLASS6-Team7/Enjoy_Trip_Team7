@@ -5,34 +5,39 @@
 
       <div class="login-form-container">
         <div class="login-form">
-          <img src="@/assets/logo.gif" class="logo-image"/>
+          <img src="@/assets/logo.gif" class="logo-image" />
 
           <div class="id-input-container">
-            <div class="inner-title">
-              ID
-            </div>
+            <div class="inner-title">ID</div>
             <div class="id-input-area">
-              <img src="@/assets/user_icons/login_input.svg" class="input-image">
-              <input type="text" class="id-input" v-model="user.userId">
+              <img src="@/assets/user_icons/login_input.svg" class="input-image" />
+              <input type="text" class="id-input" v-model="user.userId" />
             </div>
           </div>
 
           <div class="password-input-container">
-            <div class="inner-title">
-              Password
-            </div>
+            <div class="inner-title">Password</div>
             <div class="password-input-area">
-              <img src="@/assets/user_icons/password_input.svg" class="input-image">
-              <input :type="showPassword ? 'password' : 'text'" class="password-input" v-model="user.password">
-              <img src="@/assets/user_icons/eye.svg" class="password-type-change" @click="passwordTypeChange">
+              <img src="@/assets/user_icons/password_input.svg" class="input-image" />
+              <input
+                :type="showPassword ? 'password' : 'text'"
+                class="password-input"
+                v-model="user.password"
+              />
+              <img
+                src="@/assets/user_icons/eye.svg"
+                class="password-type-change"
+                @click="passwordTypeChange"
+              />
             </div>
           </div>
 
           <button class="login" @click="login">Login</button>
 
           <div class="user-service">
-            <div class="user-info">아이디나 비밀번호를 잊으셨나요?  
-              <span class="find-user-info" @click="findUserInfo">여기</span>를 클릭하세요.  
+            <div class="user-info">
+              아이디나 비밀번호를 잊으셨나요?
+              <span class="find-user-info" @click="findUserInfo">여기</span>를 클릭하세요.
             </div>
             <div class="sign-up" @click="signUp">회원 가입</div>
           </div>
@@ -40,16 +45,18 @@
           <div class="devider"></div>
 
           <div class="social-login-container">
-            <img src="@/assets/user_icons/social/google.svg" style="box-shadow: -1px 5px 16px rgba(0, 0, 0, 0.13); border-radius: 50px;" >
-            <img @click="openInsta" src="@/assets/user_icons/social/instagram.svg" >
-            <img @click="openNaver" src="@/assets/user_icons/social/naver.svg" >
-            <img src="@/assets/user_icons/social/kakaotalk.svg" >
+            <img
+              src="@/assets/user_icons/social/google.svg"
+              style="box-shadow: -1px 5px 16px rgba(0, 0, 0, 0.13); border-radius: 50px"
+            />
+            <img @click="openInsta" src="@/assets/user_icons/social/instagram.svg" />
+            <img @click="openNaver" src="@/assets/user_icons/social/naver.svg" />
+            <img src="@/assets/user_icons/social/kakaotalk.svg" />
           </div>
         </div>
       </div>
 
       <div class="right-aside"></div>
-
     </div>
   </div>
 </template>
@@ -57,57 +64,56 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 export default {
-    name: 'UserLogin',
-    components: {},
-    data() {
-        return {
-            message: '',
-            showPassword: 'password',
-            user: {
-              userId: '',
-              password: '',
-            }
-        };
+  name: 'UserLogin',
+  components: {},
+  data() {
+    return {
+      message: '',
+      showPassword: 'password',
+      user: {
+        userId: '',
+        password: '',
+      },
+    };
+  },
+  computed: {
+    ...mapGetters('userStore', ['checkToken', 'checkUserInfo']),
+  },
+  created() {},
+  methods: {
+    ...mapActions('userStore', ['userConfirm']),
+    passwordTypeChange() {
+      this.showPassword = !this.showPassword;
     },
-    computed: {
-      ...mapGetters('userStore', ['checkToken', 'checkUserInfo']),
+    signUp() {
+      this.$router.push('/user/signup');
     },
-    created() {},
-    methods: {
-      ...mapActions('userStore', ['userConfirm']),
-      passwordTypeChange() {
-        this.showPassword = !this.showPassword;
-      },
-      signUp() {
-        this.$router.push("/user/signup")
-      },
-      findUserInfo() {
-
-      },
-      openNaver() {
-        window.open("https://www.naver.com");
-      },
-      openInsta() {
-        window.open("https://www.instagram.com");
-      },
-      async login(){
-        await this.userConfirm(this.user);
-        if (this.checkToken) {
-          this.$router.push("/");
-        }else {
-          alert("ID나 비밀번호가 맞지 않습니다.");
-        }
+    findUserInfo() {},
+    openNaver() {
+      window.open('https://www.naver.com');
+    },
+    openInsta() {
+      window.open('https://www.instagram.com');
+    },
+    async login() {
+      await this.userConfirm(this.user);
+      if (this.checkToken) {
+        this.$router.push('/');
+      } else {
+        alert('ID나 비밀번호가 맞지 않습니다.');
       }
     },
+  },
 };
 </script>
 
 <style scoped>
 @font-face {
-     font-family: 'S-CoreDream-3Light';
-     src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-3Light.woff') format('woff');
-     font-weight: normal;
-     font-style: normal;
+  font-family: 'S-CoreDream-3Light';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-3Light.woff')
+    format('woff');
+  font-weight: normal;
+  font-style: normal;
 }
 
 .login-container {
@@ -156,7 +162,7 @@ export default {
   margin: 10px 0 5px 0;
   font-weight: 600;
   font-size: 16px;
-  color: #5F6073;
+  color: #5f6073;
 }
 
 .id-input-container {
@@ -171,7 +177,7 @@ export default {
   align-items: center;
   height: 35px;
   border-radius: 4px;
-  background: #FFE8EB;
+  background: #ffe8eb;
 }
 
 input {
@@ -179,7 +185,7 @@ input {
   outline: none;
   height: 35px;
   width: 80%;
-  background: #FFE8EB;
+  background: #ffe8eb;
   /* font-family: 'S-CoreDream-3Light'; */
   font-weight: 400;
   letter-spacing: 1px;
@@ -201,7 +207,7 @@ input {
   align-items: center;
   height: 35px;
   border-radius: 4px;
-  background: #FFE8EB;
+  background: #ffe8eb;
 }
 
 .password-type-change:hover {
@@ -212,7 +218,13 @@ input {
   width: 100%;
   height: 35px;
   border: none;
-  background: linear-gradient(90deg, #E1306C 0%, #FF699A 38.02%, rgba(252, 175, 69, 0.78) 99.48%);
+  /* background: linear-gradient(90deg, #E1306C 0%, #FF699A 38.02%, rgba(252, 175, 69, 0.78) 99.48%); */
+  background: linear-gradient(
+    90deg,
+    var(--main-grad1-color) 0%,
+    var(--main-grad2-color) 38.02%,
+    var(--main-grad3-color) 99.48%
+  );
   border-radius: 4px;
   margin: 20px 0 0 0;
   color: #ffffff;
@@ -229,11 +241,11 @@ input {
 }
 
 .user-service div {
-  font-size : 11px
+  font-size: 11px;
 }
 
 .find-user-info {
-  background: linear-gradient(90deg, #B224EF 0%, #7579FF 100%);
+  background: linear-gradient(90deg, #b224ef 0%, #7579ff 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -243,8 +255,15 @@ input {
   cursor: pointer;
 }
 
-.sign-up{
-  background: linear-gradient(90deg, #E1306C 0%, #FF699A 68.75%, rgba(252, 175, 69, 0.72) 99.48%);
+.sign-up {
+  /* background: linear-gradient(90deg, #e1306c 0%, #ff699a 68.75%, rgba(252, 175, 69, 0.72) 99.48%); */
+  background: linear-gradient(
+    90deg,
+    var(--main-grad1-color) 0%,
+    var(--main-grad2-color) 68.75%,
+    var(--main-grad3-color) 99.48%
+  );
+
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -269,5 +288,4 @@ input {
 .social-login-container img:hover {
   cursor: pointer;
 }
-
 </style>

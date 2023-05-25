@@ -196,7 +196,13 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(95.36deg, #e1306c 2.32%, #ff699a 68.42%, #fcaf45 104.98%);
+  /* background: linear-gradient(95.36deg, #e1306c 2.32%, #ff699a 68.42%, #fcaf45 104.98%); */
+  background: linear-gradient(
+    95.36deg,
+    var(--main-grad1-color) 2.32%,
+    var(--main-grad2-color) 68.42%,
+    var(--main-grad3-color) 104.98%
+  );
   background-blend-mode: darken;
   border-radius: 5px;
   font-size: 12px;

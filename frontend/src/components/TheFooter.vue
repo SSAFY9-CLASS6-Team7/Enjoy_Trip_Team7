@@ -15,7 +15,7 @@
 
 <script>
 export default {
-  name: "TheFooter",
+  name: 'TheFooter',
 };
 </script>
 
@@ -36,7 +36,17 @@ export default {
 
 .bottom-bar {
   bottom: 0px;
-  background: linear-gradient(90deg, #e1306c 0%, #ff699a 38.02%, rgba(252, 175, 69, 0.78) 99.48%);
+  /* background: linear-gradient(90deg,
+  #e1306c 0%,
+  #ff699a 38.02%,
+  rgba(252, 175, 69, 0.78)
+  99.48%); */
+  background: linear-gradient(
+    90deg,
+    var(--main-grad1-color) 0%,
+    var(--main-grad2-color) 38.02%,
+    var(--main-grad1-color) 99.48%
+  );
   height: 10px;
   margin: 5px 0px 0px 0px; /*위쪽에 마진을 줘서 메뉴들과 떨어지도록*/
 }

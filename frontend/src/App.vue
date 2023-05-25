@@ -8,6 +8,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import TheHeader from '@/components/TheHeader';
 import TheFooter from '@/components/TheFooter';
 import RightMenu from '@/components/RightMenu.vue';
@@ -27,10 +28,38 @@ export default {
       isRight: false,
     };
   },
+  computed: {
+    ...mapGetters(['getMainColor1', 'getMainColor2', 'getMainColor3']),
+  },
+  watch: {
+    getMainColor1() {
+      this.assignColorsToCSSVariables();
+    },
+    getMainColor2() {
+      this.assignColorsToCSSVariables();
+    },
+    getMainColor3() {
+      this.assignColorsToCSSVariables();
+    },
+  },
   methods: {
     openRightMenu() {
       this.isRight = !this.isRight;
     },
+    assignColorsToCSSVariables() {
+      // Get the computed color values
+      const mainColor1 = this.getMainColor1;
+      const mainColor2 = this.getMainColor2;
+      const mainColor3 = this.getMainColor3;
+
+      // Assign the colors to CSS variables
+      document.documentElement.style.setProperty('--main-grad1-color', mainColor1);
+      document.documentElement.style.setProperty('--main-grad2-color', mainColor2);
+      document.documentElement.style.setProperty('--main-grad3-color', mainColor3);
+    },
+  },
+  mounted() {
+    this.assignColorsToCSSVariables();
   },
 };
 </script>
@@ -48,6 +77,9 @@ export default {
 }
 
 :root {
+  /* --main-grad1-color: #e1306c;
+  --main-grad2-color: #ff699a;
+  --main-grad3-color: rgba(252, 175, 69, 0.7); */
   --main-grad1-color: #e1306c;
   --main-grad2-color: #ff699a;
   --main-grad3-color: rgba(252, 175, 69, 0.7);

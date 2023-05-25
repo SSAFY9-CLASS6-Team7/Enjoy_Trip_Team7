@@ -36,7 +36,9 @@
             메인화면 커스텀
           </button>
           <button class="open-gradation-input-btn">
-            <label>테마 컬러 커스텀<input type="color" id="gradation-select" /></label>
+            <input type="color" id="gradation-select" v-model="mainColor1" />
+            <input type="color" id="gradation-select" v-model="mainColor2" />
+            <input type="color" id="gradation-select" v-model="mainColor3" />
           </button>
         </div>
       </div>
@@ -104,13 +106,29 @@ export default {
     return {
       isOpen: false,
       baseUrl: process.env.VUE_APP_MY_BASE_URL,
+      mainColor1: '',
+      mainColor2: '',
+      mainColor3: '',
     };
   },
   computed: {
     ...mapGetters('userStore', ['checkToken', 'checkUserInfo']),
+    ...mapGetters(['getMainColor1', 'getMainColor2', 'getMainColor3']),
+  },
+  watch: {
+    mainColor1: function () {
+      this.mainColor1Change(this.mainColor1);
+    },
+    mainColor2: function () {
+      this.mainColor2Change(this.mainColor2);
+    },
+    mainColor3: function () {
+      this.mainColor3Change(this.mainColor3);
+    },
   },
   methods: {
     ...mapActions('userStore', ['userConfirm', 'userLogout', 'nextPathChange']),
+    ...mapActions(['mainColor1Change', 'mainColor2Change', 'mainColor3Change']),
     menuClose() {
       this.$emit('openRightMenu');
     },
@@ -124,6 +142,9 @@ export default {
       this.movePage('/user/login');
     },
     logout() {
+      this.mainColor1Change('#e1306c');
+      this.mainColor2Change('#ff699a');
+      this.mainColor3Change('#fcaf45');
       this.userLogout();
       this.movePage('/');
     },
@@ -162,6 +183,10 @@ export default {
     setTimeout(() => {
       this.isOpen = true;
     }, 100);
+    // Get the computed color values
+    this.mainColor1 = this.getMainColor1;
+    this.mainColor2 = this.getMainColor2;
+    this.mainColor3 = this.getMainColor3;
   },
 };
 </script>
@@ -309,11 +334,17 @@ export default {
 
 .main div:hover {
   cursor: pointer;
-  background: linear-gradient(
+  /* background: linear-gradient(
     92.4deg,
     #e1306c 0.11%,
     #ff699a 53.13%,
     rgba(252, 175, 69, 0.87) 95.51%
+  ); */
+  background: linear-gradient(
+    92.4deg,
+    var(--main-grad1-color) 0.11%,
+    var(--main-grad2-color) 53.13%,
+    var(--main-grad3-color) 95.51%
   );
   border-radius: 5px;
   width: 100%;
@@ -333,7 +364,16 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(95.36deg, #e1306c 2.32%, #ff699a 68.42%, #fcaf45 104.98%);
+  /* background: linear-gradient(95.36deg,
+   #e1306c 2.32%,
+    #ff699a 68.42%,
+     #fcaf45 104.98%); */
+  background: linear-gradient(
+    95.36deg,
+    var(--main-grad1-color) 2.32%,
+    var(--main-grad2-color) 68.42%,
+    var(--main-grad3-color) 104.98%
+  );
   background-blend-mode: darken;
   border-radius: 5px;
   font-size: 12px;
@@ -346,5 +386,22 @@ export default {
   width: 15px;
   height: auto;
   margin-right: 5px;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+}
+
+.open-gradation-input-btn {
+  position: absolute;
+  top: 21%;
+  left: 30%;
+  border: none;
+}
+
+#gradation-select {
+  margin: 3px;
 }
 </style>

@@ -136,7 +136,8 @@ export default {
 
 .selected {
   font-weight: 800;
-  color: #e1306c;
+  /* color: #e1306c; */
+  color: var(--main-grad1-color);
   border-radius: 4px;
 }
 </style>

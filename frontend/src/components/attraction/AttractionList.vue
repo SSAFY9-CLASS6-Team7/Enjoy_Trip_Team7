@@ -6,61 +6,117 @@
         <div class="dropdown">
           <button class="dropdown-toggle" @click="toggleDropdown">
             시·도 선택
-          <img src="@/assets/board_icons/dropdown.svg" />
+            <img src="@/assets/board_icons/dropdown.svg" />
           </button>
-            <ul class="dropdown-menu" v-show="sidoDropdownOpen">
-              <div class="dropdown-li" v-for="sido, i in this.getSidoCode" :key="i">
-                <li>
-                  <label
-                    ><input
-                      type="checkbox"
-                      name="sido"
-                      :value="sido.code"
-                      v-model="selectedSido"
-                    />
-                    {{ sido.text }}
-                  </label>
-                </li>
-              </div>
-            </ul>
-          </div>
+          <ul class="dropdown-menu" v-show="sidoDropdownOpen">
+            <div class="dropdown-li" v-for="(sido, i) in this.getSidoCode" :key="i">
+              <li>
+                <label
+                  ><input type="checkbox" name="sido" :value="sido.code" v-model="selectedSido" />
+                  {{ sido.text }}
+                </label>
+              </li>
+            </div>
+          </ul>
+        </div>
         <div class="category-container">
-          <input type="checkbox" class="search-category" id="category-house" v-model="category" value="32" hidden>
-          <label for="category-house" class="category-button" :class="{ 'selected': category.includes('32') }">숙박</label>
-          <input type="checkbox" class="search-category" id="category-food" v-model="category" value="39" hidden>
-          <label for="category-food" class="category-button" :class="{ 'selected': category.includes('39') }">식당</label>
-          <input type="checkbox" class="search-category" id="category-tour" v-model="category" value="12" hidden>
-          <label for="category-tour" class="category-button" :class="{ 'selected': category.includes('12') }">관광</label>
-          <input type="checkbox" class="search-category" id="category-festival" v-model="category" value="15" hidden>
-          <label for="category-festival" class="category-button" :class="{ 'selected': category.includes('15') }">행사</label>
+          <input
+            type="checkbox"
+            class="search-category"
+            id="category-house"
+            v-model="category"
+            value="32"
+            hidden
+          />
+          <label
+            for="category-house"
+            class="category-button"
+            :class="{ selected: category.includes('32') }"
+            >숙박</label
+          >
+          <input
+            type="checkbox"
+            class="search-category"
+            id="category-food"
+            v-model="category"
+            value="39"
+            hidden
+          />
+          <label
+            for="category-food"
+            class="category-button"
+            :class="{ selected: category.includes('39') }"
+            >식당</label
+          >
+          <input
+            type="checkbox"
+            class="search-category"
+            id="category-tour"
+            v-model="category"
+            value="12"
+            hidden
+          />
+          <label
+            for="category-tour"
+            class="category-button"
+            :class="{ selected: category.includes('12') }"
+            >관광</label
+          >
+          <input
+            type="checkbox"
+            class="search-category"
+            id="category-festival"
+            v-model="category"
+            value="15"
+            hidden
+          />
+          <label
+            for="category-festival"
+            class="category-button"
+            :class="{ selected: category.includes('15') }"
+            >행사</label
+          >
         </div>
 
-         <div class="keyword-container">
-            <input type="text" class="keyword" placeholder="검색어를 입력하세요" v-model="keyword" @keyup.enter="goSearch">
-            <img src="@/assets/board_icons/search.svg" @click="goSearch">
-          </div>
-
+        <div class="keyword-container">
+          <input
+            type="text"
+            class="keyword"
+            placeholder="검색어를 입력하세요"
+            v-model="keyword"
+            @keyup.enter="goSearch"
+          />
+          <img src="@/assets/board_icons/search.svg" @click="goSearch" />
+        </div>
       </div>
       <div class="content">
-        <attraction-list-item v-for="attraction in attractions" :key='attraction' :attraction="attraction"></attraction-list-item>
+        <attraction-list-item
+          v-for="attraction in attractions"
+          :key="attraction"
+          :attraction="attraction"
+        ></attraction-list-item>
       </div>
-      <attraction-pagination class="pagination" @pageChange="pageChanged" :pageResult="pageResult"></attraction-pagination>
+      <attraction-pagination
+        class="pagination"
+        @pageChange="pageChanged"
+        :pageResult="pageResult"
+      ></attraction-pagination>
     </div>
     <div class="right-aside"></div>
   </div>
 </template>
 
 <script>
-import AttractionPagination from '@/components/attraction/attraction_components/AttractionPagination.vue'
-import AttractionListItem from '@/components/attraction/attraction_components/AttractionListItem.vue'
-import { mapActions, mapGetters } from 'vuex'
-import qs from "qs"
-import axios from 'axios'
+import AttractionPagination from '@/components/attraction/attraction_components/AttractionPagination.vue';
+import AttractionListItem from '@/components/attraction/attraction_components/AttractionListItem.vue';
+import { mapActions, mapGetters } from 'vuex';
+import qs from 'qs';
+import axios from 'axios';
 
 export default {
-  name : 'AttractionList',
+  name: 'AttractionList',
   components: { AttractionPagination, AttractionListItem },
-  data(){
+  data() {
     return {
       attractions: [],
       pageResult: '',
@@ -70,20 +126,31 @@ export default {
       keyword: '',
       sidoDropdownOpen: false,
       pageNo: 1,
-    }
+    };
   },
   computed: {
-      ...mapGetters(['getSidoCode', 'getAttractionPageNo', 'getAttractionSidos', 'getAttractionCategory', 'getAttractionKeyword']),
-    },
+    ...mapGetters([
+      'getSidoCode',
+      'getAttractionPageNo',
+      'getAttractionSidos',
+      'getAttractionCategory',
+      'getAttractionKeyword',
+    ]),
+  },
   methods: {
-    ...mapActions(['attractionSidoChange', 'attractionPageNoChange', 'attractionKeywordChange', 'attractionCategoryChange']),
+    ...mapActions([
+      'attractionSidoChange',
+      'attractionPageNoChange',
+      'attractionKeywordChange',
+      'attractionCategoryChange',
+    ]),
     toggleDropdown() {
       this.sidoDropdownOpen = !this.sidoDropdownOpen;
     },
-    async pageChanged(clickedPage){
+    async pageChanged(clickedPage) {
       this.pageNo = clickedPage;
       await axios({
-        url: process.env.VUE_APP_MY_BASE_URL+`/attraction`,
+        url: process.env.VUE_APP_MY_BASE_URL + `/attraction`,
         method: 'GET',
         params: {
           pageNo: this.pageNo,
@@ -98,8 +165,8 @@ export default {
           return qs.stringify(
             {
               ...params,
-              code: code.join(','), 
-              sido: sido.join(','), 
+              code: code.join(','),
+              sido: sido.join(','),
             },
             { arrayFormat: 'comma' }
           );
@@ -111,13 +178,13 @@ export default {
       });
     },
 
-    async goSearch(){
-      this.attractionSidoChange(this.selectedSido);     
+    async goSearch() {
+      this.attractionSidoChange(this.selectedSido);
       this.attractionCategoryChange(this.category);
       this.attractionPageNoChange(1);
       this.pageNo = 1;
       await axios({
-        url: process.env.VUE_APP_MY_BASE_URL+`/attraction`,
+        url: process.env.VUE_APP_MY_BASE_URL + `/attraction`,
         method: 'GET',
         params: {
           pageNo: 1,
@@ -132,8 +199,8 @@ export default {
           return qs.stringify(
             {
               ...params,
-              code: code.join(','), 
-              sido: sido.join(','), 
+              code: code.join(','),
+              sido: sido.join(','),
             },
             { arrayFormat: 'comma' }
           );
@@ -150,42 +217,42 @@ export default {
     this.category = this.getAttractionCategory;
     this.keyword = this.getAttractionKeyword;
     await axios({
-        url: process.env.VUE_APP_MY_BASE_URL+`/attraction`,
-        method: 'GET',
-        params: {
-          pageNo: this.pageNo,
-          code: this.category,
-          sido: this.selectedSido,
-          keyword: this.keyword,
-        },
-        paramsSerializer: (params) => {
-          const code = Array.isArray(params.code) ? params.code : [params.code];
-          const sido = Array.isArray(params.sido) ? params.sido : [params.sido];
+      url: process.env.VUE_APP_MY_BASE_URL + `/attraction`,
+      method: 'GET',
+      params: {
+        pageNo: this.pageNo,
+        code: this.category,
+        sido: this.selectedSido,
+        keyword: this.keyword,
+      },
+      paramsSerializer: (params) => {
+        const code = Array.isArray(params.code) ? params.code : [params.code];
+        const sido = Array.isArray(params.sido) ? params.sido : [params.sido];
 
-          return qs.stringify(
-            {
-              ...params,
-              code: code.join(','), 
-              sido: sido.join(','), 
-            },
-            { arrayFormat: 'comma' }
-          );
-        },
-      }).then((response) => {
-        this.attractions = response.data.attractions;
-        this.pageResult = response.data.pageResult;
-      });
-  }
-}
-
+        return qs.stringify(
+          {
+            ...params,
+            code: code.join(','),
+            sido: sido.join(','),
+          },
+          { arrayFormat: 'comma' }
+        );
+      },
+    }).then((response) => {
+      this.attractions = response.data.attractions;
+      this.pageResult = response.data.pageResult;
+    });
+  },
+};
 </script>
 
 <style scoped>
 @font-face {
-     font-family: 'S-CoreDream-3Light';
-     src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-3Light.woff') format('woff');
-     font-weight: normal;
-     font-style: normal;
+  font-family: 'S-CoreDream-3Light';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-3Light.woff')
+    format('woff');
+  font-weight: normal;
+  font-style: normal;
 }
 
 .container {
@@ -221,7 +288,7 @@ export default {
 }
 
 .dropdown-toggle {
-  border: 2px solid #5C5C5C;
+  border: 2px solid #5c5c5c;
   border-radius: 4px;
   background-color: white;
   font-weight: 400;
@@ -240,7 +307,7 @@ export default {
 .dropdown-menu {
   position: absolute;
   border-radius: 4px;
-  z-index: 3; 
+  z-index: 3;
   font-weight: 400;
   background-color: white;
   min-width: 150px;
@@ -271,7 +338,7 @@ export default {
 }
 
 .category-button {
-  border: 2px solid #5C5C5C;
+  border: 2px solid #5c5c5c;
   padding: 3px 15px 3px 15px;
   border-radius: 4px;
   font-family: 'S-CoreDream-3Light';
@@ -292,16 +359,26 @@ export default {
   padding: 5px 17px 5px 17px;
   color: #ffffff;
   font-weight: 800;
-  background: linear-gradient(93.52deg, #E1306C -1.5%, #FF699A 40.19%, rgba(252, 175, 69, 0.78) 110.32%);
+  /* background: linear-gradient(
+    93.52deg,
+    #e1306c -1.5%,
+    #ff699a 40.19%,
+    rgba(252, 175, 69, 0.78) 110.32%
+  ); */
+  background: linear-gradient(
+    93.52deg,
+    var(--main-grad1-color) -1.5%,
+    var(--main-grad2-color) 40.19%,
+    var(--main-grad3-color) 110.32%
+  );
 }
-
 
 .keyword-container {
   position: relative;
   display: flex;
   height: 30px;
-  border: 2px solid #5C5C5C;
-  border-radius: 4px; 
+  border: 2px solid #5c5c5c;
+  border-radius: 4px;
   font-family: 'S-CoreDream-3Light';
   font-weight: 600;
   font-size: 14px;
@@ -339,11 +416,10 @@ export default {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  padding:10px 20px 10px 20px;
+  padding: 10px 20px 10px 20px;
 }
 
 .pagination {
   margin: 10px 0 10px 0;
 }
-
 </style>

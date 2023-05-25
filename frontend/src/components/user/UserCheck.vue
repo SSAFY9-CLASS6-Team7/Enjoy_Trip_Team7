@@ -146,7 +146,9 @@ input {
   width: 30%;
   height: 35px;
   border: none;
-  background: linear-gradient(90deg, #E1306C 0%, #FF699A 38.02%, rgba(252, 175, 69, 0.78) 99.48%);
+  /* background: linear-gradient(90deg, #E1306C 0%, #FF699A 38.02%, rgba(252, 175, 69, 0.78) 99.48%); */
+  background: linear-gradient(90deg, var(--main-grad1-color) 0%,
+  var(--main-grad2-color) 38.02%, var(--main-grad3-color) 99.48%);
   border-radius: 4px;
   margin: 20px 0 0 0;
   color: #ffffff;
