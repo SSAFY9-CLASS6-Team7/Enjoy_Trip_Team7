@@ -1,8 +1,10 @@
 <template>
   <div class="header">
-    <div class="top-bar"></div>
+    <div class="top-bar">
+      <div class="top-bar-grad"></div>
+    </div>
     <div class="header-content">
-      <img class="logo-img" src="@/assets/logo.gif" @click="toMain"/>
+      <img class="logo-img" src="@/assets/logo.gif" @click="toMain" />
       <div class="menu-set">
         <div
           :class="{ 'nav-item': true, active: activeMenuItem === 'attraction' }"
@@ -41,14 +43,22 @@
         <router-link to="/user/login">로그인</router-link>
       </div>
 
-      <div v-if="checkToken" class="user-area" @click="profileClick" >
-        <img class="profile-img"  v-if="checkUserInfo.profilePicPath != null && checkUserInfo.profilePicPath != ''" :src="`${baseUrl}/profilePath/` + checkUserInfo.profilePicPath" />
-        <img class="profile-img" v-if="checkUserInfo.profilePicPath == null || checkUserInfo.profilePicPath == ''" src="@/assets/header_icon/profile.svg">
+      <div v-if="checkToken" class="user-area" @click="profileClick">
+        <img
+          class="profile-img"
+          v-if="checkUserInfo.profilePicPath != null && checkUserInfo.profilePicPath != ''"
+          :src="`${baseUrl}/profilePath/` + checkUserInfo.profilePicPath"
+        />
+        <img
+          class="profile-img"
+          v-if="checkUserInfo.profilePicPath == null || checkUserInfo.profilePicPath == ''"
+          src="@/assets/header_icon/profile.svg"
+        />
         <div>{{ checkUserInfo.nickname }}</div>
       </div>
 
       <button class="menu-open" @click="openRightMenu">
-        <img src="@/assets/common/more.svg" style="width: 30px;">
+        <img src="@/assets/common/more.svg" style="width: 30px" />
       </button>
     </div>
   </div>
@@ -57,23 +67,23 @@
 <script>
 import { mapGetters } from 'vuex';
 export default {
-  name: "TheHeader",
+  name: 'TheHeader',
   data() {
     return {
       baseUrl: process.env.VUE_APP_MY_BASE_URL,
       // activeMenuItem: '',
-    }
+    };
   },
-  computed: {  
+  computed: {
     ...mapGetters('userStore', ['checkToken', 'checkUserInfo']),
-    activeMenuItem : function() {
+    activeMenuItem: function () {
       return this.$store.state.activeMenuItem;
     },
   },
   methods: {
-    toMain(){
-      if(this.$route.path !== '/') {
-        this.$router.push("/");
+    toMain() {
+      if (this.$route.path !== '/') {
+        this.$router.push('/');
         this.setActiveMenuItem('-1');
       }
     },
@@ -81,7 +91,7 @@ export default {
       this.$store.commit('activeMenuChange', menuItem);
     },
     openRightMenu() {
-      this.$emit('openRightMenu')
+      this.$emit('openRightMenu');
     },
     profileClick() {
       this.setActiveMenuItem('-1');
@@ -156,9 +166,42 @@ export default {
 }
 
 .top-bar {
-  background: linear-gradient(90deg, #e1306c 0%, #ff699a 38.02%, rgba(252, 175, 69, 0.78) 99.48%);
   height: 18px;
   margin: 0px 0px 0px 0px; /*아래쪽에 마진을 줘서 메뉴들과 떨어지도록*/
+  overflow: hidden;
+  background-color: #e1306c;
+}
+
+.top-bar-grad {
+  display: flex;
+  width: 200%;
+  height: 100%;
+  /* background: linear-gradient(90deg, #e1306c 0%, #ff699a 38.02%, rgba(252, 175, 69, 0.78) 99.48%); */
+  background: linear-gradient(
+    90deg,
+    #f1c772 0%,
+    #f77a3d 29.57%,
+    #f0495b 44.58%,
+    #b935aa 75.18%,
+    #4a52f2 100%
+  );
+  background-size: 160% 160%;
+  align-items: center;
+  justify-content: center;
+
+  animation: MoveGrad 3s ease infinite;
+}
+
+@keyframes MoveGrad {
+  0% {
+    background-position: 0% 40%;
+  }
+  50% {
+    background-position: 80% 40%;
+  }
+  100% {
+    background-position: 0% 40%;
+  }
 }
 
 .user-area {
@@ -176,7 +219,7 @@ export default {
   border-radius: 45px;
   width: 45px;
   height: 45px;
-  margin:0 10px 0 0;
+  margin: 0 10px 0 0;
 }
 
 a {
@@ -190,12 +233,17 @@ img {
 }
 
 .menu-open {
-  position:absolute;
-  right:0%;
-  border: none;   
+  position: absolute;
+  right: 0%;
+  border: none;
   border-radius: 40px 0 0 40px;
   padding: 0 10px 0 10px;
-  background: linear-gradient(105.82deg, #E1306C 9.07%, #FF699A 40.96%, rgba(252, 175, 69, 0.7) 71.54%);
+  background: linear-gradient(
+    105.82deg,
+    #e1306c 9.07%,
+    #ff699a 40.96%,
+    rgba(252, 175, 69, 0.7) 71.54%
+  );
   display: flex;
   align-items: center;
 }
