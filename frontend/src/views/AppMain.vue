@@ -23,7 +23,9 @@
               v-for="announcement in announcements"
               :key="announcement"
             >
-              <div class="announcement-value" @click="moveAnnouncementView(announcement.boardId)">{{ announcement.title }}</div>
+              <div class="announcement-value" @click="moveAnnouncementView(announcement.boardId)">
+                {{ announcement.title }}
+              </div>
               <div class="announcement-time" @click="moveAnnouncementView(announcement.boardId)">
                 <img src="../assets/clock.svg" style="margin-right: 10px" />
                 {{ formatDate(announcement.createTime) }}
@@ -34,15 +36,34 @@
       </div>
     </div>
     <div class="custom-main-container" v-if="this.checkToken">
-      <div class="custom-main" v-for="(item, index) in mainCustom" :key="index">
+      <div
+        class="custom-main"
+        v-for="(item, index) in mainCustom"
+        :key="index"
+        v-bind:class="[
+          {
+            'main-history': isMainHistory(mainCustom[index]),
+            'main-plan': isMainPlan(mainCustom[index]),
+            'last-content': isLastCotent(index),
+          },
+        ]"
+      >
         <component class="custom-main-items" :is="mainCustom[index]"></component>
       </div>
     </div>
     <div class="normal-main-container" v-if="!this.checkToken">
-      <main-cards></main-cards>
-      <main-community></main-community>
-      <main-history></main-history>
-      <main-plan></main-plan>
+      <div class="main-cards">
+        <main-cards></main-cards>
+      </div>
+      <div class="main-community">
+        <main-community></main-community>
+      </div>
+      <div class="main-history">
+        <main-history></main-history>
+      </div>
+      <div class="main-plan last-content">
+        <main-plan></main-plan>
+      </div>
     </div>
   </div>
 </template>
@@ -70,7 +91,7 @@ export default {
   data() {
     return {
       userid: '',
-      mainCustom: [MainPlan, MainHistory, MainCards, MainCommunity],
+      mainCustom: [],
       images: [
         {
           path: require('../assets/main1.png'),
@@ -121,22 +142,40 @@ export default {
   },
   methods: {
     formatDate(date) {
-      return date.split(' ')[0];  
+      return date.split(' ')[0];
     },
     moveAnnouncementView(announcementId) {
-      this.$router.push("/announcement/view/"+announcementId);
+      this.$router.push('/announcement/view/' + announcementId);
     },
     moveAnnouncementList() {
-      this.$router.push("/announcement");
+      this.$router.push('/announcement');
+    },
+    isMainHistory(component) {
+      return component === MainHistory ? true : false;
+    },
+    isMainPlan(component) {
+      return component === MainPlan ? true : false;
+    },
+    isLastCotent(index) {
+      return index === this.mainCustom.length - 1 ? true : false;
     },
   },
   async created() {
-    // this.userId = this.checkUserInfo.userId;
-    await axios.get(process.env.VUE_APP_MY_BASE_URL+`/announcement?pageNo=1&keyword=${this.searchKeyword}`)
-    .then(response => {
-      console.dir(response.data.boards);
-      this.announcements = response.data.boards;
-    })
+    if (this.checkUserInfo !== null) {
+      this.userId = this.checkUserInfo.userId;
+    }
+    var tempArr = this.checkUserInfo.mainpageCustom.split('-');
+    for (var tempNumber of tempArr) {
+      if (tempNumber === '100') this.mainCustom.push(MainCommunity);
+      else if (tempNumber === '200') this.mainCustom.push(MainHistory);
+      else if (tempNumber === '300') this.mainCustom.push(MainCards);
+      else if (tempNumber === '400') this.mainCustom.push(MainPlan);
+    }
+    await axios
+      .get(process.env.VUE_APP_MY_BASE_URL + `/announcement?pageNo=1&keyword=${this.searchKeyword}`)
+      .then((response) => {
+        this.announcements = response.data.boards;
+      });
   },
 };
 </script>
@@ -243,5 +282,24 @@ export default {
 
 .swiper-item:hover {
   cursor: pointer;
+}
+.normal-main-container > *,
+.custom-main-container > * {
+  padding: 50px 0;
+}
+
+.main-history >>> *,
+.main-plan >>> * {
+  margin-bottom: 0px !important;
+  min-height: 0px;
+}
+
+.last-content {
+  margin-bottom: 100px;
+}
+
+.main-history >>> h1,
+.main-plan >>> h1 {
+  margin: 30px 0;
 }
 </style>

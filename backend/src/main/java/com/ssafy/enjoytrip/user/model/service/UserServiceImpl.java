@@ -3,6 +3,7 @@ package com.ssafy.enjoytrip.user.model.service;
 import com.ssafy.enjoytrip.user.model.User;
 import com.ssafy.enjoytrip.user.model.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,6 +13,7 @@ import java.sql.SQLException;
 
 import static com.ssafy.enjoytrip.util.controller.ImageUtils.saveFile;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService{

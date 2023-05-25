@@ -13,4 +13,5 @@ public class User {
     private String gender;
     private String birth;
     private String profilePicPath;
+    private String mainpageCustom;
 }

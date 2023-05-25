@@ -6,7 +6,7 @@
 
     <!-- 로그인 유저 정보 확인 -->
     <select id="login" parameterType="User" resultType="User">
-        SELECT user_id userId, password, name, nickname, phone, email, gender, birth, profile_pic_path profilePicPath
+        SELECT user_id userId, password, name, nickname, phone, email, gender, birth, profile_pic_path profilePicPath, mainpage_custom mainpageCustom
           FROM user
          WHERE user_id = #{userId}
            AND password = #{password}
@@ -42,7 +42,8 @@
             <if test="email != null">email = #{email},</if>
             <if test="gender != null">gender = #{gender},</if>
             <if test="birth != null">birth = #{birth},</if>
-            <if test="profilePicPath != null">profile_pic_path = #{profilePicPath}</if>
+            <if test="profilePicPath != null">profile_pic_path = #{profilePicPath},</if>
+            <if test="mainpageCustom != ''">mainpage_custom = #{mainpageCustom}</if>
         </set>
          WHERE user_id = #{userId}
     </update>
