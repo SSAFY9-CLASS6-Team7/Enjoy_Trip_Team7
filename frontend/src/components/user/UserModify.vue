@@ -161,7 +161,7 @@ export default {
                     f.append("file", this.uploaded);
                 }
 
-                await axios.put(process.env.MY_BASE_URL+"/user/"+this.checkUserInfo.userId, f);
+                await axios.put(process.env.VUE_APP_MY_BASE_URL+"/user/"+this.checkUserInfo.userId, f);
                 let user = {
                     userId: this.checkUserInfo.userId,
                     password: ''

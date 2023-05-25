@@ -41,8 +41,8 @@
 
           <div class="social-login-container">
             <img src="@/assets/user_icons/social/google.svg" style="box-shadow: -1px 5px 16px rgba(0, 0, 0, 0.13); border-radius: 50px;" >
-            <img src="@/assets/user_icons/social/instagram.svg" >
-            <img src="@/assets/user_icons/social/naver.svg" >
+            <img @click="openInsta" src="@/assets/user_icons/social/instagram.svg" >
+            <img @click="openNaver" src="@/assets/user_icons/social/naver.svg" >
             <img src="@/assets/user_icons/social/kakaotalk.svg" >
           </div>
         </div>
@@ -83,6 +83,12 @@ export default {
       },
       findUserInfo() {
 
+      },
+      openNaver() {
+        window.open("https://www.naver.com");
+      },
+      openInsta() {
+        window.open("https://www.instagram.com");
       },
       async login(){
         await this.userConfirm(this.user);

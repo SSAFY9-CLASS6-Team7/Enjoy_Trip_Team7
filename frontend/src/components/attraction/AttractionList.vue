@@ -208,6 +208,9 @@ export default {
   grid-area: main;
   min-width: 1300px;
   margin: 0 0 20px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .header {
@@ -335,7 +338,7 @@ export default {
 .content {
   display: flex;
   flex-wrap: wrap;
-  justify-content: start;
+  justify-content: center;
   padding:10px 20px 10px 20px;
 }
 
