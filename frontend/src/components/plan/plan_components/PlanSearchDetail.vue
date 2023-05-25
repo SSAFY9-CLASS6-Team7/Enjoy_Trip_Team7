@@ -104,11 +104,17 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(
+  /* background: linear-gradient(
     109.72deg,
     #e1306c 10.05%,
     #ff699a 52.97%,
     rgba(252, 175, 69, 0.7) 95%
+  ); */
+  background: linear-gradient(
+    109.72deg,
+    var(--main-grad1-color) 10.05%,
+    var(--main-grad2-color) 52.97%,
+    var(--main-grad3-color) 95%
   );
   margin: 5px 0 0 5px;
   border-radius: 10px;
@@ -139,6 +145,7 @@ export default {
   font-weight: 700;
   font-size: 20px;
   color: #e1306c;
+  /* color: var(--main-grad1-color); */
 }
 
 .info-title img,

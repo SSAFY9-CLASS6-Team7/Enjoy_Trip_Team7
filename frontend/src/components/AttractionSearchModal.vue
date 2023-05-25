@@ -179,7 +179,7 @@ export default {
     async infiniteHandler($state) {
       this.infiniteState = $state;
       await axios({
-        url: process.env.VUE_APP_MY_BASE_URL+`/attraction`,
+        url: process.env.VUE_APP_MY_BASE_URL + `/attraction`,
         method: 'GET',
         params: {
           pageNo: this.pageNo,
@@ -246,7 +246,17 @@ export default {
 }
 
 .top-bar {
-  background: linear-gradient(90deg, #e1306c 0%, #ff699a 38.02%, rgba(252, 175, 69, 0.78) 99.48%);
+  /* background: linear-gradient(90deg,
+   #e1306c 0%,
+    #ff699a 38.02%,
+     rgba(252, 175, 69, 0.78)
+      99.48%); */
+  background: linear-gradient(
+    90deg,
+    var(--main-grad1-color) 0%,
+    var(--main-grad2-color) 38.02%,
+    var(--main-grad3-color) 99.48%
+  );
   height: 18px;
   width: 100%;
 }

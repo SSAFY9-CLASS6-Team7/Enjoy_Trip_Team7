@@ -117,12 +117,14 @@ export default {
 }
 
 .nav-item:hover {
-  border-bottom: 6px solid #e1306c;
+  /* border-bottom: 6px solid #e1306c; */
+  border-bottom: 6px solid var(--main-grad1-color);
   transition: 0.3s;
 }
 
 .nav-item.active {
-  border-bottom: 6px solid #e1306c;
+  /* border-bottom: 6px solid #e1306c; */
+  border-bottom: 6px solid var(--main-grad1-color);
   /* 하단 밑줄 그라데이션 */
   /* background-image: linear-gradient(#ffffff, #ffffff), linear-gradient(97.1deg, #E1306C 0%, #FF699A 48.96%, rgba(252, 175, 69, 0.78) 100%);
   background-origin: border-box;
@@ -169,7 +171,8 @@ export default {
   height: 18px;
   margin: 0px 0px 0px 0px; /*아래쪽에 마진을 줘서 메뉴들과 떨어지도록*/
   overflow: hidden;
-  background-color: #e1306c;
+  /* background-color: #e1306c; */
+  background-color: var(--main-grad1-color);
 }
 
 .top-bar-grad {
@@ -177,13 +180,19 @@ export default {
   width: 200%;
   height: 100%;
   /* background: linear-gradient(90deg, #e1306c 0%, #ff699a 38.02%, rgba(252, 175, 69, 0.78) 99.48%); */
-  background: linear-gradient(
+  /* background: linear-gradient(
     90deg,
     #f1c772 0%,
     #f77a3d 29.57%,
     #f0495b 44.58%,
     #b935aa 75.18%,
     #4a52f2 100%
+  ); */
+  background: linear-gradient(
+    90deg,
+    var(--main-grad1-color) -2.21%,
+    var(--main-grad2-color) 49.96%,
+    var(--main-grad3-color) 100%
   );
   background-size: 160% 160%;
   align-items: center;
@@ -238,11 +247,17 @@ img {
   border: none;
   border-radius: 40px 0 0 40px;
   padding: 0 10px 0 10px;
-  background: linear-gradient(
+  /* background: linear-gradient(
     105.82deg,
     #e1306c 9.07%,
     #ff699a 40.96%,
     rgba(252, 175, 69, 0.7) 71.54%
+  ); */
+  background: linear-gradient(
+    105.82deg,
+    var(--main-grad1-color) 9.07%,
+    var(--main-grad2-color) 40.96%,
+    var(--main-grad3-color) 71.54%
   );
   display: flex;
   align-items: center;

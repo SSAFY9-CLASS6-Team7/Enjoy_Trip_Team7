@@ -97,7 +97,7 @@ export default {
       newPlan.travelArea = this.travelArea;
       newPlan.content = this.memo;
       newPlan.userId = this.userId;
-      await axios.post(process.env.VUE_APP_MY_BASE_URL+'/plan', newPlan);
+      await axios.post(process.env.VUE_APP_MY_BASE_URL + '/plan', newPlan);
       this.$emit('setNeedToUpdate', true);
       this.emitModalOff();
     },
@@ -153,7 +153,13 @@ select {
 }
 
 .top-bar {
-  background: linear-gradient(90deg, #e1306c 0%, #ff699a 38.02%, rgba(252, 175, 69, 0.78) 99.48%);
+  /* background: linear-gradient(90deg, #e1306c 0%, #ff699a 38.02%, rgba(252, 175, 69, 0.78) 99.48%); */
+  background: linear-gradient(
+    90deg,
+    var(--main-grad1-color) 0%,
+    var(--main-grad2-color) 38.02%,
+    var(--main-grad3-color) 99.48%
+  );
   height: 18px;
   width: 100%;
 }
@@ -228,7 +234,13 @@ select {
   margin-top: 20px;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(95.36deg, #e1306c 2.32%, #ff699a 68.42%, #fcaf45 104.98%);
+  /* background: linear-gradient(95.36deg, #e1306c 2.32%, #ff699a 68.42%, #fcaf45 104.98%); */
+  background: linear-gradient(
+    95.36deg,
+    var(--main-grad1-color) 2.32%,
+    var(--main-grad2-color) 68.42%,
+    var(--main-grad3-color) 104.98%
+  );
   background-blend-mode: darken;
   border-radius: 5px;
   border: none;
