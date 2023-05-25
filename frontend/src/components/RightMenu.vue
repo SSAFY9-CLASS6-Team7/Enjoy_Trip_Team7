@@ -35,6 +35,9 @@
             <img class="setting-btn-vector" src="@/assets/user_icons/setting.svg" />
             메인화면 커스텀
           </button>
+          <button class="open-gradation-input-btn">
+            <label>테마 컬러 커스텀<input type="color" id="gradation-select" /></label>
+          </button>
         </div>
       </div>
       <div class="devider"></div>

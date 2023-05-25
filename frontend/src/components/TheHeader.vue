@@ -238,11 +238,17 @@ img {
   border: none;
   border-radius: 40px 0 0 40px;
   padding: 0 10px 0 10px;
-  background: linear-gradient(
+  /* background: linear-gradient(
     105.82deg,
     #e1306c 9.07%,
     #ff699a 40.96%,
     rgba(252, 175, 69, 0.7) 71.54%
+  ); */
+  background: linear-gradient(
+    105.82deg,
+    var(--main-grad1-color) 9.07%,
+    var(--main-grad2-color) 40.96%,
+    var(--main-grad3-color) 71.54%
   );
   display: flex;
   align-items: center;
