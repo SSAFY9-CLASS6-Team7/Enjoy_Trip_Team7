@@ -344,4 +344,12 @@ export default {
 .main-plan >>> h1 {
   margin: 30px 0;
 }
+
+.custom-main-items {
+  pointer-events: none;
+}
+
+.custom-main:hover {
+  cursor: pointer;
+}
 </style>
