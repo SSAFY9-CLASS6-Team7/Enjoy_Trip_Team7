@@ -10,7 +10,7 @@
             <input type="text" class="keyword" placeholder="검색어를 입력하세요" @keyup.enter="goSearch" v-model="searchKeyword">
             <img src="@/assets/board_icons/search.svg" @click="goSearch">
           </div>
-          <button class="write-button" @click="createBoard"><img src="@/assets/board_icons/write.svg"></button>
+          <button v-if="isAdmin" class="write-button" @click="createBoard"><img src="@/assets/board_icons/write.svg"></button>
         </div>
       </div>
       <div class="table-title"> 
@@ -48,6 +48,7 @@ export default {
       pageNo: 1,
       announcements: [],
       pageResult: {},
+      isAdmin: false,
     }
   },
   computed: {
@@ -64,7 +65,6 @@ export default {
         this.pageResult.pageNo = 1;
         this.pageNo = 1;
         this.pageNoChange(1);
-        this.conditionChange(this.selectedCondition);
         this.searchKeywordChange(this.searchKeyword);
         })
     },
@@ -82,7 +82,7 @@ export default {
       if (this.checkToken) {
         this.$router.push("/announcement/create");
       }else {
-        alert("로그인이 필요합니다!");
+        alert("관리자만 공지를 작성할 수 있습니다!");
         this.$router.push("/user/login");
       }
     }
@@ -91,7 +91,11 @@ export default {
   async created(){
     this.pageNo = this.getPage;
     this.searchKeyword = this.getSearchKeyword;
-  
+    if(this.checkUserInfo !== null) {
+      if (this.checkUserInfo.userId === 'TestUser1' || this.checkUserInfo.userId === 'TestUser2') {
+        this.isAdmin = true;
+      }
+    }
     await axios.get(process.env.VUE_APP_MY_BASE_URL+`/announcement?pageNo=${this.pageNo}&keyword=${this.searchKeyword}`)
     .then(response => {
       this.announcements = response.data.boards;
